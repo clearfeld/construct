@@ -25,12 +25,12 @@ const styles = stylex.create({
     base: {
         // marginLeft: "320px",
         width: "100vw",
-        height: "36px",
+        height: "var(--navbar-height)",
 
         userSelect: "none",
         display: "flex",
         // justifyContent: "flex-end",
-        position: "absolute",
+        position: "fixed",
         zIndex: 1000,
         top: "0",
         left: "0",

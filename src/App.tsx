@@ -3,6 +3,36 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import Navbar from "./commons/navbar";
+import Sidebar from "./commons/sidebar";
+
+import * as stylex from "@stylexjs/stylex";
+import Footer from "./commons/footer";
+import TabBar from "./commons/tabbar";
+import Toolbar from "./commons/toolbar";
+
+const styles = stylex.create({
+	container: {
+		paddingTop: "calc(var(--navbar-height) - 0.125rem)",
+		height:
+			"calc(100vh - var(--navbar-height) - var(--footer-height))",
+		backgroundColor: "purple",
+		display: "flex",
+	},
+
+	content_width: {
+		width: "calc(100% - var(--sidebar-width))",
+	},
+
+	details_container: {
+		display: "flex",
+		width: "100%",
+		height: "calc(100% - 2rem)", // tabbar-height
+	},
+
+	request_container: {
+		width: "calc(100% - var(--toolbar-width))",
+	},
+});
 
 function App() {
 	const [greetMsg, setGreetMsg] = useState("");
@@ -14,31 +44,50 @@ function App() {
 	}
 
 	return (
-		<>
-      <Navbar />
+		<div>
+			<Navbar />
 
-			<main className="container">
-				<h1>Welcome to Tauri + React</h1>
+			<div {...stylex.props(styles.container)}>
+				<Sidebar />
 
-				<p>Click on the Tauri, Vite, and React logos to learn more.</p>
+				<div {...stylex.props(styles.content_width)}>
+					<TabBar />
 
-				<form
-					className="row"
-					onSubmit={(e) => {
-						e.preventDefault();
-						greet();
-					}}
-				>
-					<input
-						id="greet-input"
-						onChange={(e) => setName(e.currentTarget.value)}
-						placeholder="Enter a name..."
-					/>
-					<button type="submit">Greet</button>
-				</form>
-				<p>{greetMsg}</p>
-			</main>
-		</>
+					<div {...stylex.props(styles.details_container)}>
+						<div {...stylex.props(styles.request_container)}>
+							{/* <RequestSection />
+							<ResponseSection /> */}
+						</div>
+
+						<Toolbar />
+					</div>
+				</div>
+			</div>
+
+			{/* <main className="container">
+					<h1>Welcome to Tauri + React</h1>
+
+					<p>Click on the Tauri, Vite, and React logos to learn more.</p>
+
+					<form
+						className="row"
+						onSubmit={(e) => {
+							e.preventDefault();
+							greet();
+						}}
+					>
+						<input
+							id="greet-input"
+							onChange={(e) => setName(e.currentTarget.value)}
+							placeholder="Enter a name..."
+						/>
+						<button type="submit">Greet</button>
+					</form>
+					<p>{greetMsg}</p>
+				</main> */}
+
+			<Footer />
+		</div>
 	);
 }
 
