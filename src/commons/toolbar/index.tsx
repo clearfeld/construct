@@ -14,7 +14,7 @@ const styles = stylex.create({
 		borderLeft: "0.0625rem solid var(--main-border-color)",
 
 		// TODO: fix this later
-		paddingTop: "0.40625rem",
+		// paddingTop: "0.40625rem",
 	},
 
 	sidebar: {

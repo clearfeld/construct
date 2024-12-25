@@ -3,8 +3,8 @@ import react from "@vitejs/plugin-react";
 // import stylexPlugin from "@stylexjs/rollup-plugin";
 import stylexPlugin from "vite-plugin-stylex";
 
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -16,19 +16,21 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
 	plugins: [
-    svgr(),
+		svgr(),
 
-		stylexPlugin(),
+		stylexPlugin({
+			libraries: ["@controlkit/ui"],
+		}),
 
 		react(),
 	],
 
-  resolve: {
+	resolve: {
 		alias: {
 			"@src": path.resolve(__dirname, "src"),
 			"@store": path.resolve(__dirname, "src/store"),
-      "@commons": path.resolve(__dirname, "src/commons"),
-      "@assets": path.resolve(__dirname, "src/assets"),
+			"@commons": path.resolve(__dirname, "src/commons"),
+			"@assets": path.resolve(__dirname, "src/assets"),
 		},
 	},
 

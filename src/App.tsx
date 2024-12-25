@@ -9,6 +9,7 @@ import * as stylex from "@stylexjs/stylex";
 import Footer from "./commons/footer";
 import TabBar from "./commons/tabbar";
 import Toolbar from "./commons/toolbar";
+import HttpRequestsPage from "./pages/http_requests";
 
 const styles = stylex.create({
 	container: {
@@ -26,7 +27,8 @@ const styles = stylex.create({
 	details_container: {
 		display: "flex",
 		width: "100%",
-		height: "calc(100% - 2rem)", // tabbar-height
+		// height: "calc(100% - 2rem)", // tabbar-height
+		height: "100%",
 	},
 
 	request_container: {
@@ -51,12 +53,14 @@ function App() {
 				<Sidebar />
 
 				<div {...stylex.props(styles.content_width)}>
-					<TabBar />
+					{/* <TabBar /> */}
 
 					<div {...stylex.props(styles.details_container)}>
 						<div {...stylex.props(styles.request_container)}>
 							{/* <RequestSection />
 							<ResponseSection /> */}
+
+<HttpRequestsPage />
 						</div>
 
 						<Toolbar />

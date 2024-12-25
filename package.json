@@ -10,12 +10,17 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@controlkit/ui": "^0.1.7",
+    "@lexical/react": "^0.22.0",
+    "@monaco-editor/react": "^4.6.0",
     "@stylexjs/stylex": "^0.9.3",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-os": "~2",
+    "lexical": "^0.22.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@stylexjs/rollup-plugin": "^0.9.3",
