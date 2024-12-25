@@ -18,6 +18,7 @@ export interface RequestSlice {
 	setCookies: (cookies: Record<string, string>) => void;
 
 	response: any;
+	response_headers: any;
 	loading: boolean;
 	error: string | null;
 	sendRequest: () => Promise<void>;
@@ -45,12 +46,15 @@ export const createRequestSlice: StateCreator<
 	setCookies: (cookies) => set({ cookies }),
 
 	response: null,
+	response_headers: null,
 	loading: false,
 	error: null,
 	sendRequest: async () => {
+		set({ loading: true });
+
 		const method = get().method;
 		const s = get();
-		const { url, body, cookies, headers } = get();
+		const { url, body, cookies, headers, setResp } = get();
 
 		// set({ loading: true, error: null });
 
@@ -64,11 +68,18 @@ export const createRequestSlice: StateCreator<
 			.then((message) => {
 				console.log(message);
 
+				set({ response: message.response_data_string });
+				set({ response_headers: message.response_headers });
+				set({ loading: false });
+				// setResponse(message.response_data_string);
 				// set_HTTP_API_Response_Body(message.response_data_string);
 				// set_HTTP_API_Response_Headers(message.response_headers);
 			})
 			.catch((error_message) => {
 				console.error(error_message);
+
+				set({ loading: false });
+
 			});
 
 		// return;

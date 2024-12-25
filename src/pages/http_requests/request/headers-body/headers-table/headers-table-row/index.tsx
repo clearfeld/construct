@@ -66,7 +66,9 @@ const styles = stylex.create({
 		outline: "unset",
 		fontSize: "0.75rem",
 		width: "100%",
+		color: "var(--color-text)",
 	},
+
 	hidden: {
 		opacity: 0,
 		pointerEvents: "none",

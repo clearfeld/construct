@@ -73,8 +73,10 @@ fn http_request(method: &str, url: &str) -> Result<HTTP_API_Response, String> {
     list.append("Cache-Control: no-cache").unwrap();
     list.append(construction_token_header.as_str()).unwrap();
     list.append(host_header.as_str()).unwrap();
+    // TODO: need to filter this header and need to give UX warning to end user
     // list.append("User-Agent: ConstructRuntime/0.0.1").unwrap();
     list.append("Accept: */*").unwrap();
+    // TODO: need to filter this header and need to give UX warning to end user
     // list.append("Accept-Encoding: gzip, deflate, br").unwrap();
     list.append("Connection: keep-alive").unwrap();
     easy.http_headers(list).unwrap();

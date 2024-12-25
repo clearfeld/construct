@@ -3,6 +3,8 @@ import stylex from "@stylexjs/stylex";
 // import HeadersTable from "./headers-table";
 // import MoreOptions from "../../../assets/horizontal-ellipsis.svg?react";
 import TableRow from "./header-row";
+import useRequestStore from "@src/stores/request_store";
+import { RequestSlice } from "@src/stores/request_store/request_slice";
 // import { useRecoilValue } from "recoil";
 // import { HTTP_API_Response_Headers_StateData } from "../../../store/http-api-request-and-response/response-headers";
 
@@ -87,6 +89,8 @@ export interface I_Header {
 export default function Headers() {
     // const get_response_headers = useRecoilValue(HTTP_API_Response_Headers_StateData);
 
+    const get_response_headers = useRequestStore((state: RequestSlice) => state.response_headers);
+
     return (
         <div {...stylex.props(styles.wrapper)}>
             {/* {get_response_headers[0]} */}
@@ -111,7 +115,7 @@ export default function Headers() {
                 </div>
 
 
-                {/* {get_response_headers.map((header_line, index) => {
+                {get_response_headers !== null && get_response_headers.map((header_line, index: number) => {
                     const split_idx = header_line.indexOf(":");
                     if (split_idx === -1) return;
 
@@ -127,7 +131,7 @@ export default function Headers() {
                     return (
                         <TableRow key={index} header={header} />
                     );
-                })} */}
+                })}
             </div>
         </div>
     );

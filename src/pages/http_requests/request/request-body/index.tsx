@@ -4,7 +4,7 @@ import OPTIONS from "./body_options";
 import Header from "./header";
 
 export default function RequestBody() {
-  const [selectValue, setSelectValue] = useState(OPTIONS[0]);
+  const [selectValue, setSelectValue] = useState(OPTIONS[3]);
 
   return (
     <div>

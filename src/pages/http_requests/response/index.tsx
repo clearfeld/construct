@@ -66,24 +66,27 @@ const tabs = [
 		amount: -1,
 		children: <Body />,
 	},
+
 	{
 		title: "Cookies",
 		status: "",
 		amount: -1,
 		children: <Cookies />,
 	},
+
 	{
 		title: "Headers",
 		status: "",
 		amount: -1,
 		children: <Headers />,
 	},
-	{
-		title: "Test Results",
-		status: "",
-		amount: -1,
-		children: <TestResults />,
-	},
+
+	// {
+	// 	title: "Test Results",
+	// 	status: "",
+	// 	amount: -1,
+	// 	children: <TestResults />,
+	// },
 ];
 
 function ResponseSection() {
