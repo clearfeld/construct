@@ -78,6 +78,7 @@ export default function ResponseTab({
         )}
         {status && <span {...stylex.props(styles.statusCircle)} />}
       </div>
+
       {active && children}
     </div>
   );

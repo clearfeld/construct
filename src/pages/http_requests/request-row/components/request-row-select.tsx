@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useRef, useState } from "react";
 
 import useRequestStore from "@src/stores/request_store";
-import type { RequestSlice } from "@src/stores/request_store/request_slice";
+import { methods, type RequestSlice } from "@src/stores/request_store/request_slice";
 
 // import ArrowDownRounded from "../../../assets/arrow-down-rounded.svg?react";
 // import {useOutsideClick} from "../../../hooks/use-outside-click.tsx";
@@ -14,27 +14,39 @@ const styles = stylex.create({
 		backgroundColor: "var(--background-sub)",
 		borderRadius: "0.25rem",
 	},
+
 	selectedButton: {
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "center",
-		padding: "0.25rem 0",
 		backgroundColor: "inherit",
 		borderRadius: "0.25rem",
 		height: "1.75rem",
 		width: "100%",
 		boxShadow: "none",
+		border: "0.0625rem solid var(--cds-gray-200)",
+
+		padding: "0.25rem 0.25rem",
+
+		cursor: "pointer",
+
+		":hover": {
+			backgroundColor: "var(--cds-gray-200)",
+		},
 	},
+
 	selectedText: {
 		padding: "0.25rem",
 		flex: 1,
 		textAlign: "left",
 	},
+
 	divider: {
 		backgroundColor: "var(--color-gray)",
 		width: "0.0625rem",
 		height: "100%",
 	},
+
 	arrowContainer: {
 		height: "100%",
 		width: "1.5rem",
@@ -43,7 +55,9 @@ const styles = stylex.create({
 		alignItems: "center",
 		color: "var(--color-gray)",
 	},
+
 	dropdownModal: {
+		marginTop: "0.25rem",
 		position: "absolute",
 		display: "flex",
 		flexDirection: "column",
@@ -53,29 +67,26 @@ const styles = stylex.create({
 		backgroundColor: "inherit",
 		borderRadius: "0.25rem",
 		zIndex: 100,
+		border: "0.0625rem solid var(--cds-gray-200)",
 	},
+
 	dropdownButton: {
+		border: "none",
 		backgroundColor: "inherit",
-		padding: 0,
+		// padding: 0,
+		padding: "0.5rem 0.25rem",
 		textAlign: "left",
-		paddingHorizontal: "0.25rem",
+
+		cursor: "pointer",
+
+		":hover": {
+			backgroundColor: "var(--cds-gray-200)",
+		},
 	},
 });
 
-export interface RequestRowSelectOption {
-	value: string;
-	label: string;
-	textColor: string;
-}
-
-interface RequestRowSelectProps {
-	options: RequestRowSelectOption[];
-	selectedOption: RequestRowSelectOption;
-	setSelectedValue: (value: RequestRowSelectOption) => void;
-}
-
 // @ts-ignore
-export function RequestRowSelect(props: RequestRowSelectProps) {
+export function RequestRowSelect() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const buttonRef = useRef(null);
 	// const modelRef = useOutsideClick(() => setIsDropdownOpen(false), buttonRef);
@@ -94,15 +105,15 @@ export function RequestRowSelect(props: RequestRowSelectProps) {
 			>
 				<p
 					{...stylex.props(styles.selectedText)}
-					style={{ color: props.selectedOption.textColor }}
+					style={{ color: method.textColor }}
 				>
-					{method}
+					{method.value}
 					{/* {props.selectedOption.label} */}
 				</p>
-				<div {...stylex.props(styles.divider)} />
-				<div {...stylex.props(styles.arrowContainer)}>
-					{/* <ArrowDownRounded width={16} height={6}/> */}
-				</div>
+				{/* <div {...stylex.props(styles.divider)} />
+				<div {...stylex.props(styles.arrowContainer)}> */}
+				{/* <ArrowDownRounded width={16} height={6}/> */}
+				{/* </div> */}
 			</button>
 
 			{isDropdownOpen && (
@@ -110,19 +121,18 @@ export function RequestRowSelect(props: RequestRowSelectProps) {
 					// ref={modelRef}
 					{...stylex.props(styles.dropdownModal)}
 				>
-					{props.options.map((option, index) => (
+					{methods.map((option, index) => (
 						<button
 							key={index}
 							onClick={() => {
 								// props.setSelectedValue(option);
 								setIsDropdownOpen(false);
-
-								setMethod(option.value);
+								setMethod(option);
 							}}
 							{...stylex.props(styles.dropdownButton)}
 							style={{ color: option.textColor }}
 						>
-							{option.label}
+							{option.value}
 						</button>
 					))}
 				</div>

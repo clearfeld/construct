@@ -38,6 +38,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      uuid:
+        specifier: ^11.0.3
+        version: 11.0.3
       zustand:
         specifier: ^5.0.2
         version: 5.0.2(@types/react@18.3.18)(react@18.3.1)
@@ -1863,6 +1866,10 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  uuid@11.0.3:
+    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+    hasBin: true
 
   vite-plugin-stylex@0.13.0:
     resolution: {integrity: sha512-kT44CpS8dprH+Idiff9eblsVoGCiRueRJwT6EdM7E+mbdSfHjqWI5e0kiaNebdsaacHiyhmkgPXeTfJahTXrsA==}
@@ -3819,6 +3826,8 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 18.3.18
+
+  uuid@11.0.3: {}
 
   vite-plugin-stylex@0.13.0(@stylexjs/stylex@0.9.3)(vite@6.0.5(lightningcss@1.28.2)):
     dependencies:

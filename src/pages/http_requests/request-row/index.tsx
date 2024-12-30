@@ -71,50 +71,11 @@ const styles = stylex.create({
 interface RequestRowProps {}
 
 // const options: RequestRowSelectOption[] = [
-const options: any[] = [
-	{
-		label: "GET",
-		value: "GET",
-		textColor: "#4CAB61",
-	},
-	{
-		label: "POST",
-		value: "POST",
-		textColor: "#D68323",
-	},
-	{
-		label: "PUT",
-		value: "PUT",
-		textColor: "#2E8ABE",
-	},
-	{
-		label: "PATCH",
-		value: "PATCH",
-		textColor: "#CA3939",
-	},
-	{
-		label: "DELETE",
-		value: "DELETE",
-		textColor: "#7FC27E",
-	},
-	{
-		label: "HEAD",
-		value: "HEAD",
-		textColor: "#4CAB61",
-	},
-	{
-		label: "OPTIONS",
-		value: "OPTIONS",
-		textColor: "#CA3939",
-	},
-];
 
 const path = ["collection 1", "folder 1", "folder 2", "folder 3", "request 1"];
 
 // @ts-ignore
 export function RequestRow(props: RequestRowProps) {
-	const [selectedMethodOption, setSelectedMethodOption] =
-		useState<RequestRowSelectOption>(options[0]);
 
 	const { sendRequest } = useRequestStore();
 
@@ -158,11 +119,7 @@ export function RequestRow(props: RequestRowProps) {
 			<br />
 
 			<div {...stylex.props(styles.requestUrlSection)}>
-				<RequestRowSelect
-					selectedOption={selectedMethodOption}
-					options={options}
-					setSelectedValue={setSelectedMethodOption}
-				/>
+				<RequestRowSelect />
 
 				<RequestRowUrlInput />
 
@@ -174,7 +131,7 @@ export function RequestRow(props: RequestRowProps) {
 					Send
 				</Button>
 
-				<RequestRowDropdown
+				{/* <RequestRowDropdown
 					renderButtonContent={() => (
 						<p
 							style={{ width: "5rem", color: "inherit" }}
@@ -203,9 +160,9 @@ export function RequestRow(props: RequestRowProps) {
 					onClick={() => {}}
 				>
 					<p style={{ width: "10rem" }}>Save and Download</p>
-				</RequestRowDropdown>
+				</RequestRowDropdown> */}
 
-				<RequestRowDropdown
+				{/* <RequestRowDropdown
 					renderButtonContent={() => (
 						// <SaveSVG />
 						<div />
@@ -214,7 +171,7 @@ export function RequestRow(props: RequestRowProps) {
 					onClick={() => {}}
 				>
 					<p style={{ width: "10rem" }}>Save and Download</p>
-				</RequestRowDropdown>
+				</RequestRowDropdown> */}
 			</div>
 
 			<br />

@@ -14,13 +14,29 @@ const styles = stylex.create({
 	wrapper: {
 		height: "calc(100% - var(--response-height))",
 		width: "100%",
+
 		backgroundColor: "var(--bg-color)",
+
 		position: "relative",
+
+		display: "grid",
+		gridTemplateRows: "5rem 1fr",
 	},
+
+	section: {
+		height: "100%",
+		width: "100%",
+		flexGrow: 1,
+
+		backgroundColor: "var(--bg-color)",
+		overflow: "auto",
+	},
+
 	tabContent: {
 		position: "absolute",
 		backgroundColor: "#0E0F10",
-		maxHeight: "5rem",
+		// maxHeight: "5rem",
+		height: "calc(100% - 5.75rem)",
 		width: "100%",
 		left: "0",
 		// padding: "1rem",
@@ -85,22 +101,24 @@ function RequestSection() {
 		<div {...stylex.props(styles.wrapper)}>
 			<RequestRow />
 
-			<RequestTabBar>
-				{tabs.map((tab, index) => {
-					return (
-						<RequestTab
-							title={tab.title}
-							amount={tab.amount}
-							status={tab.status}
-							key={tab.title}
-							onClick={() => setActiveTabIndex(index)}
-							active={index === activeTabIndex}
-						>
-							<div {...stylex.props(styles.tabContent)}>{tab.children}</div>
-						</RequestTab>
-					);
-				})}
-			</RequestTabBar>
+			<div {...stylex.props(styles.section)}>
+				<RequestTabBar>
+					{tabs.map((tab, index) => {
+						return (
+							<RequestTab
+								title={tab.title}
+								amount={tab.amount}
+								status={tab.status}
+								key={tab.title}
+								onClick={() => setActiveTabIndex(index)}
+								active={index === activeTabIndex}
+							>
+								<div {...stylex.props(styles.tabContent)}>{tab.children}</div>
+							</RequestTab>
+						);
+					})}
+				</RequestTabBar>
+			</div>
 		</div>
 	);
 }

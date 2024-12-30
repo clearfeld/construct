@@ -55,13 +55,18 @@ function Raw() {
 
 	return (
 		<Editor
-			height="calc(100%)"
+			// height="calc(100% - var(--response-height))"
+			height="calc(100% - 1rem)"
+
 			defaultLanguage="json"
 			theme="vs-dark"
 			defaultValue=""
 			beforeMount={handleEditorWillMount}
 			onMount={handleEditorDidMount}
 			//options={{ automaticLayout: true }}
+			options={{
+				automaticLayout: true,
+			}}
 		/>
 	);
 }

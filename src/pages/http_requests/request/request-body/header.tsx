@@ -8,7 +8,8 @@ const styles = stylex.create({
   wrapper: {
     marginTop: "0.5em",
     marginBottom: "0.5em",
-    marginLeft: "0.5em"
+    marginLeft: "0.5em",
+    // height: "2.5rem",
   }
 });
 

@@ -44,7 +44,7 @@ export default function RequestTabBar({ children }: I_RequestTabBar) {
 				);
 			})} */}
 
-			<div {...stylex.props(styles.cookies)}>Cookies</div>
+			{/* <div {...stylex.props(styles.cookies)}>Cookies</div> */}
 		</div>
 	);
 }

@@ -42,13 +42,15 @@ const styles = stylex.create({
 		zIndex: 10,
 		width: "100%",
 		backgroundColor: "transparent",
-		cursor: "row-resize",
 		position: "absolute",
-		height: "0.125rem",
+		height: "0.25rem",
 		top: "-0.125rem",
-		":hover": {
-			backgroundColor: "var(--resizer-color)",
-		},
+
+		// cursor: "row-resize",
+
+		// ":hover": {
+		// 	backgroundColor: "var(--resizer-color)",
+		// },
 	},
 
 	resizeHandleActive: {
@@ -137,7 +139,7 @@ function Footer() {
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div
-				ref={resizerRef as any}
+				// ref={resizerRef as any}
 				{...stylex.props(
 					styles.resizeHandle,
 					resizeInProgress && styles.resizeHandleActive,

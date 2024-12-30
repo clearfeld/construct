@@ -18,7 +18,7 @@ const styles = stylex.create({
 
 		position: "relative",
 		display: "grid",
-		gridTemplateRows: "4px 1fr",
+		gridTemplateRows: "0px 1fr",
 	},
 
 	section: {
@@ -33,7 +33,8 @@ const styles = stylex.create({
 	resizeHandle: {
 		zIndex: 10,
 		width: "100%",
-		backgroundColor: "var(--resizer-color)",
+		// backgroundColor: "var(--resizer-color)",
+		backgroundColor: "transparent",
 		cursor: "row-resize",
 		height: "0.25rem",
 		":hover": {
@@ -134,6 +135,8 @@ function ResponseSection() {
 
 	function resize(e) {
 		e.preventDefault();
+		if (!resizerRef.current) return;
+
 		// console.log(body.clientHeight, e);
 		const footer_height_str = document
 			.getElementsByTagName("html")[0]
@@ -146,11 +149,11 @@ function ResponseSection() {
 		}
 		// console.log(footer_height_str, footer_height_str.substring(0, footer_height_str.length - 2));
 
-		const size = body.clientHeight - footer_height - e.y;
+		const size = body.clientHeight - footer_height - e.y - 19;
 		// console.log(size);
-		if (size < 20) {
+		if (size < 30) {
 			return;
-		} else if (size > body.clientHeight - 48 - 2 - 32 - 2) {
+		} else if (size > body.clientHeight - 38 - 20) {
 			// navbar - tab bar - borders
 			return;
 		}

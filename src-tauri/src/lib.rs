@@ -37,7 +37,12 @@ struct HTTP_API_Response {
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn http_request(method: &str, url: &str) -> Result<HTTP_API_Response, String> {
+fn http_request(
+    method: &str,
+    url: &str,
+    body: &str,
+    cookies: &str,
+) -> Result<HTTP_API_Response, String> {
     let mut easy = Easy::new();
 
     // only should use this on path, query, and user info
@@ -53,9 +58,31 @@ fn http_request(method: &str, url: &str) -> Result<HTTP_API_Response, String> {
     )
     .unwrap();
 
-    // This determines the custom HTTP method sent to the server
-    // internally curl still behaves the same so use get / put / post as required
-    // easy.custom_request(method);
+    match method {
+        "GET" => easy.get(true).unwrap(),
+        "POST" => easy.post(true).unwrap(),
+        "PUT" => easy.put(true).unwrap(),
+        "PATCH" => easy.custom_request("PATCH").unwrap(),
+        "DELETE" => easy.custom_request("DELETE").unwrap(),
+
+        "HEAD" => easy.nobody(true).unwrap(),
+        "OPTIONS" => easy.custom_request("OPTIONS").unwrap(),
+
+        "TRACE" => easy.custom_request("TRACE").unwrap(),
+        "CONNECT" => easy.custom_request("CONNECT").unwrap(),
+
+        // TODO: support custom requests from frontend first
+        _ => easy.custom_request(method).unwrap(),
+    }
+
+    // TODO: finish setting up cookies frontend first
+    // if !cookies.is_empty() {
+    //     let mut cookie_list = List::new();
+    //     for cookie in cookies.split(';') {
+    //         cookie_list.append(cookie.trim()).unwrap();
+    //     }
+    //     easy.cookie_list(cookie_list).unwrap();
+    // }
 
     //
     let url_parsed = match Url::parse(
@@ -94,6 +121,10 @@ fn http_request(method: &str, url: &str) -> Result<HTTP_API_Response, String> {
 
     // Setting - Maximun number of redirects
     easy.max_redirections(10);
+
+    if method == "POST" || method == "PUT" {
+        easy.post_fields_copy(body.as_bytes()).unwrap();
+    }
 
     // response
     let mut response_data_raw = Vec::new();
@@ -155,10 +186,9 @@ fn http_request(method: &str, url: &str) -> Result<HTTP_API_Response, String> {
         time_pretransfer: easy.pretransfer_time().unwrap(), // Substract dns tcp and ssl from this to get socket init time - double check might be wrong on this
         time_starttransfer: easy.starttransfer_time().unwrap(), // transfer start
 
-        // redirect time, count, and url
+                                                            // redirect time, count, and url
     })
 }
-
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

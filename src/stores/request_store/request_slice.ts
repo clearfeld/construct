@@ -1,15 +1,142 @@
 import type { StateCreator } from "zustand";
 import { invoke } from "@tauri-apps/api/core";
+import { v4 as uuidv4 } from "uuid";
+
+export type T_Method = {
+	value: string;
+	textColor: string;
+};
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const methods: T_Method[] = [
+	{
+		value: "GET",
+		textColor: "var(--cds-green-400)",
+	},
+
+	{
+		value: "POST",
+		textColor: "var(--cds-blue-400)",
+	},
+
+	{
+		value: "PUT",
+		textColor: "var(--cds-purple-700)",
+	},
+
+	{
+		value: "PATCH",
+		textColor: "var(--cds-yellow-500)",
+	},
+
+	{
+		value: "DELETE",
+		textColor: "var(--cds-red-500)",
+	},
+
+	{
+		value: "HEAD",
+		textColor: "var(--cds-blue-700)",
+	},
+
+	{
+		value: "OPTIONS",
+		textColor: "var(--cds-green-700)",
+	},
+];
+
+const autoHeaders = [
+	// Fixed
+
+	// TODO:
+	// {
+	// 	id: uuidv4(),
+	// 	auto: true,
+	// 	enabled: true,
+	// 	key: "Authorization",
+	// 	value: "",
+	// 	description: "",
+	// },
+
+	{
+		id: uuidv4(),
+		auto: true,
+		enabled: true,
+		key: "Construct-Token",
+		value: "<calculated when request is sent>",
+		description: "",
+	},
+
+	// Editable
+
+	{
+		id: uuidv4(),
+		auto: false,
+		enabled: true,
+		key: "User-Agent",
+		value: "ConstructRuntime/0.0.1",
+		description: "",
+	},
+
+	{
+		id: uuidv4(),
+		auto: false,
+		enabled: true,
+		key: "Accept",
+		value: "*/*",
+		description: "",
+	},
+
+	{
+		id: uuidv4(),
+		auto: false,
+		enabled: true,
+		key: "Accept-Encoding",
+		// TODO:
+		// value: "gzip, deflate, br",
+		value: "gzip, deflate",
+		description: "",
+	},
+
+	// TODO:
+	// {
+	// 	id: uuidv4(),
+	// 	auto: true,
+	// 	enabled: true,
+	// 	key: "Connection",
+	// 	value: "keep-alive",
+	// 	description: "",
+	// },
+];
+
+export type T_Header = {
+	id: string;
+	auto: boolean;
+	enabled: boolean;
+	key: string;
+	value: string;
+	description: string;
+};
 
 export interface RequestSlice {
 	url: string;
 	setUrl: (url: string) => void;
 
-	method: string;
-	setMethod: (method: string) => void;
+	method: T_Method;
+	setMethod: (method: T_Method) => void;
 
-	headers: Record<string, string>;
-	setHeaders: (headers: Record<string, string>) => void;
+	// Authorization TODO:
+
+	isAutoHeadersVisible: boolean;
+	setIsAutoHeadersVisible: (arg: boolean) => void;
+
+	autoHeaders: T_Header[];
+	setAutoHeaders: (headers: T_Header[]) => void;
+	setAutoHeader: (header: T_Header) => void;
+
+	headers: T_Header[];
+	setHeaders: (headers: T_Header[]) => void;
+	setHeader: (header: T_Header) => void;
 
 	body: string;
 	setBody: (body: string) => void;
@@ -33,11 +160,37 @@ export const createRequestSlice: StateCreator<
 	url: "",
 	setUrl: (url) => set({ url }),
 
-	method: "GET",
+	method: methods[0],
 	setMethod: (method) => set({ method }),
 
-	headers: {},
-	setHeaders: (headers) => set({ headers }),
+	isAutoHeadersVisible: false,
+	setIsAutoHeadersVisible: (isAutoHeadersVisible) => set({ isAutoHeadersVisible }),
+
+	autoHeaders: autoHeaders,
+	setAutoHeaders: (headers: T_Header[]) => set({ headers }),
+	setAutoHeader: (header: T_Header) => {
+		const ns = [...get().autoHeaders];
+
+		const index = ns.findIndex((h) => h.id === header.id);
+		if (index !== -1) {
+			ns[index] = header;
+		}
+
+		set({ autoHeaders: ns });
+	},
+
+	headers: [],
+	setHeaders: (headers: T_Header[]) => set({ headers }),
+	setHeader: (header: T_Header) => {
+		const ns = [...get().headers];
+
+		const index = ns.findIndex((h) => h.id === header.id);
+		if (index !== -1) {
+			ns[index] = header;
+		}
+
+		set({ headers: ns });
+	},
 
 	body: "",
 	setBody: (body) => set({ body }),
@@ -54,16 +207,19 @@ export const createRequestSlice: StateCreator<
 
 		const method = get().method;
 		const s = get();
-		const { url, body, cookies, headers, setResp } = get();
+		const { url, body, cookies, autoHeaders, headers, setResp } = get();
 
 		// set({ loading: true, error: null });
 
-		console.log(method, body, url, cookies, headers, s);
+		console.log(method, body, url, cookies, autoHeaders, headers, s);
 
+		return;
 
 		invoke("http_request", {
-			method: method,
+			method: method.value,
 			url: "https://jsonplaceholder.typicode.com/posts",
+			body: body,
+			cookies: "",
 		})
 			.then((message) => {
 				console.log(message);
@@ -79,10 +235,7 @@ export const createRequestSlice: StateCreator<
 				console.error(error_message);
 
 				set({ loading: false });
-
 			});
-
-		// return;
 
 		// try {
 		// 	const response = await fetch(url, {

@@ -14,14 +14,14 @@ import HttpRequestsPage from "./pages/http_requests";
 const styles = stylex.create({
 	container: {
 		paddingTop: "calc(var(--navbar-height) - 0.125rem)",
-		height:
-			"calc(100vh - var(--navbar-height) - var(--footer-height))",
+		height: "calc(100vh - var(--navbar-height) - var(--footer-height))",
 		backgroundColor: "purple",
 		display: "flex",
 	},
 
 	content_width: {
-		width: "calc(100% - var(--sidebar-width))",
+		// width: "calc(100% - var(--sidebar-width))",
+		width: "calc(100%)",
 	},
 
 	details_container: {
@@ -32,7 +32,8 @@ const styles = stylex.create({
 	},
 
 	request_container: {
-		width: "calc(100% - var(--toolbar-width))",
+		// width: "calc(100% - var(--toolbar-width))",
+		width: "calc(100%)",
 	},
 });
 
@@ -50,7 +51,7 @@ function App() {
 			<Navbar />
 
 			<div {...stylex.props(styles.container)}>
-				<Sidebar />
+				{/* <Sidebar /> */}
 
 				<div {...stylex.props(styles.content_width)}>
 					{/* <TabBar /> */}
@@ -60,10 +61,10 @@ function App() {
 							{/* <RequestSection />
 							<ResponseSection /> */}
 
-<HttpRequestsPage />
+							<HttpRequestsPage />
 						</div>
 
-						<Toolbar />
+						{/* <Toolbar /> */}
 					</div>
 				</div>
 			</div>

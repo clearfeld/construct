@@ -1,3 +1,5 @@
+import { Checkbox } from "@controlkit/ui";
+import useRequestStore from "@src/stores/request_store";
 import stylex from "@stylexjs/stylex";
 import { type ReactNode, useState } from "react";
 
@@ -97,10 +99,10 @@ interface I_TableRowProps {
 }
 
 export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
-	const [key, setKey] = useState("");
-	const [value, setValue] = useState("");
-	const [description, setDescription] = useState("");
 	// const [hoverRef, isHovering] = useHover<HTMLDivElement>();
+
+	const { setAutoHeader } = useRequestStore();
+	const { setHeader } = useRequestStore();
 
 	return (
 		<div
@@ -114,14 +116,37 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
             isHovering ? styles.shown : styles.hidden
           )}
         /> */}
-				<input type="checkbox" />
+				{/* <input type="checkbox" /> */}
+
+				<Checkbox
+					checked={header.enabled}
+					disabled={header.auto && true}
+					// onCheckedChange={(checked: boolean) => setHeaders(checked)}
+					onCheckedChange={(checked: boolean) => {
+						if (autoHeaderRow) {
+							const ns = { ...header };
+							ns.enabled = checked;
+							setAutoHeader(ns);
+						} else {
+							const ns = { ...header };
+							ns.enabled = checked;
+							setHeader(ns);
+						}
+					}}
+				/>
 			</div>
 
 			<div {...stylex.props(styles.borderRight, styles.cell)}>
 				<input
 					{...stylex.props(styles.input)}
-					onChange={(event) => setKey(event.target.value)}
-					value={header.key ? header.key : key}
+					onChange={(event) => {
+						if (autoHeaderRow) return;
+
+						const ns = { ...header };
+						ns.key = event.target.value;
+						setHeader(ns);
+					}}
+					value={header.key}
 					placeholder="Key"
 				/>
 			</div>
@@ -129,8 +154,14 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 			<div {...stylex.props(styles.borderRight, styles.cell)}>
 				<input
 					{...stylex.props(styles.input)}
-					onChange={(event) => setValue(event.target.value)}
-					value={header.value ? header.value : value}
+					onChange={(event) => {
+						if (autoHeaderRow) return;
+
+						const ns = { ...header };
+						ns.value = event.target.value;
+						setHeader(ns);
+					}}
+					value={header.value}
 					placeholder="Value"
 				/>
 			</div>
@@ -138,8 +169,14 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 			<div {...stylex.props(styles.cell)}>
 				<input
 					{...stylex.props(styles.input)}
-					onChange={(event) => setDescription(event.target.value)}
-					value={header.description ? header.description : description}
+					onChange={(event) => {
+						if (autoHeaderRow) return;
+
+						const ns = { ...header };
+						ns.description = event.target.value;
+						setHeader(ns);
+					}}
+					value={header.description}
 					placeholder="Description"
 				/>
 			</div>
