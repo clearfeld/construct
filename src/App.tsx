@@ -11,6 +11,8 @@ import Footer from "./commons/footer";
 // import Toolbar from "./commons/toolbar";
 import HttpRequestsPage from "./pages/http_requests";
 
+import "./updater.tsx";
+
 const styles = stylex.create({
 	container: {
 		paddingTop: "calc(var(--navbar-height) - 0.125rem)",

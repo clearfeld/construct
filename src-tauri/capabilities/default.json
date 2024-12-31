@@ -16,6 +16,12 @@
     "core:window:allow-internal-toggle-maximize",
     "core:window:allow-set-fullscreen",
     "core:window:allow-maximize",
-    "os:default"
+    "os:default",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install",
+    "updater:allow-download-and-install",
+    "process:allow-exit",
+    "process:allow-restart"
   ]
 }
