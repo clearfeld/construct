@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { SidebarTab } from "./rail.tsx";
+// import { SidebarTab } from "./rail.tsx";
 // import { SidebarSearchRow } from "./components/sidebar-search-row.tsx";
 // import { CollectionTreeView } from "./components/collection-tree-view.tsx";
 // import data from "./components/collection-data.json";
@@ -12,11 +12,13 @@ const styles = stylex.create({
 	},
 });
 
-interface SidebarContentProps {
-	selectedTab: SidebarTab | null;
-}
+// interface SidebarContentProps {
+// 	selectedTab: SidebarTab | null;
+// }
 
-export function SidebarContent({ selectedTab }: SidebarContentProps) {
+export function SidebarContent(
+	// { selectedTab }: SidebarContentProps
+) {
 	return (
 		<div {...stylex.props(styles.container)}>
 			{/* <SidebarSearchRow />

@@ -1,15 +1,16 @@
 import * as stylex from "@stylexjs/stylex";
 import {
 	RequestRowSelect,
-	RequestRowSelectOption,
+	// RequestRowSelectOption,
 } from "./components/request-row-select.tsx";
-import { useState } from "react";
-import { RequestRowUrlInput } from "./components/request-row-url-input.tsx";
-import { RequestRowDropdown } from "./components/request-row-dropdown.tsx";
-// import SaveSVG from "@assets/save.svg?react";
-import React from "react";
+// import { useState } from "react";
 
-import { invoke } from "@tauri-apps/api/core";
+import { RequestRowUrlInput } from "./components/request-row-url-input.tsx";
+// import { RequestRowDropdown } from "./components/request-row-dropdown.tsx";
+// import SaveSVG from "@assets/save.svg?react";
+// import React from "react";
+
+// import { invoke } from "@tauri-apps/api/core";
 import { Button } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
 
@@ -68,11 +69,13 @@ const styles = stylex.create({
 	},
 });
 
-interface RequestRowProps {}
+interface RequestRowProps {
+	temp?: string;
+}
 
 // const options: RequestRowSelectOption[] = [
 
-const path = ["collection 1", "folder 1", "folder 2", "folder 3", "request 1"];
+// const path = ["collection 1", "folder 1", "folder 2", "folder 3", "request 1"];
 
 // @ts-ignore
 export function RequestRow(props: RequestRowProps) {
@@ -124,7 +127,7 @@ export function RequestRow(props: RequestRowProps) {
 				<RequestRowUrlInput />
 
 				<Button
-					onClick={(e) => {
+					onClick={(_) => {
 						sendRequest();
 					}}
 				>

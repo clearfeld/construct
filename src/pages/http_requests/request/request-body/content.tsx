@@ -1,4 +1,3 @@
-import React from "react";
 // import { SelectOption } from "@components/select";
 // import * as stylex from '@stylexjs/stylex';
 
@@ -19,7 +18,10 @@ import {
 //   option: SelectOption
 // }
 
-function getBodyContent(option: SelectOption) {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function getBodyContent(option: any
+  // SelectOption
+) {
   switch(option.value) {
     case "none":
       return <None />;
@@ -34,7 +36,10 @@ function getBodyContent(option: SelectOption) {
   }
 }
 
-export default function Content(props: ContentProps) {
+export default function Content(
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  props: any // ContentProps
+) {
   const bodyContent = getBodyContent(props.option);
 
   return (

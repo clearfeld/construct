@@ -1,5 +1,4 @@
 import stylex from "@stylexjs/stylex";
-import React from "react";
 // import DragHandle from "../../../../assets/drag-handle.svg?react";
 import TableHeaderRow from "./path-variables-table-header";
 import TableRow from "./path-variables-table-row";

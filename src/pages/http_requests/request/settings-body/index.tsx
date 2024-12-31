@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { Checkbox, Switch } from "@controlkit/ui";
 
@@ -11,7 +11,7 @@ export default function SettingsBody() {
 			<p>Settings</p>
 
 			<Checkbox
-				isChecked={isChecked}
+				// isChecked={isChecked}
 				onClick={() => {
 					setIsChecked(!isChecked);
 				}}

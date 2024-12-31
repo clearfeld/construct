@@ -1,4 +1,4 @@
-import React, { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 
 import stylex from "@stylexjs/stylex";
 

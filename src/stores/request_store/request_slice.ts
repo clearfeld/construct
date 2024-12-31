@@ -7,7 +7,6 @@ export type T_Method = {
 	textColor: string;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const methods: T_Method[] = [
 	{
 		value: "GET",
@@ -67,11 +66,12 @@ const autoHeaders = [
 		description: "",
 	},
 
-	// Editable
+	// TODO: make editable
 
 	{
 		id: uuidv4(),
-		auto: false,
+		// auto: false,
+		auto: true,
 		enabled: true,
 		key: "User-Agent",
 		value: "ConstructRuntime/0.0.1",
@@ -80,7 +80,8 @@ const autoHeaders = [
 
 	{
 		id: uuidv4(),
-		auto: false,
+		// auto: false,
+		auto: true,
 		enabled: true,
 		key: "Accept",
 		value: "*/*",
@@ -89,7 +90,8 @@ const autoHeaders = [
 
 	{
 		id: uuidv4(),
-		auto: false,
+		// auto: false,
+		auto: true,
 		enabled: true,
 		key: "Accept-Encoding",
 		// TODO:
@@ -146,6 +148,7 @@ export interface RequestSlice {
 
 	response: any;
 	response_headers: any;
+	response_cookies: any;
 	loading: boolean;
 	error: string | null;
 	sendRequest: () => Promise<void>;
@@ -164,7 +167,8 @@ export const createRequestSlice: StateCreator<
 	setMethod: (method) => set({ method }),
 
 	isAutoHeadersVisible: false,
-	setIsAutoHeadersVisible: (isAutoHeadersVisible) => set({ isAutoHeadersVisible }),
+	setIsAutoHeadersVisible: (isAutoHeadersVisible) =>
+		set({ isAutoHeadersVisible }),
 
 	autoHeaders: autoHeaders,
 	setAutoHeaders: (headers: T_Header[]) => set({ headers }),
@@ -200,6 +204,7 @@ export const createRequestSlice: StateCreator<
 
 	response: null,
 	response_headers: null,
+	response_cookies: null,
 	loading: false,
 	error: null,
 	sendRequest: async () => {
@@ -207,26 +212,35 @@ export const createRequestSlice: StateCreator<
 
 		const method = get().method;
 		const s = get();
-		const { url, body, cookies, autoHeaders, headers, setResp } = get();
+		const { url, body, cookies, autoHeaders, headers } = get();
 
 		// set({ loading: true, error: null });
 
 		console.log(method, body, url, cookies, autoHeaders, headers, s);
 
-		return;
+		const filtered_headers = headers
+			.filter((h) => h.enabled)
+			.map((h) => `${h.key}: ${h.value}`)
+			.join(", ");
+
+		// return;
 
 		invoke("http_request", {
 			method: method.value,
-			url: "https://jsonplaceholder.typicode.com/posts",
+			headers: filtered_headers,
+			url: url,
 			body: body,
 			cookies: "",
 		})
-			.then((message) => {
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			.then((message: any) => {
 				console.log(message);
 
 				set({ response: message.response_data_string });
 				set({ response_headers: message.response_headers });
+				set({ response_cookies: message.response_cookies });
 				set({ loading: false });
+
 				// setResponse(message.response_data_string);
 				// set_HTTP_API_Response_Body(message.response_data_string);
 				// set_HTTP_API_Response_Headers(message.response_headers);

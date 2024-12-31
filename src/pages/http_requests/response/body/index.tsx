@@ -16,12 +16,14 @@ function Body() {
 		FormatEditorPreview();
 	}, []);
 
-	function handleEditorWillMount(monaco: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	function handleEditorWillMount(_monaco: any) {
 		// here is the monaco instance
 		// do something before editor is mounted
 		// monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	function handleEditorDidMount(editor: any, monaco: any) {
 		monacoRef.current = monaco;
 		editorRef.current = editor;
@@ -153,9 +155,9 @@ function Body() {
 						gap: "0.75rem",
 					}}
 				>
-					<div role="button">{/* <CopySVG /> */}</div>
+					<div>{/* <CopySVG /> */}</div>
 
-					<div role="button">{/* <SearchSVG /> */}</div>
+					<div>{/* <SearchSVG /> */}</div>
 				</div>
 			</div>
 

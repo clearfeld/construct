@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Content from "./content";
 import OPTIONS from "./body_options";
-import Header from "./header";
+// import Header from "./header";
 
 export default function RequestBody() {
-	const [selectValue, setSelectValue] = useState(OPTIONS[3]);
+	const [selectValue] = useState(OPTIONS[3]);
+	// const [selectValue, setSelectValue] = useState(OPTIONS[3]);
 
 	return (
 		<div

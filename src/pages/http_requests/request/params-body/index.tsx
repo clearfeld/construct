@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ParamsTable from "./params-table";
 import stylex from "@stylexjs/stylex";
 import PathVariablesTable from "./path-variables-table";
@@ -86,16 +86,21 @@ export interface I_Row {
 	description?: string;
 }
 export default function ParamsBody() {
-	const [hasPathVariables, setHasPathVariables] = useState(true);
+	// const [hasPathVariables, setHasPathVariables] = useState(true);
+	const [hasPathVariables] = useState(true);
+
 	const [rows, setRows] = useState<I_Row[]>([]);
+
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div>
 				<TableOptions title={"Query Params"} />
+
 				<ParamsTable>
-					{rows.map((row, index) => {
+					{rows.map((row) => {
 						return <TableRow key={row.key} />;
 					})}
+
 					<button
 						{...stylex.props(styles.addRowButton)}
 						onClick={() => setRows([...rows, {} as I_Row])}
@@ -104,6 +109,7 @@ export default function ParamsBody() {
 					</button>
 				</ParamsTable>
 			</div>
+
 			{hasPathVariables && (
 				<div>
 					<TableOptions title={"Path Variables"} />

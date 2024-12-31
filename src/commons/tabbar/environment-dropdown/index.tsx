@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import stylex from "@stylexjs/stylex";
 
 // import DownArrow from "../../../assets/arrow-down.svg?react";
@@ -68,7 +68,7 @@ export default function EnvironmentDropdown() {
 
 	return (
 		<div {...stylex.props(styles.wrapper, styles.relativeParent)}>
-			<input placeholder="Environment" {...stylex.props(styles.reset)}></input>
+			<input placeholder="Environment" {...stylex.props(styles.reset)} />
 
 			<button
 				{...stylex.props(styles.reset, styles.button)}
@@ -90,7 +90,7 @@ export default function EnvironmentDropdown() {
 				{...stylex.props(styles.reset, styles.button, styles.relativeParent)}
 			>
 				{/* <SettingsPage /> */}
-				<span {...stylex.props(styles.pipe)}></span>
+				<span {...stylex.props(styles.pipe)} />
 			</button>
 		</div>
 	);

@@ -1,9 +1,9 @@
 use curl::easy::{Easy, List};
-use std::borrow::{Borrow, BorrowMut};
-use std::io::{stdout, Read, Write};
-use std::str;
+// use std::borrow::{Borrow, BorrowMut};
+// use std::io::{stdout, Read, Write};
 use std::time::Duration;
-use url::{ParseError, Url};
+use std::{str, vec};
+use url::Url;
 use uuid::Uuid;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -13,7 +13,7 @@ fn greet(name: &str) -> String {
 }
 
 #[derive(serde::Serialize)]
-struct HTTP_API_Response {
+struct HTTPAPIResponse {
     status_code: u32,
     content_type: String,
 
@@ -23,6 +23,8 @@ struct HTTP_API_Response {
     response_data_raw: Vec<u8>,
     response_data_string: String,
     response_size: f64,
+
+    cookies: Vec<String>,
 
     network_local_address: String,
     network_remote_address: String,
@@ -39,10 +41,11 @@ struct HTTP_API_Response {
 #[tauri::command]
 fn http_request(
     method: &str,
+    headers: &str,
     url: &str,
     body: &str,
-    cookies: &str,
-) -> Result<HTTP_API_Response, String> {
+    _cookies: &str,
+) -> Result<HTTPAPIResponse, String> {
     let mut easy = Easy::new();
 
     // only should use this on path, query, and user info
@@ -106,25 +109,57 @@ fn http_request(
     // TODO: need to filter this header and need to give UX warning to end user
     // list.append("Accept-Encoding: gzip, deflate, br").unwrap();
     list.append("Connection: keep-alive").unwrap();
+
+    if !headers.is_empty() {
+        for header in headers.split(',') {
+            list.append(header.trim()).unwrap();
+        }
+    }
+
+    // Set content type header for JSON if body is not empty
+    if !body.is_empty() {
+        list.append("Content-Type: application/json").unwrap();
+        easy.post_fields_copy(body.as_bytes()).unwrap();
+
+        // TODO: check for the method to copy fields without settings post method
+        match method {
+            "GET" => easy.get(true).unwrap(),
+            "POST" => easy.post(true).unwrap(),
+            "PUT" => easy.put(true).unwrap(),
+            "PATCH" => easy.custom_request("PATCH").unwrap(),
+            "DELETE" => easy.custom_request("DELETE").unwrap(),
+
+            "HEAD" => easy.nobody(true).unwrap(),
+            "OPTIONS" => easy.custom_request("OPTIONS").unwrap(),
+
+            "TRACE" => easy.custom_request("TRACE").unwrap(),
+            "CONNECT" => easy.custom_request("CONNECT").unwrap(),
+
+            // TODO: support custom requests from frontend first
+            _ => easy.custom_request(method).unwrap(),
+        }
+    }
+
     easy.http_headers(list).unwrap();
 
-    easy.useragent("ConstructRuntime/0.0.1");
+    easy.useragent("ConstructRuntime/0.1.0").unwrap();
 
     // dirty evil lies that breaks my heart
     // easy.accept_encoding("gzip, deflate, br");
     // brotli encodings arent enabled with the rust libcurl so we cant demporess those automatically
 
-    easy.accept_encoding("gzip, deflate");
+    easy.accept_encoding("gzip, deflate").unwrap();
 
     // Setting - Automatically follow redirects
-    easy.follow_location(true);
+    easy.follow_location(true).unwrap();
 
     // Setting - Maximun number of redirects
-    easy.max_redirections(10);
+    easy.max_redirections(10).unwrap();
 
-    if method == "POST" || method == "PUT" {
-        easy.post_fields_copy(body.as_bytes()).unwrap();
-    }
+    // if method == "POST" || method == "PUT" {
+    // if !body.is_empty() {
+    //     easy.post_fields_copy(body.as_bytes()).unwrap();
+    // }
 
     // response
     let mut response_data_raw = Vec::new();
@@ -154,13 +189,20 @@ fn http_request(
         transfer.perform().unwrap();
     }
 
+    let cookies = easy
+        .cookies()
+        .unwrap()
+        .into_iter()
+        .map(|c| String::from_utf8_lossy(c).into_owned())
+        .collect::<Vec<String>>();
+
     // easy.perform().unwrap();
 
     // println!("{:?}", response_headers);
 
     // println!("{}", easy.response_code().unwrap());
 
-    Ok(HTTP_API_Response {
+    Ok(HTTPAPIResponse {
         status_code: easy.response_code().unwrap(),
         content_type: easy.content_type().unwrap().unwrap().to_string(),
 
@@ -173,6 +215,9 @@ fn http_request(
         response_data_string: response_data_string,
         response_data_raw: response_data_raw,
         response_size: easy.download_size().unwrap(),
+
+        //
+        cookies: cookies,
 
         // network
         network_local_address: easy.local_ip().unwrap().unwrap().to_string(),

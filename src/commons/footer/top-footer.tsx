@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import {FooterButton} from "./components/footer-button.tsx";
+// import {FooterButton} from "./components/footer-button.tsx";
 // import SidebarSVG from '../../assets/sidebar.svg?react';
 // import CheckMarkSVG from '../../assets/check-mark.svg?react';
 // import SearchSVG from '../../assets/search.svg?react';

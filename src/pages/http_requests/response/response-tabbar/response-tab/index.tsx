@@ -1,5 +1,5 @@
 import stylex from "@stylexjs/stylex";
-import React, { type MouseEventHandler, type ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 interface I_TabProps {
   active?: boolean;

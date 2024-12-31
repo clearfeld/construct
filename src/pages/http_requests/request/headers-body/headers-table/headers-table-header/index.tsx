@@ -1,5 +1,5 @@
 import stylex from "@stylexjs/stylex";
-import React from "react";
+// import React from "react";
 // import DragHandle from "../../../../../assets/drag-handle.svg?react";
 
 const styles = stylex.create({

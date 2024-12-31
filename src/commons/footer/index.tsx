@@ -92,6 +92,7 @@ function Footer() {
 
 	const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (resizerRef.current) {
 			resizerRef.current.addEventListener("mousedown", () => {

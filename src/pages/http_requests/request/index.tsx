@@ -2,12 +2,12 @@ import * as stylex from "@stylexjs/stylex";
 import RequestTabBar from "../request-tabbar";
 import RequestTab from "../request-tabbar/request-tab";
 import { useState } from "react";
-import ParamsBody from "./params-body";
-import AuthorizationBody from "./authorization-body";
+// import ParamsBody from "./params-body";
+// import AuthorizationBody from "./authorization-body";
 import HeadersBody from "./headers-body";
 import RequestBody from "./request-body";
-import ScriptsBody from "./scripts-body";
-import SettingsBody from "./settings-body";
+// import ScriptsBody from "./scripts-body";
+// import SettingsBody from "./settings-body";
 import { RequestRow } from "../request-row";
 
 const styles = stylex.create({

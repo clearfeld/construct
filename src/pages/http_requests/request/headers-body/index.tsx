@@ -1,9 +1,9 @@
-import React, { type MouseEventHandler, useState } from "react";
+import type { MouseEventHandler } from "react";
 import HeadersTable from "./headers-table";
 import stylex from "@stylexjs/stylex";
 import TableRow from "./headers-table/headers-table-row";
 import { Button, ButtonVariants } from "@controlkit/ui";
-import { T_Header } from "@src/stores/request_store/request_slice";
+// import { T_Header } from "@src/stores/request_store/request_slice";
 import { v4 as uuidv4 } from "uuid";
 import useRequestStore from "@src/stores/request_store";
 
@@ -161,11 +161,11 @@ export default function HeadersBody() {
 
 				<HeadersTable>
 					{isAutoHeadersVisible &&
-						autoHeaders.map((autoHeader, index) => {
-							return <TableRow key={index} header={autoHeader} autoHeaderRow />;
+						autoHeaders.map((autoHeader) => {
+							return <TableRow key={autoHeader.id} header={autoHeader} autoHeaderRow />;
 						})}
-					{headers.map((header, index) => {
-						return <TableRow key={index} header={header} />;
+					{headers.map((header) => {
+						return <TableRow key={header.id} header={header} />;
 					})}
 				</HeadersTable>
 

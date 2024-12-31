@@ -1,8 +1,8 @@
 import stylex from "@stylexjs/stylex";
-import React, { type ReactNode } from "react";
+import type { ReactNode } from "react";
 // import DragHandle from "../../../../assets/drag-handle.svg?react";
 import TableHeaderRow from "./params-table-header";
-import TableRow from "./params-table-row";
+// import TableRow from "./params-table-row";
 
 const styles = stylex.create({
   table: {

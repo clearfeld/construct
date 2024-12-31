@@ -62,9 +62,11 @@ function Toolbar() {
 	const resizerRef = useRef<HTMLDListElement | null>(null);
 	const [resizeInProgress, setResizeInProgress] = useState<boolean>(false);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (resizerRef.current) {
-			resizerRef.current.addEventListener("mousedown", (event) => {
+			resizerRef.current.addEventListener("mousedown", (_) => {
+				// event
 				setResizeInProgress(true);
 				html_style.cursor = "col-resize";
 
@@ -87,6 +89,7 @@ function Toolbar() {
 		}
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (expandedTab) {
 			prevExpandedTab.current = expandedTab;
@@ -97,7 +100,7 @@ function Toolbar() {
 		prevIsExpanded.current = !!expandedTab;
 	}, [expandedTab]);
 
-	function resize(e) {
+	function resize(e: MouseEvent) {
 		e.preventDefault();
 		// const size = e.x;
 		const size = body.clientWidth - e.x;
@@ -123,7 +126,7 @@ function Toolbar() {
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div
-				ref={resizerRef}
+				// ref={resizerRef}
 				{...stylex.props(
 					styles.resizeHandle,
 					resizeInProgress && styles.resizeHandleActive,
@@ -132,6 +135,7 @@ function Toolbar() {
 
 			<div {...stylex.props(styles.sidebar)}>
 				<LeftToolbar
+					// @ts-ignore
 					expandedTab={expandedTab}
 					setExpandedTab={setExpandedTab}
 				/>

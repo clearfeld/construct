@@ -1,5 +1,5 @@
 import stylex from "@stylexjs/stylex";
-import React, { type MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 // import { useHover } from "../../../hooks/use-hover";
 // import CloseX from "../../../assets/close-x.svg?react";
 
@@ -68,13 +68,14 @@ const styles = stylex.create({
 	},
 });
 
-const requestTypeStyles = stylex.create({
-	get: {},
-	post: {},
-});
+// const requestTypeStyles = stylex.create({
+// 	get: {},
+// 	post: {},
+// });
+
 export default function Tab({
 	active,
-	status,
+	// status,
 	title,
 	requestType,
 	onClick,
@@ -88,10 +89,13 @@ export default function Tab({
 			{...stylex.props(styles.tab, active && styles.active)}
 		>
 			<p {...stylex.props(styles.requestType)}>{requestType}</p>
+
 			<p {...stylex.props(styles.title, active && styles.titleActive)}>
 				{title}
 			</p>
-			<span {...stylex.props(styles.statusCircle)}></span>
+
+			<span {...stylex.props(styles.statusCircle)} />
+
 			<div {...stylex.props(styles.closeButton)}>
 				{/* {isHovering && <CloseX />} */}
 			</div>

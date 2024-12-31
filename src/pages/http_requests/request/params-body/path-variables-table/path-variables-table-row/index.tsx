@@ -1,5 +1,8 @@
 import stylex from "@stylexjs/stylex";
-import React, { type ReactNode, useState } from "react";
+import {
+	// type ReactNode,
+	useState,
+} from "react";
 // import DragHandle from "../../../../../assets/drag-handle.svg?react";
 
 const styles = stylex.create({
@@ -67,10 +70,10 @@ const styles = stylex.create({
 	},
 });
 
-interface I_CellProps {
-	children: ReactNode;
-	last?: boolean;
-}
+// interface I_CellProps {
+// 	children: ReactNode;
+// 	last?: boolean;
+// }
 
 export default function TableRow() {
 	const [key, setKey] = useState("");

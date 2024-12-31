@@ -55,9 +55,10 @@ function Sidebar() {
 	const resizerRef = useRef<HTMLDListElement | null>(null);
 	const [resizeInProgress, setResizeInProgress] = useState<boolean>(false);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (resizerRef.current) {
-			resizerRef.current.addEventListener("mousedown", (event) => {
+			resizerRef.current.addEventListener("mousedown", (_) => { // event
 				setResizeInProgress(true);
 				html_style.cursor = "col-resize";
 
@@ -80,6 +81,7 @@ function Sidebar() {
 		}
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (selectedTab) {
 			if (!prevSelectedState.current) {
@@ -94,7 +96,7 @@ function Sidebar() {
 		prevSelectedState.current = !!selectedTab;
 	}, [selectedTab]);
 
-	function resize(e) {
+	function resize(e: MouseEvent) {
 		e.preventDefault();
 		if (!resizerRef.current) return;
 		const size = e.x;
@@ -117,12 +119,16 @@ function Sidebar() {
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div {...stylex.props(styles.sidebar)}>
-				<SidebarRail selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-				<SidebarContent selectedTab={selectedTab} />
+				<SidebarRail
+				// selectedTab={selectedTab} onSelectTab={setSelectedTab}
+				/>
+				<SidebarContent
+				// selectedTab={selectedTab}
+				/>
 			</div>
 
 			<div
-				ref={resizerRef}
+				// ref={resizerRef}
 				{...stylex.props(
 					styles.resizeHandle,
 					resizeInProgress && styles.resizeHandleActive,

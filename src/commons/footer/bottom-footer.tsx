@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { FooterButton } from "./components/footer-button.tsx";
+// import { FooterButton } from "./components/footer-button.tsx";
 // import BinSVG from "../../assets/bin.svg?react";
 // import ConstructBotSVG from "../../assets/construct-bot.svg?react";
 // import CookieSVG from "../../assets/cookie.svg?react";

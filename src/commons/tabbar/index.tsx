@@ -1,5 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
-import Tab, { type RequestType, type Status } from "./tab";
+
+import Tab
+// , { type RequestType, type Status }
+from "./tab";
+
 import { useRef, useState } from "react";
 // import LeftArrow from "../../assets/arrow-left-notail.svg?react";
 // import RightArrow from "../../assets/arrow-right-notail.svg?react";
@@ -82,6 +86,7 @@ function TabBar() {
 			scrollRef.current.scrollLeft += scrollOffset;
 		}
 	};
+
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div {...stylex.props(styles.rightBorder)}>
@@ -89,20 +94,22 @@ function TabBar() {
 					{/* <LeftArrow /> */}
 				</button>
 			</div>
+
 			<div {...stylex.props(styles.tabsList)} ref={scrollRef}>
 				{testTabs.map((tab, index) => {
 					return (
 						<Tab
-							key={index}
-							status={tab.status}
+							key={`${tab.title}-${index}`}
+							// status={tab.status}
 							title={tab.title}
-							requestType={tab.requestType}
+							// requestType={tab.requestType}
 							onClick={() => setActiveIndex(index)}
-							active={index == activeIndex}
+							active={index === activeIndex}
 						/>
 					);
 				})}
 			</div>
+
 			<div {...stylex.props(styles.optionsRow)}>
 				<button {...stylex.props(styles.button)} onClick={() => scroll(80)}>
 					{/* <RightArrow /> */}
@@ -110,6 +117,7 @@ function TabBar() {
 				<button {...stylex.props(styles.button)}>{/* <Plus /> */}</button>
 				<button {...stylex.props(styles.button)}>{/* <DownArrow /> */}</button>
 			</div>
+
 			<EnvironmentDropdown />
 		</div>
 	);

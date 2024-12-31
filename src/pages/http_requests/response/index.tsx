@@ -5,8 +5,11 @@ import ResponseTabBar from "./response-tabbar";
 import ResponseTab from "./response-tabbar/response-tab";
 import Body from "./body";
 import Headers from "./header";
-import Cookies from "./cookies";
-import TestResults from "./test-results";
+// import Cookies from "./cookies";
+// import TestResults from "./test-results";
+// import { useStore } from "zustand";
+import useRequestStore from "@src/stores/request_store";
+import EmptyResponseState from "./empty_state";
 
 const styles = stylex.create({
 	wrapper: {
@@ -60,6 +63,15 @@ const styles = stylex.create({
 	},
 });
 
+const no_res_tabs = [
+	{
+		title: "Response",
+		status: "",
+		amount: -1,
+		children: <EmptyResponseState />,
+	},
+];
+
 const tabs = [
 	{
 		title: "Body",
@@ -68,12 +80,12 @@ const tabs = [
 		children: <Body />,
 	},
 
-	{
-		title: "Cookies",
-		status: "",
-		amount: -1,
-		children: <Cookies />,
-	},
+	// {
+	// 	title: "Cookies",
+	// 	status: "",
+	// 	amount: -1,
+	// 	children: <Cookies />,
+	// },
 
 	{
 		title: "Headers",
@@ -93,10 +105,13 @@ const tabs = [
 function ResponseSection() {
 	const html_style = document.getElementsByTagName("html")[0].style;
 	const body = document.getElementsByTagName("body")[0];
-	const resizerRef = useRef<HTMLDListElement | null>(null);
+	const resizerRef = useRef<HTMLDivElement | null>(null);
 	const [resizeInProgress, setResizeInProgress] = useState<boolean>(false);
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
 
+	const response = useRequestStore((state) => state.response);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (resizerRef.current) {
 			resizerRef.current.addEventListener("mousedown", () => {
@@ -123,6 +138,7 @@ function ResponseSection() {
 	}, []);
 
 	const topLevelDivRef = useRef<HTMLDivElement | null>(null);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (topLevelDivRef.current) {
 			console.log("Top level div height:", topLevelDivRef.current.clientHeight);
@@ -133,7 +149,7 @@ function ResponseSection() {
 		}
 	}, []);
 
-	function resize(e) {
+	function resize(e: MouseEvent) {
 		e.preventDefault();
 		if (!resizerRef.current) return;
 
@@ -143,7 +159,7 @@ function ResponseSection() {
 			.style.getPropertyValue("--footer-height");
 		let footer_height = 0;
 		if (footer_height_str) {
-			footer_height = parseInt(
+			footer_height = Number.parseInt(
 				footer_height_str.substring(0, footer_height_str.length - 2),
 			);
 		}
@@ -153,7 +169,9 @@ function ResponseSection() {
 		// console.log(size);
 		if (size < 30) {
 			return;
-		} else if (size > body.clientHeight - 38 - 20) {
+		}
+
+		if (size > body.clientHeight - 38 - 20) {
 			// navbar - tab bar - borders
 			return;
 		}
@@ -173,21 +191,53 @@ function ResponseSection() {
 			/>
 
 			<div {...stylex.props(styles.section)}>
-				<ResponseTabBar>
-					{tabs.map((tab, index) => {
-						return (
-							<ResponseTab
-								key={index}
-								active={index === activeTabIndex}
-								onClick={() => setActiveTabIndex(index)}
-								title={tab.title}
-								amount={tab.amount}
-								status={tab.status}
-							>
-								<div {...stylex.props(styles.tabContent)}>{tab.children}</div>
-							</ResponseTab>
-						);
-					})}
+				<ResponseTabBar
+					// children={undefined}
+					hideRightSegment={false}
+				>
+					<div>
+						{response === null ? (
+							<>
+								{no_res_tabs.map((tab, index) => {
+									return (
+										<ResponseTab
+											key={tab.title}
+											active={index === activeTabIndex}
+											onClick={() => setActiveTabIndex(index)}
+											title={tab.title}
+											amount={tab.amount}
+											status={tab.status}
+											// hideRightSegment={false}
+										>
+											<div {...stylex.props(styles.tabContent)}>
+												{tab.children}
+											</div>
+										</ResponseTab>
+									);
+								})}
+							</>
+						) : (
+							<>
+								{tabs.map((tab, index) => {
+									return (
+										<ResponseTab
+											key={tab.title}
+											active={index === activeTabIndex}
+											onClick={() => setActiveTabIndex(index)}
+											title={tab.title}
+											amount={tab.amount}
+											status={tab.status}
+											// hideRightSegment={false}
+										>
+											<div {...stylex.props(styles.tabContent)}>
+												{tab.children}
+											</div>
+										</ResponseTab>
+									);
+								})}
+							</>
+						)}
+					</div>
 				</ResponseTabBar>
 			</div>
 		</div>

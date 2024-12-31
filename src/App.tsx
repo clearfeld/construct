@@ -1,14 +1,14 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
+// import { useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import Navbar from "./commons/navbar";
-import Sidebar from "./commons/sidebar";
+// import Sidebar from "./commons/sidebar";
 
 import * as stylex from "@stylexjs/stylex";
 import Footer from "./commons/footer";
-import TabBar from "./commons/tabbar";
-import Toolbar from "./commons/toolbar";
+// import TabBar from "./commons/tabbar";
+// import Toolbar from "./commons/toolbar";
 import HttpRequestsPage from "./pages/http_requests";
 
 const styles = stylex.create({
@@ -38,13 +38,13 @@ const styles = stylex.create({
 });
 
 function App() {
-	const [greetMsg, setGreetMsg] = useState("");
-	const [name, setName] = useState("");
+	// const [greetMsg, setGreetMsg] = useState("");
+	// const [name, setName] = useState("");
 
-	async function greet() {
-		// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-		setGreetMsg(await invoke("greet", { name }));
-	}
+	// async function greet() {
+	// 	// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+	// 	setGreetMsg(await invoke("greet", { name }));
+	// }
 
 	return (
 		<div>
