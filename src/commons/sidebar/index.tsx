@@ -56,7 +56,7 @@ function Sidebar() {
 	const html_style = document.getElementsByTagName("html")[0].style;
 	const resizerRef = useRef<HTMLDivElement | null>(null);
 	const [resizeInProgress, setResizeInProgress] = useState<boolean>(false);
-	const body = document.getElementsByTagName("body")[0];
+	// const body = document.getElementsByTagName("body")[0];
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {

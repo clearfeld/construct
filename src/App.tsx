@@ -14,7 +14,7 @@ import HttpRequestsPage from "./pages/http_requests";
 import { Routes, Route, Outlet } from "react-router";
 
 import "./updater.tsx";
-import { H3, H5 } from "@controlkit/ui";
+import { H5 } from "@controlkit/ui";
 
 const styles = stylex.create({
 	container: {

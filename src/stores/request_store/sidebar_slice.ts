@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
 import { v4 as uuidv4 } from "uuid";
-import { T_Header, T_Method } from "./request_slice";
+import type { T_Header, T_Method } from "./request_slice";
 
 export interface SidebarSlice {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -22,7 +22,7 @@ export const createSidebarSlice: StateCreator<
 	[],
 	SidebarSlice
 > = (set, get) => ({
-	collection: [], // data, // [],
+	collection: [], // test_data,
 	setCollection: (collection) => set({ collection }),
 	getCollection: () => get().collection,
 
@@ -147,7 +147,7 @@ function addToTargetIfExists(nc: any, id: string, value: any) {
 	}
 }
 
-function updateTargetIfExists(nc: any, id: string, field: string, value: any) {
+export function updateTargetIfExists(nc: any, id: string, field: string, value: any) {
 	for (let i = 0; i < nc.length; ++i) {
 		// console.log("NC", nc[i].id);
 
@@ -163,7 +163,7 @@ function updateTargetIfExists(nc: any, id: string, field: string, value: any) {
 	}
 }
 
-function deleteTargetIfExists(nc: any, id: string, delete_all: boolean) {
+function deleteTargetIfExists(nc: any, id: string, _delete_all: boolean) {
 	for (let i = 0; i < nc.length; ++i) {
 		// console.log("NC", nc[i].id);
 
@@ -188,7 +188,7 @@ function deleteTargetIfExists(nc: any, id: string, delete_all: boolean) {
 	}
 }
 
-const data = [
+export const test_data = [
 	{
 		id: uuidv4(),
 		type: "collection",

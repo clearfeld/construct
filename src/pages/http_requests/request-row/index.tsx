@@ -11,8 +11,9 @@ import { RequestRowUrlInput } from "./components/request-row-url-input.tsx";
 // import React from "react";
 
 // import { invoke } from "@tauri-apps/api/core";
-import { Button } from "@controlkit/ui";
+import { Button, Input, Label } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
+import { updateTargetIfExists } from "@src/stores/request_store/sidebar_slice.ts";
 
 // import { useSetRecoilState } from 'recoil';
 // import { HTTP_API_Response_Body_StateData } from "@store/http-api-request-and-response/response-body.ts";
@@ -67,6 +68,19 @@ const styles = stylex.create({
 		color: "#3E7CC5",
 		fontSize: "0.875rem",
 	},
+
+	name_input: {
+		backgroundColor: "var(--color-sidebar-bg)",
+		color: "var(--color-sidebar-text)",
+		border: "1px solid var(--color-sidebar-bg)",
+		borderRadius: "0.25rem",
+		padding: "0.25rem 0.5rem",
+		fontSize: "0.875rem",
+		":focus": {
+			outline: "none",
+			border: "1px solid #3E7CC5",
+		},
+	},
 });
 
 interface RequestRowProps {
@@ -79,8 +93,14 @@ interface RequestRowProps {
 
 // @ts-ignore
 export function RequestRow(props: RequestRowProps) {
+	const sendRequest = useRequestStore((state) => state.sendRequest);
 
-	const { sendRequest } = useRequestStore();
+	const name = useRequestStore((state) => state.name);
+	const setName = useRequestStore((state) => state.setName);
+
+	const getCollection = useRequestStore((state) => state.getCollection);
+	const setCollection = useRequestStore((state) => state.setCollection);
+	const getId = useRequestStore((state) => state.getId);
 
 	// http api requests
 	// const set_HTTP_API_Response_Body = useSetRecoilState(
@@ -119,7 +139,64 @@ export function RequestRow(props: RequestRowProps) {
 				})}
 			</div> */}
 
-			<br />
+			{/* <br /> */}
+
+			<div
+				style={{
+					marginTop: "0.5rem",
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
+				<Label
+					style={{
+						color: "#3E7CC5",
+						marginLeft: "0.5rem",
+					}}
+				>
+					HTTP
+				</Label>
+
+				<Label
+					style={{
+						color: "var(--text-sub)",
+						marginLeft: "0.5rem",
+					}}
+				>
+					/
+				</Label>
+
+				<Input
+					extend={styles.name_input}
+					style={{
+						// color: "var(--text-sub)",
+						// marginLeft: "0.5rem",
+						height: "1.25rem",
+						fontSize: "0.75rem",
+						width: "auto",
+						// padding: "0.25rem 0",
+					}}
+					value={name}
+					onChange={(e) => {
+						setName(e.target.value);
+					}}
+					onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+						console.log("asd");
+						if (e.key === "Enter") {
+							const ns = structuredClone(getCollection());
+							updateTargetIfExists(
+								ns,
+								getId(),
+								"name",
+								name,
+							);
+							setCollection(ns);
+
+							(e.target as HTMLInputElement).blur();
+						}
+					}}
+				/>
+			</div>
 
 			<div {...stylex.props(styles.requestUrlSection)}>
 				<RequestRowSelect />

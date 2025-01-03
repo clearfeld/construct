@@ -8,7 +8,7 @@ import FolderSVG from "../../../assets/folder.svg?react";
 // import FavoriteSVG from "../../../assets/favorite.svg?react";
 import { autoHeaders, methods } from "@src/stores/request_store/request_slice";
 import useRequestStore from "@src/stores/request_store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import {
@@ -99,8 +99,8 @@ export default function RecursiveTree(props: any) {
 	);
 
 	// TODO: remove this when moving the sub comps into their own files
-	const [isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
-	const [isHoveredOther, setIsHoveredOther] = useState<boolean>(false);
+	const [_isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
+	const [_isHoveredOther, setIsHoveredOther] = useState<boolean>(false);
 
 	function updateTargetIfExists(
 		nc: any,
@@ -617,6 +617,7 @@ export default function RecursiveTree(props: any) {
 
 											setRequestParameters(
 												item.id,
+												item.name,
 												item.url,
 												method,
 												autoHeaders, // [], // item.autoHeaders,

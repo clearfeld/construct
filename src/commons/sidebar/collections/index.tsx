@@ -20,8 +20,6 @@ export default function Collections() {
 	const getHeaders = useRequestStore((state) => state.getHeaders);
 	const getBody = useRequestStore((state) => state.getBody);
 
-	const save_http_request_shortcut = "CommandOrControl+S";
-
 	useEffect(() => {
 		SetupShortcuts();
 

@@ -132,6 +132,10 @@ export interface RequestSlice {
 	setId: (url: string) => void;
 	getId: () => string;
 
+	name: string;
+	setName: (url: string) => void;
+	getName: () => string;
+
 	url: string;
 	setUrl: (url: string) => void;
 	getUrl: () => string;
@@ -172,6 +176,8 @@ export interface RequestSlice {
 	sendRequest: () => Promise<void>;
 
 	setRequestParameters: (
+		id: string,
+		name: string,
 		url: string,
 		method: T_Method,
 		autoHeaders: T_Header[],
@@ -190,6 +196,10 @@ export const createRequestSlice: StateCreator<
 	id: "",
 	setId: (id) => set({ id }),
 	getId: () => get().id,
+
+	name: "",
+	setName: (name) => set({ name }),
+	getName: () => get().name,
 
 	url: "",
 	setUrl: (url) => set({ url }),
@@ -261,12 +271,21 @@ export const createRequestSlice: StateCreator<
 			.map((h) => `${h.key}: ${h.value}`)
 			.join(", ");
 
+		// TODO: verify data before invoking
+		// console.log(url);
+		const trimmedUrl = url.trim();
+		if (trimmedUrl.length === 0) {
+			// TODO: error state ui
+			// set({ error: "URL cannot be empty", loading: false });
+			return;
+		}
+		// console.log(trimmedUrl);
 		// return;
 
 		invoke("http_request", {
 			method: method.value,
 			headers: filtered_headers,
-			url: url,
+			url: trimmedUrl,
 			body: body,
 			cookies: "",
 		})
@@ -309,6 +328,7 @@ export const createRequestSlice: StateCreator<
 
 	setRequestParameters: (
 		id: string,
+		name: string,
 		url: string,
 		method: T_Method,
 		autoHeaders: T_Header[],
@@ -358,6 +378,7 @@ export const createRequestSlice: StateCreator<
 
 		set({
 			id,
+			name,
 			url,
 			method,
 			autoHeaders,
