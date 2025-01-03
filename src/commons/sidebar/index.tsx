@@ -48,17 +48,21 @@ const MAX_EXPANDED_WIDTH = 16 * 40;
 const MIN_EXPANDED_THRESHOLD = MIN_EXPANDED_WIDTH / 2;
 
 function Sidebar() {
-	const [selectedTab, setSelectedTab] = useState<SidebarTab | null>("collections");
+	const [selectedTab, setSelectedTab] = useState<SidebarTab | null>(
+		"collections",
+	);
 	const prevSelectedTab = useRef<SidebarTab | null>(null);
 	const prevSelectedState = useRef<boolean>(false);
 	const html_style = document.getElementsByTagName("html")[0].style;
-	const resizerRef = useRef<HTMLDListElement | null>(null);
+	const resizerRef = useRef<HTMLDivElement | null>(null);
 	const [resizeInProgress, setResizeInProgress] = useState<boolean>(false);
+	// const body = document.getElementsByTagName("body")[0];
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (resizerRef.current) {
-			resizerRef.current.addEventListener("mousedown", (_) => { // event
+			resizerRef.current.addEventListener("mousedown", (_) => {
+				// event
 				setResizeInProgress(true);
 				html_style.cursor = "col-resize";
 
@@ -101,6 +105,9 @@ function Sidebar() {
 		if (!resizerRef.current) return;
 		const size = e.x;
 		let curSize = size;
+		// body.clientWidth
+		// console.log(curSize, body.clientWidth);
+
 		if (curSize < MIN_EXPANDED_WIDTH && curSize > MIN_EXPANDED_THRESHOLD) {
 			curSize = MIN_EXPANDED_WIDTH;
 			setSelectedTab(prevSelectedTab.current || "collections");
@@ -119,16 +126,12 @@ function Sidebar() {
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div {...stylex.props(styles.sidebar)}>
-				<SidebarRail
-				// selectedTab={selectedTab} onSelectTab={setSelectedTab}
-				/>
-				<SidebarContent
-				// selectedTab={selectedTab}
-				/>
+				<SidebarRail selectedTab={selectedTab} onSelectTab={setSelectedTab} />
+				<SidebarContent selectedTab={selectedTab} />
 			</div>
 
 			<div
-				// ref={resizerRef}
+				ref={resizerRef}
 				{...stylex.props(
 					styles.resizeHandle,
 					resizeInProgress && styles.resizeHandleActive,
