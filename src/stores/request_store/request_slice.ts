@@ -3,6 +3,9 @@ import { invoke } from "@tauri-apps/api/core";
 // TODO: AC-81 use v7 when possible
 import { v4 as uuidv4 } from "uuid";
 import type { LexicalEditor } from "lexical";
+import { getVersion } from '@tauri-apps/api/app';
+
+const APP_VERSION = await getVersion();
 
 export type T_Method = {
 	value: string;
@@ -81,7 +84,7 @@ export const autoHeaders = [
 		auto: true,
 		enabled: true,
 		key: "User-Agent",
-		value: "ConstructRuntime/0.0.1",
+		value: `ConstructRuntime/${APP_VERSION}`,
 		description: "",
 	},
 
