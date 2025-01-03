@@ -198,10 +198,6 @@ fn http_request(
 
     // easy.perform().unwrap();
 
-    // println!("{:?}", response_headers);
-
-    // println!("{}", easy.response_code().unwrap());
-
     Ok(HTTPAPIResponse {
         status_code: easy.response_code().unwrap(),
         content_type: easy.content_type().unwrap().unwrap().to_string(),
@@ -238,6 +234,7 @@ fn http_request(
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_os::init())

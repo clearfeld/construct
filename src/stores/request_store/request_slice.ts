@@ -1,6 +1,8 @@
 import type { StateCreator } from "zustand";
 import { invoke } from "@tauri-apps/api/core";
+// TODO: AC-81 use v7 when possible
 import { v4 as uuidv4 } from "uuid";
+import type { LexicalEditor } from "lexical";
 
 export type T_Method = {
 	value: string;
@@ -10,41 +12,46 @@ export type T_Method = {
 export const methods: T_Method[] = [
 	{
 		value: "GET",
-		textColor: "var(--cds-green-400)",
+		textColor: "#4CAB61",
+		// textColor: "var(--cds-green-400)",
 	},
 
 	{
 		value: "POST",
-		textColor: "var(--cds-blue-400)",
+		textColor: "#D68323",
+		// textColor: "var(--cds-blue-400)",
 	},
 
 	{
 		value: "PUT",
-		textColor: "var(--cds-purple-700)",
+		textColor: "#2E8ABE",
+		// textColor: "var(--cds-purple-700)",
 	},
 
 	{
 		value: "PATCH",
-		textColor: "var(--cds-yellow-500)",
+		textColor: "#7FC27E",
+		// textColor: "var(--cds-yellow-500)",
 	},
 
 	{
 		value: "DELETE",
-		textColor: "var(--cds-red-500)",
+		textColor: "#CA3939",
+		// textColor: "var(--cds-red-500)",
 	},
 
 	{
 		value: "HEAD",
-		textColor: "var(--cds-blue-700)",
+		textColor: "var(--cds-blue-600)",
 	},
 
 	{
 		value: "OPTIONS",
-		textColor: "var(--cds-green-700)",
+		textColor: "var(--cds-green-600)",
 	},
 ];
 
-const autoHeaders = [
+export const autoHeaders = [
 	// Fixed
 
 	// TODO:
@@ -121,11 +128,20 @@ export type T_Header = {
 };
 
 export interface RequestSlice {
+	id: string;
+	setId: (url: string) => void;
+	getId: () => string;
+
 	url: string;
 	setUrl: (url: string) => void;
+	getUrl: () => string;
+
+	urlEditorRef: LexicalEditor | null;
+	setUrlEditorRef: (ref: LexicalEditor) => void;
 
 	method: T_Method;
 	setMethod: (method: T_Method) => void;
+	getMethod: () => T_Method;
 
 	// Authorization TODO:
 
@@ -139,9 +155,11 @@ export interface RequestSlice {
 	headers: T_Header[];
 	setHeaders: (headers: T_Header[]) => void;
 	setHeader: (header: T_Header) => void;
+	getHeaders: () => T_Header[];
 
 	body: string;
 	setBody: (body: string) => void;
+	getBody: () => string;
 
 	cookies: Record<string, string>;
 	setCookies: (cookies: Record<string, string>) => void;
@@ -152,6 +170,15 @@ export interface RequestSlice {
 	loading: boolean;
 	error: string | null;
 	sendRequest: () => Promise<void>;
+
+	setRequestParameters: (
+		url: string,
+		method: T_Method,
+		autoHeaders: T_Header[],
+		headers: T_Header[],
+		body: string,
+		// cookies:
+	) => void;
 }
 
 export const createRequestSlice: StateCreator<
@@ -160,11 +187,20 @@ export const createRequestSlice: StateCreator<
 	[],
 	RequestSlice
 > = (set, get) => ({
+	id: "",
+	setId: (id) => set({ id }),
+	getId: () => get().id,
+
 	url: "",
 	setUrl: (url) => set({ url }),
+	getUrl: () => get().url,
+
+	urlEditorRef: null,
+	setUrlEditorRef: (ref: LexicalEditor) => set({ urlEditorRef: ref }),
 
 	method: methods[0],
 	setMethod: (method) => set({ method }),
+	getMethod: () => get().method,
 
 	isAutoHeadersVisible: false,
 	setIsAutoHeadersVisible: (isAutoHeadersVisible) =>
@@ -195,9 +231,11 @@ export const createRequestSlice: StateCreator<
 
 		set({ headers: ns });
 	},
+	getHeaders: () => get().headers,
 
 	body: "",
 	setBody: (body) => set({ body }),
+	getBody: () => get().body,
 
 	cookies: {},
 	setCookies: (cookies) => set({ cookies }),
@@ -267,5 +305,67 @@ export const createRequestSlice: StateCreator<
 		// } catch (error) {
 		// 	set({ error: error.message, loading: false });
 		// }
+	},
+
+	setRequestParameters: (
+		id: string,
+		url: string,
+		method: T_Method,
+		autoHeaders: T_Header[],
+		headers: T_Header[],
+		body: string,
+		// cookies:
+	) => {
+		const uef = get().urlEditorRef;
+		if (uef) {
+			// Marko: lexical is so disgusting to use...
+			const default_editor_text_state = {
+				root: {
+					children: [
+						{
+							children: [
+								{
+									detail: 0,
+									format: 0,
+									mode: "normal",
+									style: "",
+									text: url,
+									type: "text",
+									version: 1,
+								},
+							],
+							direction: "ltr",
+							format: "",
+							indent: 0,
+							type: "paragraph",
+							version: 1,
+							textFormat: 0,
+							textStyle: "",
+						},
+					],
+					direction: "ltr",
+					format: "",
+					indent: 0,
+					type: "root",
+					version: 1,
+				},
+			};
+
+			uef.setEditorState(
+				uef.parseEditorState(JSON.stringify(default_editor_text_state)),
+			);
+		}
+
+		set({
+			id,
+			url,
+			method,
+			autoHeaders,
+			headers,
+			body,
+			// cookies,
+
+			response: null,
+		});
 	},
 });

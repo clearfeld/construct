@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
-// import { SidebarTab } from "./rail.tsx";
+import type { SidebarTab } from "./rail.tsx";
+import Collections from "./collections/index.tsx";
 // import { SidebarSearchRow } from "./components/sidebar-search-row.tsx";
 // import { CollectionTreeView } from "./components/collection-tree-view.tsx";
 // import data from "./components/collection-data.json";
@@ -12,22 +13,19 @@ const styles = stylex.create({
 	},
 });
 
-// interface SidebarContentProps {
-// 	selectedTab: SidebarTab | null;
-// }
+interface SidebarContentProps {
+	selectedTab: SidebarTab | null;
+}
 
-export function SidebarContent(
-	// { selectedTab }: SidebarContentProps
-) {
+export function SidebarContent({ selectedTab }: SidebarContentProps) {
+	// <CollectionTreeView data={data as any} />
 	return (
 		<div {...stylex.props(styles.container)}>
-			{/* <SidebarSearchRow />
+			{/* <SidebarSearchRow /> */}
 
-			{selectedTab === "collections" && (
-				<CollectionTreeView data={data as any} />
-			)}
+			{selectedTab === "collections" && <Collections />}
 
-			{selectedTab === "environment" && <EnvironmentList />} */}
+			{/* {selectedTab === "environment" && <EnvironmentList />} */}
 		</div>
 	);
 }

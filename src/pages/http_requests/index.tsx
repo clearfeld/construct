@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import RequestSection from "./request";
 import ResponseSection from "./response";
 

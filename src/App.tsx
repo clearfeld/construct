@@ -3,7 +3,7 @@
 // import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import Navbar from "./commons/navbar";
-// import Sidebar from "./commons/sidebar";
+import Sidebar from "./commons/sidebar";
 
 import * as stylex from "@stylexjs/stylex";
 import Footer from "./commons/footer";
@@ -11,13 +11,19 @@ import Footer from "./commons/footer";
 // import Toolbar from "./commons/toolbar";
 import HttpRequestsPage from "./pages/http_requests";
 
+import { Routes, Route, Outlet } from "react-router";
+
 import "./updater.tsx";
+import { H3, H5 } from "@controlkit/ui";
 
 const styles = stylex.create({
 	container: {
-		paddingTop: "calc(var(--navbar-height) - 0.125rem)",
-		height: "calc(100vh - var(--navbar-height) - var(--footer-height))",
-		backgroundColor: "purple",
+		height:
+			"calc(100vh - var(--navbar-height) - var(--footer-height) - 0.125rem)",
+
+		// TODO: AC-80 create dev vs prod toggle for testing
+		// backgroundColor: "purple",
+		backgroundColor: "var(--background-main)",
 		display: "flex",
 	},
 
@@ -49,29 +55,22 @@ function App() {
 	// }
 
 	return (
-		<div>
-			<Navbar />
-
-			<div {...stylex.props(styles.container)}>
-				{/* <Sidebar /> */}
-
-				<div {...stylex.props(styles.content_width)}>
-					{/* <TabBar /> */}
-
-					<div {...stylex.props(styles.details_container)}>
-						<div {...stylex.props(styles.request_container)}>
-							{/* <RequestSection />
-							<ResponseSection /> */}
-
-							<HttpRequestsPage />
+		<Routes>
+			<Route
+				path="/"
+				element={
+					<div>
+						<div
+							style={{
+								height: "var(--navbar-height)",
+							}}
+						>
+							<Navbar />
 						</div>
 
-						{/* <Toolbar /> */}
-					</div>
-				</div>
-			</div>
+						<Outlet />
 
-			{/* <main className="container">
+						{/* <main className="container">
 					<h1>Welcome to Tauri + React</h1>
 
 					<p>Click on the Tauri, Vite, and React logos to learn more.</p>
@@ -93,8 +92,72 @@ function App() {
 					<p>{greetMsg}</p>
 				</main> */}
 
-			<Footer />
-		</div>
+						<div
+						// style={{
+						// 	height: "var(--footer-height)",
+						// }}
+						>
+							<Footer />
+						</div>
+					</div>
+				}
+			>
+				<Route
+					index
+					element={
+						<div {...stylex.props(styles.container)}>
+							<Sidebar />
+
+							<div {...stylex.props(styles.content_width)}>
+								{/* <TabBar /> */}
+
+								<div {...stylex.props(styles.details_container)}>
+									<div {...stylex.props(styles.request_container)}>
+										{/* <httprequestspage /> */}
+
+										<div
+											style={{
+												display: "flex",
+												justifyContent: "center",
+												width: "100%",
+												height: "100%",
+												alignItems: "center",
+												textAlign: "center",
+											}}
+										>
+											<H5>Create a collection to get Started.</H5>
+										</div>
+									</div>
+
+									{/* <Toolbar /> */}
+								</div>
+							</div>
+						</div>
+					}
+				/>
+
+				<Route
+					path="/http_request/:id"
+					element={
+						<div {...stylex.props(styles.container)}>
+							<Sidebar />
+
+							<div {...stylex.props(styles.content_width)}>
+								{/* <TabBar /> */}
+
+								<div {...stylex.props(styles.details_container)}>
+									<div {...stylex.props(styles.request_container)}>
+										<HttpRequestsPage />
+									</div>
+
+									{/* <Toolbar /> */}
+								</div>
+							</div>
+						</div>
+					}
+				/>
+			</Route>
+		</Routes>
 	);
 }
 

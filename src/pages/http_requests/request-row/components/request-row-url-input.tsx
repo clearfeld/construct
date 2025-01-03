@@ -1,10 +1,11 @@
 import {
-//	$createParagraphNode,
-//	$createTextNode,
+	//	$createParagraphNode,
+	//	$createTextNode,
 	$getRoot,
+	type LexicalEditor,
 	type EditorState,
-//	RootNode,
-//	type TextNode,
+	//	RootNode,
+	//	type TextNode,
 } from "lexical";
 
 import * as stylex from "@stylexjs/stylex";
@@ -19,6 +20,10 @@ import useRequestStore from "@src/stores/request_store";
 // import type { RequestSlice } from "@src/stores/request_store/request_slice";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import type { RequestSlice } from "@src/stores/request_store/request_slice";
+import { useEffect, useRef } from "react";
+// import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
 
 const styles = stylex.create({
 	editorContainer: {
@@ -191,7 +196,24 @@ const Placeholder = () => {
 export function RequestRowUrlInput() {
 	// TODO: need to update lexical line with url when enabling sidebar
 	// const url = useRequestStore((state: RequestSlice) => state.url);
-	const { setUrl } = useRequestStore();
+	const setUrl = useRequestStore((state: RequestSlice) => state.setUrl);
+	const setUrlEditorRef = useRequestStore(
+		(state: RequestSlice) => state.setUrlEditorRef,
+	);
+
+	const internalEditorRef = useRef<LexicalEditor>();
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (internalEditorRef.current) {
+			setUrlEditorRef(internalEditorRef.current);
+		}
+		// if(internalEditorRef.current && props.value && props.value !== "") {
+		// 	const initialEditorState = internalEditorRef.current.parseEditorState(
+		// 		props.value,
+		// 	);
+		// 	internalEditorRef.current.setEditorState(initialEditorState);
+		// }
+	}, []);
 
 	return (
 		<LexicalComposer
@@ -201,12 +223,17 @@ export function RequestRowUrlInput() {
 				onError,
 			}}
 		>
+			<EditorRefPlugin editorRef={internalEditorRef} />
+
 			<div {...stylex.props(styles.editorContainer)}>
 				{/* <RichTextPlugin
           contentEditable={<ContentEditable {...stylex.props(styles.editor)}/>}
           placeholder={<Placeholder/>}
           ErrorBoundary={LexicalErrorBoundary}
         /> */}
+
+				{/* EditorRefPlugin must be first in render order*/}
+
 				<PlainTextPlugin
 					contentEditable={<ContentEditable {...stylex.props(styles.editor)} />}
 					placeholder={<Placeholder />}
