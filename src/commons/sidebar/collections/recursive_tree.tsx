@@ -21,11 +21,21 @@ import {
 	Label,
 } from "@controlkit/ui";
 
+import {
+	E_TabStatus,
+	E_TabType,
+	type T_Tab,
+} from "@src/stores/request_store/tabbar_slice";
+
 const styles = stylex.create({
 	row: {
 		padding: "0.0625rem 0",
 
 		cursor: "pointer",
+
+		borderLeft: "0.125rem solid transparent",
+
+		// transition: "background-color var(--transition-speed) ease",
 
 		":hover": {
 			backgroundColor: "#0E0F10",
@@ -34,6 +44,7 @@ const styles = stylex.create({
 
 	rowActive: {
 		backgroundColor: "#1F252D",
+		borderLeft: "0.125rem solid #2558BC",
 	},
 });
 
@@ -97,6 +108,14 @@ export default function RecursiveTree(props: any) {
 	const setRequestParameters = useRequestStore(
 		(state) => state.setRequestParameters,
 	);
+
+	const getTabs = useRequestStore((state) => state.getTabs);
+	const setTabs = useRequestStore((state) => state.setTabs);
+
+	const activeTab = useRequestStore((state) => state.activeTab);
+	const setActiveTab = useRequestStore((state) => state.setActiveTab);
+
+	// const setTabState = useRequestStore((state) => state.setTabState);
 
 	// TODO: remove this when moving the sub comps into their own files
 	const [_isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
@@ -587,7 +606,12 @@ export default function RecursiveTree(props: any) {
 					return (
 						// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 						<div key={item.id}>
-							<div {...stylex.props(styles.row)}>
+							<div
+								{...stylex.props(
+									styles.row,
+									activeTab === item.id && styles.rowActive,
+								)}
+							>
 								<div
 									style={{
 										display: "grid",
@@ -615,6 +639,37 @@ export default function RecursiveTree(props: any) {
 
 											navigate(`/http_request/${item.id}`);
 
+
+											const tabs = [...getTabs()];
+
+											const tab = tabs.find((t) => t.id === item.id);
+											// const status = tab?.status ?? E_TabStatus.NONE;
+
+											if (tab) {
+												// setTabState(item.id, status);
+												// setTimeout(() => {
+												// 	setTabState(item.id, status);
+												// 	// setTabState(item.id, E_TabStatus.SAVED);
+												// }, 100);
+
+												const method = methods.find((method) => method.value === tab.data.method);
+
+												setRequestParameters(
+													tab.data.id,
+													tab.data.name,
+													tab.data.url,
+													method ?? methods[0],
+													tab.data.autoHeaders ?? autoHeaders, // [], // item.autoHeaders,
+													tab.data.headers,
+													tab.data.body,
+													// item.cookies,
+												);
+
+												setActiveTab(item.id);
+
+												// return;
+											} else {
+
 											setRequestParameters(
 												item.id,
 												item.name,
@@ -626,6 +681,30 @@ export default function RecursiveTree(props: any) {
 												// item.cookies,
 											);
 
+												const t: T_Tab = {
+													id: item.id,
+													status: E_TabStatus.NONE,
+													title: item.name,
+													type: E_TabType.HTTP_REQUEST,
+													requestType: item.method,
+													data: {
+														id: item.id,
+														name: item.name,
+														url: item.url,
+														method: item.method,
+														autoHeaders: item.autoHeaders,
+														headers: item.headers,
+														body: item.body,
+
+														response: null,
+														response_headers: null,
+													},
+												};
+												tabs.push(t);
+												setTabs(tabs);
+
+												setActiveTab(item.id);
+											}
 											// 	toggleField(item.id, "open", !item.open);
 										}}
 										onMouseEnter={(e) => {

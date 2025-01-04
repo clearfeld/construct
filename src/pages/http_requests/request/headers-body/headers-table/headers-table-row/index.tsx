@@ -1,5 +1,6 @@
 import { Checkbox } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 import stylex from "@stylexjs/stylex";
 // import { type ReactNode, useState } from "react";
 
@@ -102,8 +103,11 @@ interface I_TableRowProps {
 export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 	// const [hoverRef, isHovering] = useHover<HTMLDivElement>();
 
-	const { setAutoHeader } = useRequestStore();
-	const { setHeader } = useRequestStore();
+	const setAutoHeader = useRequestStore((state) => state.setAutoHeader);
+	const setHeader = useRequestStore((state) => state.setHeader);
+
+	const setTabState = useRequestStore((state) => state.setTabState);
+	const getId = useRequestStore((state) => state.getId);
 
 	return (
 		<div
@@ -133,6 +137,11 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 							ns.enabled = checked;
 							setHeader(ns);
 						}
+
+						// TODO: need a different update strat for this lots of refactoring to come
+						// setTabDataField(getId(), "headers", nheaders);
+
+						setTabState(getId(), E_TabStatus.MODIFIED);
 					}}
 				/>
 			</div>
@@ -146,6 +155,11 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 						const ns = { ...header };
 						ns.key = event.target.value;
 						setHeader(ns);
+
+						// TODO: need a different update strat for this lots of refactoring to come
+						// setTabDataField(getId(), "headers", nheaders);
+
+						setTabState(getId(), E_TabStatus.MODIFIED);
 					}}
 					value={header.key}
 					placeholder="Key"
@@ -161,6 +175,11 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 						const ns = { ...header };
 						ns.value = event.target.value;
 						setHeader(ns);
+
+						// TODO: need a different update strat for this lots of refactoring to come
+						// setTabDataField(getId(), "headers", nheaders);
+
+						setTabState(getId(), E_TabStatus.MODIFIED);
 					}}
 					value={header.value}
 					placeholder="Value"
@@ -176,6 +195,11 @@ export default function TableRow({ header, autoHeaderRow }: I_TableRowProps) {
 						const ns = { ...header };
 						ns.description = event.target.value;
 						setHeader(ns);
+
+						// TODO: need a different update strat for this lots of refactoring to come
+						// setTabDataField(getId(), "headers", nheaders);
+
+						setTabState(getId(), E_TabStatus.MODIFIED);
 					}}
 					value={header.description}
 					placeholder="Description"

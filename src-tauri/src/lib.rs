@@ -6,6 +6,8 @@ use std::{str, vec};
 use url::Url;
 use uuid::Uuid;
 
+static mut APP_VERSION: String = String::new();
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -142,7 +144,11 @@ fn http_request(
 
     easy.http_headers(list).unwrap();
 
-    easy.useragent("ConstructRuntime/0.1.0").unwrap();
+    // TODO: FIXME
+    unsafe {
+        easy.useragent(&format!("ConstructRuntime/{}", APP_VERSION)).unwrap();
+        // println!("{}", format!("ConstructRuntime/{}", APP_VERSION));
+    }
 
     // dirty evil lies that breaks my heart
     // easy.accept_encoding("gzip, deflate, br");
@@ -234,6 +240,12 @@ fn http_request(
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|app| {
+            println!("{}", app.package_info().version.to_string());
+            // TODO: FIXME: use lazy or whatever is the current rust recommendation, so unsafe isnt needed
+            unsafe { APP_VERSION = app.package_info().version.to_string() };
+            Ok(())
+        })
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())

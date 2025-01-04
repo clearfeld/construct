@@ -6,6 +6,7 @@ import { Button, ButtonVariants } from "@controlkit/ui";
 // import { T_Header } from "@src/stores/request_store/request_slice";
 import { v4 as uuidv4 } from "uuid";
 import useRequestStore from "@src/stores/request_store";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 
 // import MoreOptions from "../../../assets/horizontal-ellipsis.svg?react";
 // import EyeOpen from "../../../assets/eye-open.svg?react";
@@ -136,12 +137,16 @@ export default function HeadersBody() {
 	const autoHeaders = useRequestStore((state) => state.autoHeaders);
 
 	const headers = useRequestStore((state) => state.headers);
-	const { setHeaders } = useRequestStore();
+	const setHeaders = useRequestStore((state) => state.setHeaders);
 
 	const isAutoHeadersVisible = useRequestStore(
 		(state) => state.isAutoHeadersVisible,
 	);
-	const { setIsAutoHeadersVisible } = useRequestStore();
+	const setIsAutoHeadersVisible = useRequestStore((state) => state.setIsAutoHeadersVisible);
+
+	const setTabState = useRequestStore((state) => state.setTabState);
+	const getId = useRequestStore((state) => state.getId);
+	const setTabDataField = useRequestStore((state) => state.setTabDataField);
 
 	return (
 		<div {...stylex.props(styles.wrapper)}>
@@ -177,8 +182,8 @@ export default function HeadersBody() {
 
 				<Button
 					extend={styles.addRowButton}
-					onClick={() =>
-						setHeaders([
+					onClick={() => {
+						const nheaders = [
 							...headers,
 							{
 								id: uuidv4(),
@@ -188,8 +193,13 @@ export default function HeadersBody() {
 								value: "",
 								description: "",
 							},
-						])
-					}
+						];
+						setHeaders(nheaders);
+
+						setTabDataField(getId(), "headers", nheaders);
+
+						setTabState(getId(), E_TabStatus.MODIFIED);
+					}}
 				>
 					Add Row
 				</Button>

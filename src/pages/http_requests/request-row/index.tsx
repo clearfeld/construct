@@ -14,6 +14,7 @@ import { RequestRowUrlInput } from "./components/request-row-url-input.tsx";
 import { Button, Input, Label } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
 import { updateTargetIfExists } from "@src/stores/request_store/sidebar_slice.ts";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice.ts";
 
 // import { useSetRecoilState } from 'recoil';
 // import { HTTP_API_Response_Body_StateData } from "@store/http-api-request-and-response/response-body.ts";
@@ -102,6 +103,9 @@ export function RequestRow(props: RequestRowProps) {
 	const setCollection = useRequestStore((state) => state.setCollection);
 	const getId = useRequestStore((state) => state.getId);
 
+	const setTabState = useRequestStore((state) => state.setTabState);
+	const setTabDataField = useRequestStore((state) => state.setTabDataField);
+
 	// http api requests
 	// const set_HTTP_API_Response_Body = useSetRecoilState(
 	// 	HTTP_API_Response_Body_StateData,
@@ -179,17 +183,14 @@ export function RequestRow(props: RequestRowProps) {
 					value={name}
 					onChange={(e) => {
 						setName(e.target.value);
+						setTabDataField(getId(), "name", e.target.value);
+						setTabState(getId(), E_TabStatus.MODIFIED);
 					}}
 					onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
 						console.log("asd");
 						if (e.key === "Enter") {
 							const ns = structuredClone(getCollection());
-							updateTargetIfExists(
-								ns,
-								getId(),
-								"name",
-								name,
-							);
+							updateTargetIfExists(ns, getId(), "name", name);
 							setCollection(ns);
 
 							(e.target as HTMLInputElement).blur();

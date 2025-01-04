@@ -2,7 +2,11 @@ import * as stylex from "@stylexjs/stylex";
 import { useRef, useState } from "react";
 
 import useRequestStore from "@src/stores/request_store";
-import { methods, type RequestSlice } from "@src/stores/request_store/request_slice";
+import {
+	methods,
+	type RequestSlice,
+} from "@src/stores/request_store/request_slice";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 
 // import ArrowDownRounded from "../../../assets/arrow-down-rounded.svg?react";
 // import {useOutsideClick} from "../../../hooks/use-outside-click.tsx";
@@ -94,6 +98,11 @@ export function RequestRowSelect() {
 	const method = useRequestStore((state: RequestSlice) => state.method);
 	const { setMethod } = useRequestStore();
 
+	// TODO: create a generic function to set dirty state for tab instead of copying and pasting this everywhere for prototype
+	const setTabState = useRequestStore((state) => state.setTabState);
+	const getId = useRequestStore((state) => state.getId);
+	const setTabDataField = useRequestStore((state) => state.setTabDataField);
+
 	return (
 		<div {...stylex.props(styles.container)}>
 			<button
@@ -128,6 +137,10 @@ export function RequestRowSelect() {
 								// props.setSelectedValue(option);
 								setIsDropdownOpen(false);
 								setMethod(option);
+
+								setTabDataField(getId(), "method", option);
+								// TODO: check if same method is being set
+								setTabState(getId(), E_TabStatus.MODIFIED);
 							}}
 							{...stylex.props(styles.dropdownButton)}
 							style={{ color: option.textColor }}
