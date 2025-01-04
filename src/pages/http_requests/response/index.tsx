@@ -171,7 +171,7 @@ function ResponseSection() {
 			return;
 		}
 
-		if (size > body.clientHeight - 38 - 20) {
+		if (size > body.clientHeight - 38 - 20 - 30) {
 			// navbar - tab bar - borders
 			return;
 		}

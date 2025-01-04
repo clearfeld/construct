@@ -555,7 +555,7 @@ dependencies = [
 
 [[package]]
 name = "construct"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "curl",
  "serde",
