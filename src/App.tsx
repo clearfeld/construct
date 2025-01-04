@@ -15,6 +15,7 @@ import { Routes, Route, Outlet } from "react-router";
 
 import "./updater.tsx";
 import { H5 } from "@controlkit/ui";
+import TabBar from "./commons/tabbar/index.tsx";
 
 const styles = stylex.create({
 	container: {
@@ -28,14 +29,13 @@ const styles = stylex.create({
 	},
 
 	content_width: {
-		// width: "calc(100% - var(--sidebar-width))",
-		width: "calc(100%)",
+		width: "calc(100% - var(--sidebar-width))",
 	},
 
 	details_container: {
 		display: "flex",
 		width: "100%",
-		// height: "calc(100% - 2rem)", // tabbar-height
+		// height: "calc(100% - var(--tabbar-height))",
 		height: "100%",
 	},
 
