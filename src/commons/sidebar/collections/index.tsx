@@ -6,6 +6,7 @@ import useRequestStore from "@src/stores/request_store";
 
 import { UpdateHttpRequestTargetIfExists } from "@src/stores/request_store/sidebar_slice";
 import { useEffect } from "react";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 
 export default function Collections() {
 	const collection = useRequestStore((state) => state.collection);
@@ -14,11 +15,19 @@ export default function Collections() {
 	const addCollection = useRequestStore((state) => state.addCollection);
 	const setCollection = useRequestStore((state) => state.setCollection);
 
+	const getTabs = useRequestStore((state) => state.getTabs);
+	const setTabs = useRequestStore((state) => state.setTabs);
+
+	const getCurrentRequest= useRequestStore((state) => state.getCurrentRequest);
+
 	const getId = useRequestStore((state) => state.getId);
+	const getName = useRequestStore((state) => state.getName);
 	const getUrl = useRequestStore((state) => state.getUrl);
 	const getMethod = useRequestStore((state) => state.getMethod);
 	const getHeaders = useRequestStore((state) => state.getHeaders);
 	const getBody = useRequestStore((state) => state.getBody);
+
+	const setTabState = useRequestStore((state) => state.setTabState);
 
 	useEffect(() => {
 		SetupShortcuts();
@@ -48,12 +57,16 @@ export default function Collections() {
 	function SyncHTTPRequestStateToSidebar() {
 		// console.log("Shortcut triggered");
 
+		// TODO: add switch statement for different types of tabs / sidebar items
+		// defaulting to HTTP_REQUEST
+
 		const ns = structuredClone(getCollection());
 		// debugger;
 
 		UpdateHttpRequestTargetIfExists(
 			ns,
 			getId(),
+			getName(),
 			getUrl(),
 			getMethod(),
 			getHeaders(),
@@ -61,6 +74,25 @@ export default function Collections() {
 		);
 
 		setCollection(ns);
+
+		const tabs = [ ...getTabs() ];
+
+		const id = getId();
+		for(let i = 0; i < tabs.length; ++i) {
+			if(tabs[i].id === id) {
+				tabs[i].title = getName();
+				tabs[i].requestType = getMethod().value;
+				tabs[i].status = E_TabStatus.SAVED;
+
+				tabs[i].data = getCurrentRequest();
+
+				break;
+			}
+		}
+
+		setTabs(tabs);
+
+		setTabState(id, E_TabStatus.SAVED);
 	}
 
 	return (

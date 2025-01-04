@@ -24,6 +24,7 @@ import type { RequestSlice } from "@src/stores/request_store/request_slice";
 import { useEffect, useRef } from "react";
 // import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { EditorRefPlugin } from "@lexical/react/LexicalEditorRefPlugin";
+// import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 
 const styles = stylex.create({
 	editorContainer: {
@@ -215,6 +216,9 @@ export function RequestRowUrlInput() {
 		// }
 	}, []);
 
+	// const setTabState = useRequestStore((state) => state.setTabState);
+	// const getId = useRequestStore((state) => state.getId);
+
 	return (
 		<LexicalComposer
 			initialConfig={{
@@ -248,6 +252,9 @@ export function RequestRowUrlInput() {
 							);
 							// console.log(textContent);
 							setUrl(textContent);
+
+							// TODO: dont update state on first render update ie when tab switch otherwise false dirty state is set
+							// setTabState(getId(), E_TabStatus.MODIFIED);
 						});
 
 						// editorStateRef.current = editorState;

@@ -35,8 +35,7 @@ const styles = stylex.create({
 	details_container: {
 		display: "flex",
 		width: "100%",
-		// height: "calc(100% - var(--tabbar-height))",
-		height: "100%",
+		height: "calc(100% - var(--tabbar-height))",
 	},
 
 	request_container: {
@@ -113,8 +112,6 @@ function App() {
 
 								<div {...stylex.props(styles.details_container)}>
 									<div {...stylex.props(styles.request_container)}>
-										{/* <httprequestspage /> */}
-
 										<div
 											style={{
 												display: "flex",
@@ -143,7 +140,7 @@ function App() {
 							<Sidebar />
 
 							<div {...stylex.props(styles.content_width)}>
-								{/* <TabBar /> */}
+								<TabBar />
 
 								<div {...stylex.props(styles.details_container)}>
 									<div {...stylex.props(styles.request_container)}>

@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 // TODO: AC-81 use v7 when possible
 import { v4 as uuidv4 } from "uuid";
 import type { LexicalEditor } from "lexical";
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from "@tauri-apps/api/app";
 
 const APP_VERSION = await getVersion();
 
@@ -130,7 +130,27 @@ export type T_Header = {
 	description: string;
 };
 
+// TODO: create a subset with only fields required
+// export type T_Http_Request {
+//
+// };
+
 export interface RequestSlice {
+	getCurrentRequest: () => any;
+	setCurrentRequest: (
+		id: string,
+		name: string,
+		url: string,
+		method: T_Method,
+		autoHeaders: T_Header[],
+		headers: T_Header[],
+		body: string,
+		// cookies: Record<string, string>,
+		response: any,
+		response_headers: any,
+		// response_cookies: any,
+	) => any;
+
 	id: string;
 	setId: (url: string) => void;
 	getId: () => string;
@@ -196,6 +216,54 @@ export const createRequestSlice: StateCreator<
 	[],
 	RequestSlice
 > = (set, get) => ({
+	getCurrentRequest: () => {
+		return {
+			// req
+			id: get().id,
+			name: get().name,
+			url: get().url,
+			method: get().method,
+			autoHeaders: get().autoHeaders,
+			headers: get().headers,
+			body: get().body,
+			cookies: get().cookies,
+
+			// res
+			response: get().response,
+			response_headers: get().response_headers,
+			response_cookies: get().response_cookies,
+		};
+	},
+
+	setCurrentRequest: (
+		id,
+		name,
+		url,
+		method,
+		autoHeaders,
+		headers,
+		body,
+		// cookies: Record<string, string>,
+		response,
+		response_headers,
+		// response_cookies: any,
+	) => {
+		set({
+			id,
+			name,
+			url,
+			method,
+			autoHeaders,
+			headers,
+			body,
+			// cookies,
+
+			response,
+			response_headers,
+			// response_cookies,
+		});
+	},
+
 	id: "",
 	setId: (id) => set({ id }),
 	getId: () => get().id,

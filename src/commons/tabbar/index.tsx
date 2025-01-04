@@ -1,85 +1,76 @@
 import * as stylex from "@stylexjs/stylex";
 
-import Tab
-// , { type RequestType, type Status }
-from "./tab";
+import Tab from "./tab"; // , { type RequestType, type Status }
 
-import { useRef, useState } from "react";
-// import LeftArrow from "../../assets/arrow-left-notail.svg?react";
-// import RightArrow from "../../assets/arrow-right-notail.svg?react";
+import { useRef
+// 	, useState
+} from "react";
+import LeftArrow from "../../assets/arrow-left.svg?react";
+import RightArrow from "../../assets/arrow-right.svg?react";
 // import Plus from "../../assets/plus.svg?react";
 // import DownArrow from "../../assets/arrow-down.svg?react";
-import EnvironmentDropdown from "./environment-dropdown";
+// import EnvironmentDropdown from "./environment-dropdown";
+import { Button } from "@controlkit/ui";
+import useRequestStore from "@src/stores/request_store";
+
+const scroll_amount = 12 * 16;
 
 const styles = stylex.create({
 	wrapper: {
-		//height: "fit-content",
 		width: "100%",
+
 		display: "flex",
-		boxSizing: "border-box",
 		alignItems: "center",
-		backgroundColor: "var(--tabbar-bg)",
+
+		boxSizing: "border-box",
+
+		backgroundColor: "#141414",
 		borderBottom: "0.0625rem solid var(--main-border-color)",
-		//overflow: "auto",
+		height: "var(--tabbar-height)",
 	},
 
 	button: {
 		backgroundColor: "transparent",
 		boxShadow: "none",
-		padding: "0.25rem 0.5rem",
-		width: "2rem",
-		height: "1.5rem",
+
+		borderRadius: 0,
+
+		width: "2.5rem",
+
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+
+		":hover": {
+			backgroundColor: "#0E0F10",
+		},
 	},
 
 	tabsList: {
 		display: "flex",
-		overflow: "hidden",
+		gap: "0.125rem",
+		overflowX: "scroll",
 		scrollBehavior: "smooth",
+		height: "calc(100% + 0.1875rem)",
 	},
 
 	optionsRow: {
 		display: "flex",
-		borderLeft: "1px solid #A6A6A6",
-		borderRight: "1px solid #A6A6A6",
 	},
 
+	leftBorder: {
+		borderLeft: "1px solid #28292A",
+	},
 	rightBorder: {
-		borderRight: "1px solid #A6A6A6",
+		borderRight: "1px solid #28292A",
 	},
 });
 
-const testTabs = [
-	{
-    status: "UNSAVED",
-		title: "U GET",
-		requestType: "GET",
-	},
-
-  {
-		status: "SAVED",
-		title: "S GET",
-		requestType: "GET",
-	},
-
-  {
-		status: "MODIFIED",
-		title: "M GET",
-		requestType: "GET",
-	},
-
-	{
-		status: "UNSAVED",
-		title: "U PUT",
-		requestType: "PUT",
-	},
-];
-
 function TabBar() {
-	const [activeIndex, setActiveIndex] = useState(-1);
+	// const [activeIndex, setActiveIndex] = useState(-1);
 	const scrollRef = useRef<HTMLDivElement>(null);
+
+	const tabs = useRequestStore((state) => state.tabs);
 
 	const scroll = (scrollOffset: number) => {
 		if (scrollRef.current) {
@@ -89,36 +80,81 @@ function TabBar() {
 
 	return (
 		<div {...stylex.props(styles.wrapper)}>
-			<div {...stylex.props(styles.rightBorder)}>
-				<button {...stylex.props(styles.button)} onClick={() => scroll(-80)}>
-					{/* <LeftArrow /> */}
-				</button>
+			<div
+				style={{
+					width: "100%",
+					display: "flex",
+				}}
+			>
+				<div {...stylex.props(styles.rightBorder)}>
+					<Button
+						// {...stylex.props(styles.button)}
+						extend={styles.button}
+						onClick={() => scroll(-scroll_amount)}
+					>
+						<LeftArrow height={16} width={16} />
+					</Button>
+				</div>
+
+				<div
+					style={{
+						overflow: "hidden",
+						width: "100%",
+					}}
+				>
+					<div {...stylex.props(styles.tabsList)} ref={scrollRef}>
+						{tabs.map((tab, index) => {
+							const isLastItem = index === tabs.length - 1;
+
+							return (
+								<div
+									key={`${tab.title}-${index}`}
+									style={{
+										display: "flex",
+										gap: "0.125rem",
+									}}
+								>
+									<Tab
+										id={tab.id}
+										status={tab.status}
+										title={tab.title}
+										requestType={tab.requestType}
+									/>
+
+									{!isLastItem && (
+										<div
+											style={{
+												borderLeft: "0.0625rem solid #28292A",
+												borderRadius: "0.25rem",
+												height: "1.25rem",
+												marginTop: "0.4375rem",
+												// padding: "0.0625rem",
+												// margin: "0.375rem 0 10.25rem 0",
+											}}
+										/>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				</div>
+
+				<div {...stylex.props(styles.leftBorder, styles.optionsRow)}>
+					<Button extend={styles.button} onClick={() => scroll(scroll_amount)}>
+						<RightArrow />
+					</Button>
+
+					{/* <Button extend={styles.button}>+ */}
+					{/* <Plus /> */}
+					{/* </Button> */}
+
+					{/* <Button extend={styles.button}>D */}
+					{/* <DownArrow /> */}
+					{/* </Button> */}
+				</div>
 			</div>
 
-			<div {...stylex.props(styles.tabsList)} ref={scrollRef}>
-				{testTabs.map((tab, index) => {
-					return (
-						<Tab
-							key={`${tab.title}-${index}`}
-							// status={tab.status}
-							title={tab.title}
-							// requestType={tab.requestType}
-							onClick={() => setActiveIndex(index)}
-							active={index === activeIndex}
-						/>
-					);
-				})}
-			</div>
-
-			<div {...stylex.props(styles.optionsRow)}>
-				<button {...stylex.props(styles.button)} onClick={() => scroll(80)}>
-					{/* <RightArrow /> */}
-				</button>
-				<button {...stylex.props(styles.button)}>{/* <Plus /> */}</button>
-				<button {...stylex.props(styles.button)}>{/* <DownArrow /> */}</button>
-			</div>
-
-			<EnvironmentDropdown />
+			{/* <EnvironmentDropdown /> */}
 		</div>
 	);
 }

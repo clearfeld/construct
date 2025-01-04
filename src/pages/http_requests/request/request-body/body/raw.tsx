@@ -4,6 +4,7 @@ from "@monaco-editor/react";
 
 import { CTNAME, darkThemeMonaco } from "@src/commons/monaco/cust_theme";
 import useRequestStore from "@src/stores/request_store";
+import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 import { useEffect, useRef } from "react";
 // import { useRecoilValue } from "recoil";
 // import { HTTP_API_Response_Body_StateData } from "../../../../store/http-api-request-and-response/response-body";
@@ -13,7 +14,12 @@ function Raw() {
 	const editorRef = useRef(null);
 
 	const body = useRequestStore((state) => state.body);
-	const { setBody } = useRequestStore();
+	const setBody = useRequestStore((state) => state.setBody);
+
+	const setTabState = useRequestStore((state) => state.setTabState);
+	const getId = useRequestStore((state) => state.getId);
+
+	const setTabDataField = useRequestStore((state) => state.setTabDataField);
 
 	// const get_HTTP_API_Response_Body = useRecoilValue(HTTP_API_Response_Body_StateData);
 
@@ -78,6 +84,10 @@ function Raw() {
 			value={body}
 			onChange={(value) => {
 				setBody(value ?? "");
+
+				setTabDataField(getId(), "body", value ?? "");
+
+				setTabState(getId(), E_TabStatus.MODIFIED);
 			}}
 
 			options={{

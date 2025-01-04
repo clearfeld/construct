@@ -101,6 +101,7 @@ export function FindTargetIfExists(nc: any, id: string) {
 export function UpdateHttpRequestTargetIfExists(
 	nc: any,
 	id: string,
+	name: string,
 	url: string,
 	method: T_Method,
 	headers: T_Header[],
@@ -111,6 +112,7 @@ export function UpdateHttpRequestTargetIfExists(
 
 		if (nc[i].id === id) {
 			nc[i].url = url;
+			nc[i].name = name;
 			nc[i].method = method.value;
 			nc[i].headers = headers;
 			nc[i].body = body;
@@ -122,6 +124,7 @@ export function UpdateHttpRequestTargetIfExists(
 			UpdateHttpRequestTargetIfExists(
 				nc[i].items,
 				id,
+				name,
 				url,
 				method,
 				headers,

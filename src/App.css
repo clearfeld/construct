@@ -43,6 +43,8 @@ body {
 	--sidebar-delete-req: #CA3939;
 	--sidebar-patch-req: #7FC27E;
 
+	--tabbar-height: 1.875rem;
+
 	--toolbar-width: 2.25rem;
 	--toolbar-fixed-width: 2.25rem;
 	/* This won't change */
