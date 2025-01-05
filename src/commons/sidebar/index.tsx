@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 import * as stylex from "@stylexjs/stylex";
-import { SidebarRail, type SidebarTab } from "./rail.tsx";
+import { SidebarRail } from "./rail.tsx";
 import { SidebarContent } from "./content.tsx";
+import { E_SidebarSection } from "@src/stores/request_store/sidebar_slice.ts";
+import useRequestStore from "@src/stores/request_store/index.ts";
 
 const styles = stylex.create({
 	wrapper: {
@@ -48,10 +50,14 @@ const MAX_EXPANDED_WIDTH = 16 * 40;
 const MIN_EXPANDED_THRESHOLD = MIN_EXPANDED_WIDTH / 2;
 
 function Sidebar() {
-	const [selectedTab, setSelectedTab] = useState<SidebarTab | null>(
-		"collections",
-	);
-	const prevSelectedTab = useRef<SidebarTab | null>(null);
+	// const [selectedTab, setSelectedTab] = useState<E_SidebarSection | null>(
+	// 	E_SidebarSection.COLLECTIONS,
+	// );
+
+	const currentSidebarTab = useRequestStore((state) => state.currentSidebarTab);
+	const setCurrentSidebarTab = useRequestStore((state) => state.setCurrentSidebarTab);
+
+	const prevSelectedTab = useRef<E_SidebarSection | null>(null);
 	const prevSelectedState = useRef<boolean>(false);
 	const html_style = document.getElementsByTagName("html")[0].style;
 	const resizerRef = useRef<HTMLDivElement | null>(null);
@@ -87,7 +93,7 @@ function Sidebar() {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (selectedTab) {
+		if (currentSidebarTab) {
 			if (!prevSelectedState.current) {
 				html_style.setProperty(
 					// TODO: move these values out into a constants file instead
@@ -95,10 +101,10 @@ function Sidebar() {
 					`${MIN_EXPANDED_WIDTH}px`,
 				);
 			}
-			prevSelectedTab.current = selectedTab;
+			prevSelectedTab.current = currentSidebarTab;
 		}
-		prevSelectedState.current = !!selectedTab;
-	}, [selectedTab]);
+		prevSelectedState.current = !!currentSidebarTab;
+	}, [currentSidebarTab]);
 
 	function resize(e: MouseEvent) {
 		e.preventDefault();
@@ -110,10 +116,10 @@ function Sidebar() {
 
 		if (curSize < MIN_EXPANDED_WIDTH && curSize > MIN_EXPANDED_THRESHOLD) {
 			curSize = MIN_EXPANDED_WIDTH;
-			setSelectedTab(prevSelectedTab.current || "collections");
+			setCurrentSidebarTab(prevSelectedTab.current || E_SidebarSection.COLLECTIONS);
 		} else if (curSize <= MIN_EXPANDED_THRESHOLD) {
 			curSize = MIN_WIDTH;
-			setSelectedTab(null);
+			setCurrentSidebarTab(null);
 		}
 		// console.log(size);
 		html_style.setProperty(
@@ -126,8 +132,8 @@ function Sidebar() {
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			<div {...stylex.props(styles.sidebar)}>
-				<SidebarRail selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-				<SidebarContent selectedTab={selectedTab} />
+				<SidebarRail selectedTab={currentSidebarTab} onSelectTab={setCurrentSidebarTab} />
+				<SidebarContent selectedTab={currentSidebarTab} />
 			</div>
 
 			<div

@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
-import type { SidebarTab } from "./rail.tsx";
 
 import Collections from "./collections/index.tsx";
 
 import Environments from "./environment";
+import { E_SidebarSection } from "@src/stores/request_store/sidebar_slice.ts";
 // import { SidebarSearchRow } from "./components/sidebar-search-row.tsx";
 
 const styles = stylex.create({
@@ -14,7 +14,7 @@ const styles = stylex.create({
 });
 
 interface SidebarContentProps {
-	selectedTab: SidebarTab | null;
+	selectedTab: E_SidebarSection | null;
 }
 
 export function SidebarContent({ selectedTab }: SidebarContentProps) {
@@ -22,9 +22,9 @@ export function SidebarContent({ selectedTab }: SidebarContentProps) {
 		<div {...stylex.props(styles.container)}>
 			{/* <SidebarSearchRow /> */}
 
-			{selectedTab === "collections" && <Collections />}
+			{selectedTab === E_SidebarSection.COLLECTIONS && <Collections />}
 
-			{selectedTab === "environment" && <Environments />}
+			{selectedTab === E_SidebarSection.ENVIRONMENT && <Environments />}
 		</div>
 	);
 }

@@ -16,6 +16,7 @@ import useRequestStore from "@src/stores/request_store";
 import { useNavigate } from "react-router";
 import type { T_ActiveEnvironment } from "@src/stores/request_store/environments_slice";
 import EnvironmentSVG from "../../../assets/environment.svg?react";
+import { E_SidebarSection } from "@src/stores/request_store/sidebar_slice";
 
 interface I_TabProps {
 	id: string;
@@ -188,6 +189,8 @@ export default function Tab({
 		(state) => state.getEnvironmentById,
 	);
 
+	const setCurrentSidebarTab = useRequestStore((state) => state.setCurrentSidebarTab);
+
 	return (
 		<div
 			onClick={(_e: React.MouseEvent<HTMLDivElement>) => {
@@ -250,6 +253,8 @@ export default function Tab({
 
 					setActiveTab(id);
 
+					setCurrentSidebarTab(E_SidebarSection.ENVIRONMENT);
+
 					return;
 				}
 
@@ -283,6 +288,8 @@ export default function Tab({
 						tab.status = E_TabStatus.NONE;
 					}
 				}
+
+				setCurrentSidebarTab(E_SidebarSection.COLLECTIONS);
 
 				setTabs(tabs);
 			}}
