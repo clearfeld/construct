@@ -4,14 +4,17 @@ import {
 	type T_Method,
 } from "@src/stores/request_store/request_slice";
 import stylex from "@stylexjs/stylex";
-import { useState
-// 	, type MouseEventHandler
+import {
+	useState,
+	// 	, type MouseEventHandler
 } from "react";
 // import { useHover } from "../../../hooks/use-hover";
 import CloseX from "../../../assets/mdi_close.svg?react";
 import { Button } from "@controlkit/ui";
-import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
+import { E_TabStatus, E_TabType } from "@src/stores/request_store/tabbar_slice";
 import useRequestStore from "@src/stores/request_store";
+import { useNavigate } from "react-router";
+import type { T_ActiveEnvironment } from "@src/stores/request_store/environments_slice";
 
 interface I_TabProps {
 	id: string;
@@ -107,6 +110,8 @@ const styles = stylex.create({
 });
 
 export default function Tab({ id, status, title, requestType }: I_TabProps) {
+	const navigate = useNavigate();
+
 	const activeTab = useRequestStore((state) => state.activeTab);
 	const setActiveTab = useRequestStore((state) => state.setActiveTab);
 
@@ -152,14 +157,89 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 
 	const [isHovering, setIsHovering] = useState<boolean>(false);
 
+	const setActiveEnvironmentDetails = useRequestStore(
+		(state) => state.setActiveEnvironmentDetails,
+	);
+	const getActiveEnvironmentDetails = useRequestStore(
+		(state) => state.getActiveEnvironmentDetails,
+	);
+	const setActiveEnvironment = useRequestStore(
+		(state) => state.setActiveEnvironment,
+	);
+	const getActiveEnvironmentInEnvironments = useRequestStore(
+		(state) => state.getActiveEnvironmentInEnvironments,
+	);
+	const setTabData = useRequestStore((state) => state.setTabData);
+
+	const getEnvironmentById = useRequestStore((state) => state.getEnvironmentById);
+
 	return (
 		<div
 			onClick={(_e: React.MouseEvent<HTMLDivElement>) => {
 				setActiveTab(id);
 
-				const tabs = [ ...getTabs() ];
+				const tabs = [...getTabs()];
 				const tab = tabs.find((tab) => tab.id === id);
 				const data = tab.data;
+
+				// TODO: create separate comps for each tab type instead
+				if (tab.type === E_TabType.ENVIRONMENT) {
+					navigate(`/environment/${id}`);
+
+					const aed = getActiveEnvironmentDetails();
+					if (aed === null) {
+						const aed_c: T_ActiveEnvironment = {
+							env_id: id,
+							stage_id: null,
+						};
+						setActiveEnvironmentDetails(aed_c);
+
+						const target_env = getEnvironmentById(id);
+
+						if (target_env) {
+							setActiveEnvironment(target_env);
+						}
+					} else {
+						aed.env_id = id;
+						setActiveEnvironmentDetails(aed);
+
+						if (tab) {
+							if (Object.keys(tab.data).length === 0) {
+								const target_env = getEnvironmentById(id);
+								if (target_env) {
+									setActiveEnvironment(target_env);
+								}
+							} else {
+								setActiveEnvironment(tab.data);
+							}
+						} else {
+
+							const target_env = getEnvironmentById(id);
+
+							if (target_env) {
+								setActiveEnvironment(target_env);
+							}
+						}
+					}
+
+					// const activeEnvironment = getActiveEnvironmentInEnvironments();
+					// if (activeEnvironment) {
+					// 	data = structuredClone(activeEnvironment);
+					// 	// setActiveEnvironment(activeEnvironment);
+					// }
+
+					// setActiveEnvironment(data);
+
+					// setTabData(id, activeEnvironment);
+
+					// setActiveEnvironment(getActiveEnvironmentInEnvironments());
+
+					setActiveTab(id);
+
+					return;
+				}
+
+				navigate(`/http_request/${id}`);
 
 				let method: T_Method = methods[0];
 				if (typeof data.method === "string") {
@@ -183,8 +263,9 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 					data.response_headers,
 				);
 
-				for(const tab of tabs) {
-					if(tab.status === E_TabStatus.SAVED) {
+				// TODO: remove saved state doesn't add anything and makes a lot of UI require a lot of extra logic
+				for (const tab of tabs) {
+					if (tab.status === E_TabStatus.SAVED) {
 						tab.status = E_TabStatus.NONE;
 					}
 				}
@@ -195,6 +276,11 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 			onMouseEnter={() => setIsHovering(true)}
 			onMouseLeave={() => setIsHovering(false)}
 		>
+			{/* TODO: add more state details to activeTab  */}
+			{/* {tab.type === E_TabType.ENVIRONMENT && (
+				<div></div>
+			)} */}
+
 			<p
 				{...stylex.props(styles.requestType)}
 				style={{

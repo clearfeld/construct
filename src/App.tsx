@@ -16,6 +16,7 @@ import { Routes, Route, Outlet } from "react-router";
 import "./updater.tsx";
 import { H5 } from "@controlkit/ui";
 import TabBar from "./commons/tabbar/index.tsx";
+import EnvironmentsPage from "./pages/environments/index.tsx";
 
 const styles = stylex.create({
 	container: {
@@ -145,6 +146,27 @@ function App() {
 								<div {...stylex.props(styles.details_container)}>
 									<div {...stylex.props(styles.request_container)}>
 										<HttpRequestsPage />
+									</div>
+
+									{/* <Toolbar /> */}
+								</div>
+							</div>
+						</div>
+					}
+				/>
+
+				<Route
+					path="/environment/:id"
+					element={
+						<div {...stylex.props(styles.container)}>
+							<Sidebar />
+
+							<div {...stylex.props(styles.content_width)}>
+								<TabBar />
+
+								<div {...stylex.props(styles.details_container)}>
+									<div {...stylex.props(styles.request_container)}>
+										<EnvironmentsPage />
 									</div>
 
 									{/* <Toolbar /> */}

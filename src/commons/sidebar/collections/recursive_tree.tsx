@@ -639,7 +639,6 @@ export default function RecursiveTree(props: any) {
 
 											navigate(`/http_request/${item.id}`);
 
-
 											const tabs = [...getTabs()];
 
 											const tab = tabs.find((t) => t.id === item.id);
@@ -652,7 +651,9 @@ export default function RecursiveTree(props: any) {
 												// 	// setTabState(item.id, E_TabStatus.SAVED);
 												// }, 100);
 
-												const method = methods.find((method) => method.value === tab.data.method);
+												const method = methods.find(
+													(method) => method.value === tab.data.method,
+												);
 
 												setRequestParameters(
 													tab.data.id,
@@ -669,17 +670,16 @@ export default function RecursiveTree(props: any) {
 
 												// return;
 											} else {
-
-											setRequestParameters(
-												item.id,
-												item.name,
-												item.url,
-												method,
-												autoHeaders, // [], // item.autoHeaders,
-												item.headers,
-												item.body,
-												// item.cookies,
-											);
+												setRequestParameters(
+													item.id,
+													item.name,
+													item.url,
+													method,
+													autoHeaders, // [], // item.autoHeaders,
+													item.headers,
+													item.body,
+													// item.cookies,
+												);
 
 												const t: T_Tab = {
 													id: item.id,

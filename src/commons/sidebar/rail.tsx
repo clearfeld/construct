@@ -4,7 +4,7 @@ import type { FC, SVGProps } from "react";
 import CollectionsSVG from "../../assets/collection.svg?react";
 // import ConnectedSVG from '../../assets/connected.svg?react';
 // import DBSVG from '../../assets/db.svg?react';
-// import EnvironmentSVG from '../../assets/environment.svg?react';
+import EnvironmentSVG from "../../assets/environment.svg?react";
 // import HistorySVG from '../../assets/history.svg?react';
 // import HomePNG from '../../assets/home.png';
 // import NoteSVG from '../../assets/note.svg?react';
@@ -106,9 +106,16 @@ export function SidebarRail({ selectedTab, onSelectTab }: SidebarRailProps) {
 					selected={selectedTab === "collections"}
 					onClick={() => onSelectTab("collections")}
 				/>
-				{/* <SidebarButton Svg={CollectionsSVG} selected={selectedTab === 'collections'} onClick={() => onSelectTab('collections')} />
+
+				<SidebarButton
+					Svg={EnvironmentSVG}
+					selected={selectedTab === "environment"}
+					onClick={() => onSelectTab("environment")}
+				/>
+
+				{/*
         <SidebarButton Svg={NoteSVG} selected={selectedTab === 'note'} onClick={() => onSelectTab('note')} />
-        <SidebarButton Svg={EnvironmentSVG} selected={selectedTab === 'environment'} onClick={() => onSelectTab('environment')} />
+
         <SidebarButton Svg={DBSVG} selected={selectedTab === 'db'} onClick={() => onSelectTab('db')} />
         <SidebarButton Svg={TrendSVG} selected={selectedTab === 'trend'} onClick={() => onSelectTab('trend')} />
         <SidebarButton Svg={ConnectedSVG} selected={selectedTab === 'connected'} onClick={() => onSelectTab('connected')} />
