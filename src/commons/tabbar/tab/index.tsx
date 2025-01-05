@@ -15,11 +15,13 @@ import { E_TabStatus, E_TabType } from "@src/stores/request_store/tabbar_slice";
 import useRequestStore from "@src/stores/request_store";
 import { useNavigate } from "react-router";
 import type { T_ActiveEnvironment } from "@src/stores/request_store/environments_slice";
+import EnvironmentSVG from "../../../assets/environment.svg?react";
 
 interface I_TabProps {
 	id: string;
 	status: Status;
 	title: string;
+	tabType: E_TabType;
 	requestType: string;
 }
 
@@ -31,10 +33,10 @@ export type RequestType = "GET" | "POST" | "PUT";
 const styles = stylex.create({
 	tab: {
 		display: "grid",
-		gridTemplateColumns: "3rem 1fr 1rem",
+		gridTemplateColumns: "auto 1fr 1rem",
 		alignItems: "center",
 
-		gap: "0.5rem",
+		gap: "1rem",
 		padding: "0rem 0.5rem",
 		boxSizing: "border-box",
 
@@ -107,9 +109,20 @@ const styles = stylex.create({
 			backgroundColor: "#28292A",
 		},
 	},
+
+	environment_icon: {
+		width: "1rem",
+		height: "1.125rem",
+	},
 });
 
-export default function Tab({ id, status, title, requestType }: I_TabProps) {
+export default function Tab({
+	id,
+	status,
+	title,
+	tabType,
+	requestType,
+}: I_TabProps) {
 	const navigate = useNavigate();
 
 	const activeTab = useRequestStore((state) => state.activeTab);
@@ -171,7 +184,9 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 	);
 	const setTabData = useRequestStore((state) => state.setTabData);
 
-	const getEnvironmentById = useRequestStore((state) => state.getEnvironmentById);
+	const getEnvironmentById = useRequestStore(
+		(state) => state.getEnvironmentById,
+	);
 
 	return (
 		<div
@@ -213,7 +228,6 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 								setActiveEnvironment(tab.data);
 							}
 						} else {
-
 							const target_env = getEnvironmentById(id);
 
 							if (target_env) {
@@ -277,18 +291,27 @@ export default function Tab({ id, status, title, requestType }: I_TabProps) {
 			onMouseLeave={() => setIsHovering(false)}
 		>
 			{/* TODO: add more state details to activeTab  */}
-			{/* {tab.type === E_TabType.ENVIRONMENT && (
-				<div></div>
-			)} */}
+			{tabType === E_TabType.ENVIRONMENT && (
+				<div
+					{...stylex.props(styles.environment_icon)}
+					style={{
+						color,
+					}}
+				>
+					<EnvironmentSVG width={"1rem"} height={"1rem"} />
+				</div>
+			)}
 
-			<p
-				{...stylex.props(styles.requestType)}
-				style={{
-					color,
-				}}
-			>
-				{shortRequestString}
-			</p>
+			{tabType === E_TabType.HTTP_REQUEST && (
+				<p
+					{...stylex.props(styles.requestType)}
+					style={{
+						color,
+					}}
+				>
+					{shortRequestString}
+				</p>
+			)}
 
 			<p
 				{...stylex.props(styles.title, activeTab === id && styles.titleActive)}

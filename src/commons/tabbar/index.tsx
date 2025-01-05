@@ -118,6 +118,7 @@ function TabBar() {
 										id={tab.id}
 										status={tab.status}
 										title={tab.title}
+										tabType={tab.type}
 										requestType={tab.requestType}
 									/>
 
