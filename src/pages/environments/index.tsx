@@ -11,7 +11,6 @@ import type { T_ManagedVariable } from "@src/stores/request_store/environments_s
 import { E_TabStatus } from "@src/stores/request_store/tabbar_slice.ts";
 import { useEffect, useRef, useState } from "react";
 // import DragHandle from "../../../../../assets/drag-handle.svg?react";
-import { v4 as uuidv4 } from "uuid";
 
 const styles = stylex.create({
 	mainWrapper: {

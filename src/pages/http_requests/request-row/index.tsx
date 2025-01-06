@@ -10,11 +10,11 @@ import { RequestRowUrlInput } from "./components/request-row-url-input.tsx";
 // import SaveSVG from "@assets/save.svg?react";
 // import React from "react";
 
-// import { invoke } from "@tauri-apps/api/core";
-import { Button, Input, Label } from "@controlkit/ui";
+import { Input, Label } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
 import { updateTargetIfExists } from "@src/stores/request_store/sidebar_slice.ts";
 import { E_TabStatus } from "@src/stores/request_store/tabbar_slice.ts";
+import SendRequestBtn from "./send_request.tsx";
 
 // import { useSetRecoilState } from 'recoil';
 // import { HTTP_API_Response_Body_StateData } from "@store/http-api-request-and-response/response-body.ts";
@@ -94,7 +94,6 @@ interface RequestRowProps {
 
 // @ts-ignore
 export function RequestRow(props: RequestRowProps) {
-	const sendRequest = useRequestStore((state) => state.sendRequest);
 
 	const name = useRequestStore((state) => state.name);
 	const setName = useRequestStore((state) => state.setName);
@@ -204,13 +203,7 @@ export function RequestRow(props: RequestRowProps) {
 
 				<RequestRowUrlInput />
 
-				<Button
-					onClick={(_) => {
-						sendRequest();
-					}}
-				>
-					Send
-				</Button>
+				<SendRequestBtn />
 
 				{/* <RequestRowDropdown
 					renderButtonContent={() => (

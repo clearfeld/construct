@@ -55,6 +55,7 @@ export interface EnvironmentsSlice {
 		environment_id: T_ActiveEnvironment | null,
 	) => void;
 	getEnabledEnvironmentDetails: () => T_ActiveEnvironment | null;
+	getEnabledEnvironmentAndDetails: () => T_ActiveEnvironment & T_Environment | null;
 
     // TODO: rename this to something better emabled is the environment to pull variables from
     // active is for the tabs sidebar and active page edit
@@ -119,6 +120,20 @@ export const createEnvironmentsSlice: StateCreator<
         set({ enabledEnvironment: environment_details });
     },
 	getEnabledEnvironmentDetails: () => get().enabledEnvironment,
+	getEnabledEnvironmentAndDetails: () => {
+		const ee = get().enabledEnvironment;
+		if(ee === null) return null;
+
+		const env = get().environments.find(
+			(env) => env.id === get().enabledEnvironment?.env_id,
+		);
+		if(env == null) return null;
+
+		return {
+			...ee,
+			...env,
+		};
+	},
 
 	activeEnvironmentDetails: null,
 	setActiveEnvironmentDetails: (environment_id: T_ActiveEnvironment | null) =>
@@ -183,6 +198,7 @@ export const createEnvironmentsSlice: StateCreator<
 		if (aenv) {
 			const var_index = aenv.variables.findIndex((v) => v.id === variable_id);
 			if (var_index !== -1) {
+				// @ts-ignore
 				aenv.variables[var_index][field] = value;
 
 				set({
@@ -247,12 +263,13 @@ export const createEnvironmentsSlice: StateCreator<
 	getVaultSecret: () => get().vaultSecret,
 });
 
+/*
 const env_id = uuidv4();
 const v1 = uuidv4();
 const v2 = uuidv4();
 const v3 = uuidv4();
 
-const globals_test_data: T_ManagedVariable[] = [
+const _globals_test_data: T_ManagedVariable[] = [
 	{
 		id: v1,
 		key: "access_token",
@@ -286,7 +303,7 @@ const globals_test_data: T_ManagedVariable[] = [
 	},
 ];
 
-const environment_test_data: T_Environment[] = [
+const _environment_test_data: T_Environment[] = [
 	{
 		id: env_id,
 		name: "1 - New Environment",
@@ -376,3 +393,4 @@ const environment_test_data: T_Environment[] = [
 		],
 	},
 ];
+*/

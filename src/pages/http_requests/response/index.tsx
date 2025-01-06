@@ -195,7 +195,11 @@ function ResponseSection() {
 					// children={undefined}
 					hideRightSegment={false}
 				>
-					<div>
+					<div
+						style={{
+							display: "flex",
+						}}
+					>
 						{response === null ? (
 							<>
 								{no_res_tabs.map((tab, index) => {

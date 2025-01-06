@@ -180,10 +180,10 @@ export default function Tab({
 	const setActiveEnvironment = useRequestStore(
 		(state) => state.setActiveEnvironment,
 	);
-	const getActiveEnvironmentInEnvironments = useRequestStore(
-		(state) => state.getActiveEnvironmentInEnvironments,
-	);
-	const setTabData = useRequestStore((state) => state.setTabData);
+	// const getActiveEnvironmentInEnvironments = useRequestStore(
+	// 	(state) => state.getActiveEnvironmentInEnvironments,
+	// );
+	// const setTabData = useRequestStore((state) => state.setTabData);
 
 	const getEnvironmentById = useRequestStore(
 		(state) => state.getEnvironmentById,

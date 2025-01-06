@@ -84,7 +84,7 @@ function TabBar() {
 		<div {...stylex.props(styles.wrapper)}>
 			<div
 				style={{
-					width: "calc(100% - 11.625rem)",
+					width: "calc(100% - 13.125rem)",
 					display: "flex",
 				}}
 			>

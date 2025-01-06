@@ -178,12 +178,12 @@ export const WorkspaceEnvironmentButton = memo(
 		const setActiveEnvironment = useRequestStore(
 			(state) => state.setActiveEnvironment,
 		);
-		const getActiveEnvironmentInEnvironments = useRequestStore(
-			(state) => state.getActiveEnvironmentInEnvironments,
-		);
+		// const getActiveEnvironmentInEnvironments = useRequestStore(
+		// 	(state) => state.getActiveEnvironmentInEnvironments,
+		// );
 
 		const [isHovering, setIsHovering] = useState(false);
-		const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+		// const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 		const getEnvironmentById = useRequestStore(
 			(state) => state.getEnvironmentById,
