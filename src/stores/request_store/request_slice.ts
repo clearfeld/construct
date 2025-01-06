@@ -192,11 +192,17 @@ export interface RequestSlice {
 	setCookies: (cookies: Record<string, string>) => void;
 
 	response: any;
+	setResponse: (response: any) => void;
 	response_headers: any;
+	setResponseHeaders: (response: any) => void;
 	response_cookies: any;
+	setResponseCookies: (response: any) => void;
 	loading: boolean;
+	setLoading: (arg: boolean) => void;
 	error: string | null;
 	sendRequest: () => Promise<void>;
+
+	getHTTPRequest: () => any;
 
 	setRequestParameters: (
 		id: string,
@@ -322,10 +328,22 @@ export const createRequestSlice: StateCreator<
 	setCookies: (cookies) => set({ cookies }),
 
 	response: null,
+	setResponse: (response: any) => {
+		set({ response: response });
+	},
 	response_headers: null,
+	setResponseHeaders: (headers: any) => {
+		set({ response_headers: headers });
+	},
 	response_cookies: null,
+	setResponseCookies: (cookies: any) => {
+		set({ response_cookies: cookies });
+	},
 	loading: false,
+	setLoading: (arg: boolean) => set({ loading: arg }),
 	error: null,
+
+	// TODO: old clean
 	sendRequest: async () => {
 		set({ loading: true });
 
@@ -350,8 +368,12 @@ export const createRequestSlice: StateCreator<
 			// set({ error: "URL cannot be empty", loading: false });
 			return;
 		}
-		// console.log(trimmedUrl);
-		// return;
+
+	    // url
+		// body
+		// headers
+
+		console.log(trimmedUrl);
 
 		invoke("http_request", {
 			method: method.value,
@@ -395,6 +417,17 @@ export const createRequestSlice: StateCreator<
 		// } catch (error) {
 		// 	set({ error: error.message, loading: false });
 		// }
+	},
+
+	getHTTPRequest: () => {
+		return {
+			url: get().url,
+			method: get().method,
+			autoHeaders: get().autoHeaders,
+			headers: get().headers,
+			body: get().body,
+			cookies: get().cookies,
+		};
 	},
 
 	setRequestParameters: (

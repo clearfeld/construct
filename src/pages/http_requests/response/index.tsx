@@ -171,7 +171,7 @@ function ResponseSection() {
 			return;
 		}
 
-		if (size > body.clientHeight - 38 - 20) {
+		if (size > body.clientHeight - 38 - 20 - 30) {
 			// navbar - tab bar - borders
 			return;
 		}
@@ -195,7 +195,11 @@ function ResponseSection() {
 					// children={undefined}
 					hideRightSegment={false}
 				>
-					<div>
+					<div
+						style={{
+							display: "flex",
+						}}
+					>
 						{response === null ? (
 							<>
 								{no_res_tabs.map((tab, index) => {

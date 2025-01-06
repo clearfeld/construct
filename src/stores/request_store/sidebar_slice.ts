@@ -2,7 +2,21 @@ import type { StateCreator } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import type { T_Header, T_Method } from "./request_slice";
 
+export enum E_SidebarSection {
+	HOME = "HOME",
+	COLLECTIONS = "COLLECTIONS",
+	CONNECTED = "CONNECTED",
+	DB = "DB",
+	ENVIRONMENT = "ENVIRONMENT",
+	HISTORY = "HISTORY",
+	NOTE = "NOTE",
+	TREND = "TREND",
+}
+
 export interface SidebarSlice {
+	currentSidebarTab: E_SidebarSection | null;
+	setCurrentSidebarTab: (tab: E_SidebarSection | null) => void;
+
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	collection: any[];
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -22,6 +36,11 @@ export const createSidebarSlice: StateCreator<
 	[],
 	SidebarSlice
 > = (set, get) => ({
+	currentSidebarTab: E_SidebarSection.COLLECTIONS,
+	setCurrentSidebarTab: (tab: E_SidebarSection | null) => {
+		set({ currentSidebarTab: tab });
+	},
+
 	collection: [], // test_data,
 	setCollection: (collection) => set({ collection }),
 	getCollection: () => get().collection,
@@ -150,7 +169,12 @@ function addToTargetIfExists(nc: any, id: string, value: any) {
 	}
 }
 
-export function updateTargetIfExists(nc: any, id: string, field: string, value: any) {
+export function updateTargetIfExists(
+	nc: any,
+	id: string,
+	field: string,
+	value: any,
+) {
 	for (let i = 0; i < nc.length; ++i) {
 		// console.log("NC", nc[i].id);
 

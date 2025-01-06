@@ -4,7 +4,8 @@ import type { FC, SVGProps } from "react";
 import CollectionsSVG from "../../assets/collection.svg?react";
 // import ConnectedSVG from '../../assets/connected.svg?react';
 // import DBSVG from '../../assets/db.svg?react';
-// import EnvironmentSVG from '../../assets/environment.svg?react';
+import EnvironmentSVG from "../../assets/environment.svg?react";
+import { E_SidebarSection } from "@src/stores/request_store/sidebar_slice";
 // import HistorySVG from '../../assets/history.svg?react';
 // import HomePNG from '../../assets/home.png';
 // import NoteSVG from '../../assets/note.svg?react';
@@ -80,19 +81,9 @@ const styles = stylex.create({
 	},
 });
 
-export type SidebarTab =
-	| "home"
-	| "collections"
-	| "connected"
-	| "db"
-	| "environment"
-	| "history"
-	| "note"
-	| "trend";
-
 interface SidebarRailProps {
-	selectedTab: SidebarTab | null;
-	onSelectTab: (tab: SidebarTab) => void;
+	selectedTab: E_SidebarSection | null;
+	onSelectTab: (tab: E_SidebarSection) => void;
 }
 
 export function SidebarRail({ selectedTab, onSelectTab }: SidebarRailProps) {
@@ -103,12 +94,19 @@ export function SidebarRail({ selectedTab, onSelectTab }: SidebarRailProps) {
 			<div>
 				<SidebarButton
 					Svg={CollectionsSVG}
-					selected={selectedTab === "collections"}
-					onClick={() => onSelectTab("collections")}
+					selected={selectedTab === E_SidebarSection.COLLECTIONS}
+					onClick={() => onSelectTab(E_SidebarSection.COLLECTIONS)}
 				/>
-				{/* <SidebarButton Svg={CollectionsSVG} selected={selectedTab === 'collections'} onClick={() => onSelectTab('collections')} />
+
+				<SidebarButton
+					Svg={EnvironmentSVG}
+					selected={selectedTab === E_SidebarSection.ENVIRONMENT}
+					onClick={() => onSelectTab(E_SidebarSection.ENVIRONMENT)}
+				/>
+
+				{/*
         <SidebarButton Svg={NoteSVG} selected={selectedTab === 'note'} onClick={() => onSelectTab('note')} />
-        <SidebarButton Svg={EnvironmentSVG} selected={selectedTab === 'environment'} onClick={() => onSelectTab('environment')} />
+
         <SidebarButton Svg={DBSVG} selected={selectedTab === 'db'} onClick={() => onSelectTab('db')} />
         <SidebarButton Svg={TrendSVG} selected={selectedTab === 'trend'} onClick={() => onSelectTab('trend')} />
         <SidebarButton Svg={ConnectedSVG} selected={selectedTab === 'connected'} onClick={() => onSelectTab('connected')} />

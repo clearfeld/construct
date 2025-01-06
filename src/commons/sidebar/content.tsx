@@ -1,10 +1,10 @@
 import * as stylex from "@stylexjs/stylex";
-import type { SidebarTab } from "./rail.tsx";
+
 import Collections from "./collections/index.tsx";
+
+import Environments from "./environment";
+import { E_SidebarSection } from "@src/stores/request_store/sidebar_slice.ts";
 // import { SidebarSearchRow } from "./components/sidebar-search-row.tsx";
-// import { CollectionTreeView } from "./components/collection-tree-view.tsx";
-// import data from "./components/collection-data.json";
-// import { EnvironmentList } from "./components/environment-list";
 
 const styles = stylex.create({
 	container: {
@@ -14,18 +14,17 @@ const styles = stylex.create({
 });
 
 interface SidebarContentProps {
-	selectedTab: SidebarTab | null;
+	selectedTab: E_SidebarSection | null;
 }
 
 export function SidebarContent({ selectedTab }: SidebarContentProps) {
-	// <CollectionTreeView data={data as any} />
 	return (
 		<div {...stylex.props(styles.container)}>
 			{/* <SidebarSearchRow /> */}
 
-			{selectedTab === "collections" && <Collections />}
+			{selectedTab === E_SidebarSection.COLLECTIONS && <Collections />}
 
-			{/* {selectedTab === "environment" && <EnvironmentList />} */}
+			{selectedTab === E_SidebarSection.ENVIRONMENT && <Environments />}
 		</div>
 	);
 }

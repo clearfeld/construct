@@ -13,6 +13,7 @@ export type T_Tab = {
 
 export enum E_TabType {
     HTTP_REQUEST = "HTTP_REQUEST",
+	ENVIRONMENT = "ENVIRONMENT",
 };
 
 export enum E_TabStatus {
@@ -28,12 +29,18 @@ export interface TabbarSlice {
 	setTabs: (collection: any[]) => void;
 	getTabs: () => any[];
 
+	getActiveTab: () => T_Tab | null;
+
     activeTab: string | null;
     setActiveTab: (tab_id: string | null) => void;
+
+	setTabTitle: (tab_id: string, title: string) => void;
 
     setTabState: (tab_id: string, state: E_TabStatus) => void;
 
     setTabDataField: (tab_id: string, field: string, value: any) => void;
+
+	setTabData: (tab_id: string, data: any) => void;
 }
 
 export const createTabbarSlice: StateCreator<
@@ -48,6 +55,24 @@ export const createTabbarSlice: StateCreator<
 
     activeTab: null,
     setActiveTab: (tab_id) => set({ activeTab: tab_id }),
+
+	getActiveTab: () => {
+		const tab_id = get().activeTab;
+		const tabs = get().tabs;
+
+		return tabs.find((tab) => tab.id === tab_id) ?? null;
+	},
+
+	setTabTitle: (tab_id: string, title: string) => {
+        const tabs = [ ...get().tabs ];
+        const tab = tabs.find((tab) => tab.id === tab_id);
+
+        if (tab) {
+            tab.title = title;
+        }
+
+        set({ tabs });
+	},
 
     setTabState: (tab_id: string, state: E_TabStatus) => {
         const tabs = [ ...get().tabs ];
@@ -66,6 +91,17 @@ export const createTabbarSlice: StateCreator<
 
         if (tab) {
             tab.data[field] = value;
+        }
+
+        set({ tabs });
+    },
+
+    setTabData: (tab_id: string, data: any) => {
+        const tabs = [ ...get().tabs ];
+        const tab = tabs.find((tab) => tab.id === tab_id);
+
+        if (tab) {
+            tab.data = data;
         }
 
         set({ tabs });
