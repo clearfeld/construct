@@ -18,8 +18,8 @@ import {
 // import { EnvironmentButtonProps } from "./type.ts";
 // import { EnvironmentDropdownButton } from "./environment-dropdown-button.tsx";
 
-// import ArrowCheckCircleHoverSVG from "../../../assets/enabled-arrow-circle-hover.svg?react";
-// import ArrowCheckCircleActiveSVG from "../../../assets/enabled-arrow-circle-active.svg?react";
+import ArrowCheckCircleHoverSVG from "../../../assets/enabled-arrow-circle-hover.svg?react";
+import ArrowCheckCircleActiveSVG from "../../../assets/enabled-arrow-circle-active.svg?react";
 
 const styles = stylex.create({
 	button: {
@@ -136,10 +136,10 @@ const styles = stylex.create({
 		justifyContent: "center",
 		padding: 0,
 		boxShadow: "none",
-		color: "var(--color-sidebar-text)",
+		cursor: "pointer",
 
 		":hover": {
-			backgroundColor: "var(--sidebar-selected-bg)",
+			backgroundColor: "var(--cds-gray-300)",
 		},
 	},
 
@@ -189,8 +189,19 @@ export const WorkspaceEnvironmentButton = memo(
 			(state) => state.getEnvironmentById,
 		);
 
+		const enabledEnvironment = useRequestStore(
+			(state) => state.enabledEnvironment,
+		);
+		const setEnabledEnvironmentDetails = useRequestStore(
+			(state) => state.setEnabledEnvironmentDetails,
+		);
+
 		return (
-			<div {...stylex.props(styles.buttonContainer)}>
+			<div
+				{...stylex.props(styles.buttonContainer)}
+				onMouseEnter={() => setIsHovering(true)}
+				onMouseLeave={() => setIsHovering(false)}
+			>
 				<div
 					{...stylex.props(
 						styles.inactiveBorder,
@@ -246,7 +257,6 @@ export const WorkspaceEnvironmentButton = memo(
 									setActiveEnvironment(tab.data);
 								}
 							} else {
-
 								const target_env = getEnvironmentById(props.env.id);
 
 								if (target_env) {
@@ -315,12 +325,22 @@ export const WorkspaceEnvironmentButton = memo(
 							onClick={(e) => {
 								e.stopPropagation();
 								// props.toggleInUse(environment.id);
+
+								setEnabledEnvironmentDetails({
+									env_id: props.envId,
+									stage_id: null,
+								});
 							}}
 						>
 							{/* <CheckIcon envId={environment.id} /> */}
 
-							{/* <ArrowCheckCircleHoverSVG />
-							<ArrowCheckCircleActiveSVG /> */}
+							{isHovering && !(enabledEnvironment?.env_id === props.envId) && (
+								<ArrowCheckCircleHoverSVG />
+							)}
+
+							{enabledEnvironment?.env_id === props.envId && (
+								<ArrowCheckCircleActiveSVG />
+							)}
 						</button>
 
 						{/* <EnvironmentDropdownButton setOpen={setIsDropdownOpen}>

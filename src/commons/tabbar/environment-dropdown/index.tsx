@@ -1,97 +1,144 @@
-import { useState } from "react";
-import stylex from "@stylexjs/stylex";
+import * as stylex from "@stylexjs/stylex";
+import useRequestStore from "@src/stores/request_store";
 
-// import DownArrow from "../../../assets/arrow-down.svg?react";
-// import SettingsPage from "../../../assets/settings-page.svg?react";
-// import { useOutsideClick } from "../../../hooks/use-outside-click";
+import DownArrow from "../../../assets/arrow-down.svg?react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@controlkit/ui";
+
+import ArrowCheckCircleActiveSVG from "../../../assets/enabled-arrow-circle-active.svg?react";
+// import ArrowCheckCircleHoverSVG from "../../../assets/enabled-arrow-circle-hover.svg?react";
 
 const styles = stylex.create({
 	wrapper: {
 		display: "flex",
-		//backgroundColor: "pink",
-		//borderRadius: "0.5rem",
-		paddingLeft: "0.5rem",
 		boxSizing: "border-box",
 		gap: "0.5rem",
-		//maxWidth: "2rem",
+		padding: 0,
+		margin: 0,
+		width: "12rem",
+		height: "100%",
 	},
 
-	reset: {
-		border: "unset",
-		padding: "unset",
-		backgroundColor: "unset",
-		borderRadius: "unset",
-		outline: "unset",
-		boxShadow: "unset",
+	env_text_main: {
+		textOverflow: "ellipsis",
+		overflow: "hidden",
+		textWrap: "nowrap",
+		width: "calc(100% - 1rem)",
 	},
 
-	button: {
-		boxSizing: "border-box",
-		padding: "0.25rem",
-		borderRadius: "0.5rem",
+	trigger_wrapper: {
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "center",
-		boxShadow: "none",
+		justifyItems: "center",
+		justifyContent: "space-between",
+		padding: "0 0.5rem",
+		cursor: "pointer",
+		width: "100%",
+
+		transition: "background-color var(--transition-speed) ease",
+
+		":hover": {
+			backgroundColor: "var(--cds-gray-200)",
+		},
 	},
 
-	pipe: {
-		backgroundColor: "#A6A6A6",
-		height: "1rem",
-		width: "1px",
-		position: "absolute",
-		boxSizing: "border-box",
-		left: 0,
-		marginLeft: "-0.25rem",
+	menu_content: {
+		width: "20rem",
 	},
 
-	menu: {
-		position: "absolute",
-		padding: "0.5rem",
-		backgroundColor: "#252525",
-		borderRadius: "0.5rem",
-		top: "100%",
+	no_env: {
+		color: "var(--text-sub)",
+	},
+
+	item: {
 		display: "flex",
-		flexDirection: "column",
-		boxSizing: "border-box",
-		boxShadow: "0.5rem 0.5rem 0.25rem 0rem rgba(0,0,0,0.75)",
-		zIndex: 99,
+		gap: "0.5rem",
+		alignItems: "center",
+		justifyContent: "space-between",
+		width: "100%",
+		paddingRight: "0.25rem",
 	},
 
-	relativeParent: {
-		position: "relative",
+	borderActive: {
+		// borderLeft: "0.125rem solid blue",
+		borderLeft: "0.125rem solid transparent",
 	},
 });
+
 export default function EnvironmentDropdown() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	// const modalRef = useOutsideClick(() => setIsMenuOpen(!isMenuOpen));
+	const environments = useRequestStore((state) => state.environments);
+
+	const enabledEnvironment = useRequestStore(
+		(state) => state.enabledEnvironment,
+	);
+	const setEnabledEnvironmentDetails = useRequestStore(
+		(state) => state.setEnabledEnvironmentDetails,
+	);
+
+	const currentlyEnabledEnvironment =
+		enabledEnvironment === null
+			? null
+			: environments.find((env) => env.id === enabledEnvironment?.env_id);
 
 	return (
-		<div {...stylex.props(styles.wrapper, styles.relativeParent)}>
-			<input placeholder="Environment" {...stylex.props(styles.reset)} />
+		<div {...stylex.props(styles.wrapper)}>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<div {...stylex.props(styles.trigger_wrapper)}>
+						<div {...stylex.props(styles.env_text_main)}>
+							{currentlyEnabledEnvironment === null ? (
+								<span>No Environment</span>
+							) : (
+								<span>{currentlyEnabledEnvironment?.name}</span>
+							)}
+						</div>
 
-			<button
-				{...stylex.props(styles.reset, styles.button)}
-				onClick={() => setIsMenuOpen(!isMenuOpen)}
-			>
-				{/* <DownArrow /> */}
-			</button>
+						<DownArrow />
+					</div>
+				</DropdownMenuTrigger>
 
-			{isMenuOpen && (
-				<div
-					// ref={modalRef}
-					{...stylex.props(styles.menu)}
-				>
-					menu
-				</div>
-			)}
+				<DropdownMenuContent align="end" extend={styles.menu_content}>
+					<DropdownMenuItem
+						onClick={() => {
+							setEnabledEnvironmentDetails(null);
+						}}
+						extend={[styles.no_env, styles.borderActive]}
+					>
+						<div {...stylex.props(styles.item)}>
+							<span>No Environment</span>
 
-			<button
-				{...stylex.props(styles.reset, styles.button, styles.relativeParent)}
-			>
-				{/* <SettingsPage /> */}
-				<span {...stylex.props(styles.pipe)} />
-			</button>
+							{enabledEnvironment === null && <ArrowCheckCircleActiveSVG />}
+						</div>
+					</DropdownMenuItem>
+
+					{environments.map((env) => {
+						return (
+							<DropdownMenuItem
+								key={env.id}
+								onClick={() => {
+									setEnabledEnvironmentDetails({
+										env_id: env.id,
+										stage_id: null, // env.stages[0].id,
+									});
+								}}
+								extend={styles.borderActive}
+							>
+								<div {...stylex.props(styles.item)}>
+									<span>{env.name}</span>
+
+									{enabledEnvironment?.env_id === env.id && (
+										<ArrowCheckCircleActiveSVG />
+									)}
+								</div>
+							</DropdownMenuItem>
+						);
+					})}
+				</DropdownMenuContent>
+			</DropdownMenu>
 		</div>
 	);
 }

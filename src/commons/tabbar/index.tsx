@@ -2,14 +2,15 @@ import * as stylex from "@stylexjs/stylex";
 
 import Tab from "./tab"; // , { type RequestType, type Status }
 
-import { useRef
-// 	, useState
+import {
+	useRef,
+	// 	, useState
 } from "react";
 import LeftArrow from "../../assets/arrow-left.svg?react";
 import RightArrow from "../../assets/arrow-right.svg?react";
 // import Plus from "../../assets/plus.svg?react";
 // import DownArrow from "../../assets/arrow-down.svg?react";
-// import EnvironmentDropdown from "./environment-dropdown";
+import EnvironmentDropdown from "./environment-dropdown";
 import { Button } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store";
 
@@ -27,6 +28,7 @@ const styles = stylex.create({
 		backgroundColor: "#141414",
 		borderBottom: "0.0625rem solid var(--main-border-color)",
 		height: "var(--tabbar-height)",
+
 	},
 
 	button: {
@@ -82,7 +84,7 @@ function TabBar() {
 		<div {...stylex.props(styles.wrapper)}>
 			<div
 				style={{
-					width: "100%",
+					width: "calc(100% - 11.625rem)",
 					display: "flex",
 				}}
 			>
@@ -155,7 +157,15 @@ function TabBar() {
 				</div>
 			</div>
 
-			{/* <EnvironmentDropdown /> */}
+			<div
+				{...stylex.props(styles.leftBorder)}
+				style={{
+					// padding: "0 0.25rem",
+					height: "100%",
+				}}
+			/>
+
+			<EnvironmentDropdown />
 		</div>
 	);
 }

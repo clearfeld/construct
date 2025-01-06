@@ -6,17 +6,11 @@ import { useState } from "react";
 import { Checkbox } from "@controlkit/ui";
 
 import type { ReactNode } from "react";
-import { T_ManagedVariable } from "@src/stores/request_store/environments_slice";
+import type { T_ManagedVariable } from "@src/stores/request_store/environments_slice";
 import useRequestStore from "@src/stores/request_store";
 import { E_TabStatus } from "@src/stores/request_store/tabbar_slice";
 // import DownArrow from "../../../../../assets/arrow-down.svg?react";
 // import { useOutsideClick } from "../../../../../hooks/use-outside-click";
-
-// TODO: sidebar rail should change depending on which tab was pressed
-// hoist state up to sidebar slice
-
-// TODO: need toggle enable environment state in sidebar
-// TODO: tabbar needs environment dropdown and display of currently active environment
 
 // TODO: need to parse request contents using environment variable names
 
