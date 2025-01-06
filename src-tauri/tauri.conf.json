@@ -41,7 +41,7 @@
 			"endpoints": ["https://github.com/clearfeld/construct/releases/latest/download/latest.json"],
 
 			"windows": {
-				"installMode": "passive"
+				"installMode": "basicUi"
 			}
 		}
 	}
