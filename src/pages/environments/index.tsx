@@ -9,7 +9,7 @@ import { Button, Input } from "@controlkit/ui";
 import useRequestStore from "@src/stores/request_store/index.ts";
 import type { T_ManagedVariable } from "@src/stores/request_store/environments_slice.ts";
 import { E_TabStatus } from "@src/stores/request_store/tabbar_slice.ts";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 // import DragHandle from "../../../../../assets/drag-handle.svg?react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -149,18 +149,38 @@ interface I_TableOptionsProps {
 	title: string;
 }
 const TableOptions = ({ title }: I_TableOptionsProps) => {
+	const [envName, setEnvName] = useState<string>(title);
+
+	// const activeEnvironment = useRequestStore((state) => state.activeEnvironment);
+	const getActiveEnvironment = useRequestStore(
+		(state) => state.getActiveEnvironment,
+	);
+	const setTabData = useRequestStore((state) => state.setTabData);
+
+	const setTabState = useRequestStore((state) => state.setTabState);
+
+	// Enabled this if tab should update with input change
+	// TODO: decide if sidebar and tabbar should update with none saved changes
+	// and if sidebar should also show none saved changes status as well :thinking
+	// const setTabTitle = useRequestStore((state) => state.setTabTitle);
+
 	return (
 		<div {...stylex.props(optionsStyles.wrapper)}>
 			<Input
 				extend={styles.name_input}
-				value={title}
+				value={envName}
 				onChange={(e) => {
-					// setName(e.target.value);
-					// setTabDataField(getId(), "name", e.target.value);
-					// setTabState(getId(), E_TabStatus.MODIFIED);
+					setEnvName(e.target.value);
+
+					const ae = getActiveEnvironment();
+					if (ae) {
+						ae.name = e.target.value;
+						// setTabTitle(ae.id, e.target.value);
+						setTabData(ae.id, ae);
+						setTabState(ae.id, E_TabStatus.MODIFIED);
+					}
 				}}
 				onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-					console.log("asd");
 					if (e.key === "Enter") {
 						// const ns = structuredClone(getCollection());
 						// updateTargetIfExists(ns, getId(), "name", name);

@@ -209,7 +209,7 @@ export const createEnvironmentsSlice: StateCreator<
         }
     },
 
-	environments: environment_test_data, // [],
+	environments: [], // environment_test_data,
 	setEnvironments: (environments) => set({ environments }),
 	getEnvironments: () => get().environments,
 	addEmptyDefaultEnvironment: () => {
@@ -233,7 +233,7 @@ export const createEnvironmentsSlice: StateCreator<
         return get().environments.find((env) => env.id === id) || null;
     },
 
-	globals: globals_test_data, // [],
+	globals: [], // globals_test_data,
 	setGlobals: (globals) => set({ globals }),
 	getGlobals: () => get().globals,
 

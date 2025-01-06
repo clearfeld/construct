@@ -34,6 +34,8 @@ export interface TabbarSlice {
     activeTab: string | null;
     setActiveTab: (tab_id: string | null) => void;
 
+	setTabTitle: (tab_id: string, title: string) => void;
+
     setTabState: (tab_id: string, state: E_TabStatus) => void;
 
     setTabDataField: (tab_id: string, field: string, value: any) => void;
@@ -59,6 +61,17 @@ export const createTabbarSlice: StateCreator<
 		const tabs = get().tabs;
 
 		return tabs.find((tab) => tab.id === tab_id) ?? null;
+	},
+
+	setTabTitle: (tab_id: string, title: string) => {
+        const tabs = [ ...get().tabs ];
+        const tab = tabs.find((tab) => tab.id === tab_id);
+
+        if (tab) {
+            tab.title = title;
+        }
+
+        set({ tabs });
 	},
 
     setTabState: (tab_id: string, state: E_TabStatus) => {
