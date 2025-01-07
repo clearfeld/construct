@@ -10,6 +10,14 @@
   ],
   "permissions": [
     "updater:default",
-    "updater:default"
+    "updater:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/*" }]
+    },
+    "fs:allow-appdata-read",
+    "fs:allow-appdata-read-recursive",
+    "fs:allow-appdata-write",
+    "fs:allow-appdata-write-recursive"
   ]
 }

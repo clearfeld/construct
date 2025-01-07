@@ -28,6 +28,9 @@ export interface SidebarSlice {
 	addRequest: (collection_id: string) => void;
 
 	deleteItem: (id: string) => void;
+
+	getAllSidebarSliceDataForSessionSave: () => any;
+	setAllSidebarSliceDataFromSessionSave: (ss: any) => any;
 }
 
 export const createSidebarSlice: StateCreator<
@@ -100,6 +103,19 @@ export const createSidebarSlice: StateCreator<
 		deleteTargetIfExists(ns, id, false);
 
 		set({ collection: ns });
+	},
+
+	getAllSidebarSliceDataForSessionSave: () => {
+		return {
+			currentSidebarTab: get().currentSidebarTab,
+			collection: get().collection,
+		};
+	},
+	setAllSidebarSliceDataFromSessionSave: (ss: any) =>  {
+		set({
+			currentSidebarTab: ss.currentSidebarTab,
+			collection: ss.collection,
+		});
 	},
 });
 

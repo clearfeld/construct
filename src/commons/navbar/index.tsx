@@ -13,12 +13,26 @@ import { useEffect, useState } from "react";
 
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
+// import { useLocation } from "react-router";
+
+// Save session - load is in SessionsSaveAndLoadManager.tsx
+// TODO: bring these together after figuring out tauri's way of listening to window close
+const session_file = "last_session.json";
+
+import {
+	exists,
+	BaseDirectory,
+	writeTextFile,
+	create,
+} from "@tauri-apps/plugin-fs";
+
 // import { sqlite_db } from "@src/stores/sqlite";
 // console.log(sqlite_db);
 
 // TODO: use stronghold or something better instead of a plaintext store
 // import { store } from "../../stores/store_helper";
 import MacControls from "./mac_controls";
+import useRequestStore from "@src/stores/request_store";
 // import { Link } from "react-router-dom";
 
 const styles = stylex.create({
@@ -128,9 +142,86 @@ export default function Navbar() {
         document
             .getElementById("titlebar-close")
             ?.addEventListener("click", async () => {
+
+                await AttemptToSaveLocalSession();
+
+                // TODO: UI state showing session save in progress
+
                 await getCurrentWindow().close();
             });
     }, [currentPlatform]);
+
+
+	const getAllSidebarSliceDataForSessionSave = useRequestStore(
+		(state) => state.getAllSidebarSliceDataForSessionSave,
+	);
+
+	const getAllTabbarSliceDataForSessionSave = useRequestStore(
+		(state) => state.getAllTabbarSliceDataForSessionSave,
+	);
+    const getAllDataForSessionSave = useRequestStore(
+		(state) => state.getAllDataForSessionSave,
+	);
+    const getAllEnvironmentsSliceDataForSessionSave = useRequestStore(
+		(state) => state.getAllEnvironmentsSliceDataForSessionSave,
+	);
+
+    // const location = useLocation();
+
+	async function AttemptToSaveLocalSession() {
+		const request_slice = getAllDataForSessionSave();
+		const environment_slice = getAllEnvironmentsSliceDataForSessionSave();
+		const tabbar_slice = getAllTabbarSliceDataForSessionSave();
+		const sidebar_slice = getAllSidebarSliceDataForSessionSave();
+
+		console.log("ctrl + p");
+
+		console.log(request_slice);
+
+		const contents = JSON.stringify({
+			meta: {
+				version: "0.0.1", // save file version
+				url: window.location.pathname, // location.pathname,
+			},
+			request_slice: request_slice,
+			environments_slice: environment_slice,
+			tabbar_slice: tabbar_slice,
+			sidebar_slice: sidebar_slice,
+		});
+
+		const previous_session_exists = await exists(session_file, {
+			baseDir: BaseDirectory.AppData,
+		});
+
+		console.log("Checked if exists");
+
+		if (previous_session_exists) {
+			console.log("attempt to write");
+
+			writeTextFile(session_file, contents, {
+				baseDir: BaseDirectory.AppData,
+			})
+				.then((res) => {
+					console.log("success?", res);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else {
+			console.log("attempt to create");
+
+			// TODO: testing needed for weird initial state of app
+			// await mkdir("com.construct.app", {
+			// 	baseDir: BaseDirectory.AppData,
+			// });
+
+			const file = await create(session_file, {
+				baseDir: BaseDirectory.AppData,
+			});
+			await file.write(new TextEncoder().encode(contents));
+			await file.close();
+		}
+	}
 
     return (
         <div data-tauri-drag-region {...stylex.props(styles.base)}>

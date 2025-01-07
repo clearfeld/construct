@@ -17,6 +17,7 @@ import "./updater.tsx";
 import { H5 } from "@controlkit/ui";
 import TabBar from "./commons/tabbar/index.tsx";
 import EnvironmentsPage from "./pages/environments/index.tsx";
+import SessionSaveAndLoadManager from "./SessionSaveAndLoadManager.tsx";
 
 const styles = stylex.create({
 	container: {
@@ -60,6 +61,8 @@ function App() {
 				path="/"
 				element={
 					<div>
+						<SessionSaveAndLoadManager />
+
 						<div
 							style={{
 								height: "var(--navbar-height)",
