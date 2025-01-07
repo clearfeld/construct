@@ -146,7 +146,8 @@ fn http_request(
 
     // TODO: FIXME
     unsafe {
-        easy.useragent(&format!("ConstructRuntime/{}", APP_VERSION)).unwrap();
+        easy.useragent(&format!("ConstructRuntime/{}", APP_VERSION))
+            .unwrap();
         // println!("{}", format!("ConstructRuntime/{}", APP_VERSION));
     }
 
@@ -240,6 +241,7 @@ fn http_request(
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
         .setup(|app| {
             println!("{}", app.package_info().version.to_string());
             // TODO: FIXME: use lazy or whatever is the current rust recommendation, so unsafe isnt needed

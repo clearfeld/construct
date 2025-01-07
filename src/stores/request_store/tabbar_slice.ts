@@ -6,21 +6,21 @@ export type T_Tab = {
 	id: string;
 	status: E_TabStatus;
 	title: string;
-    type: E_TabType;
+	type: E_TabType;
 	requestType: string;
-    data: any;
+	data: any;
 };
 
 export enum E_TabType {
-    HTTP_REQUEST = "HTTP_REQUEST",
+	HTTP_REQUEST = "HTTP_REQUEST",
 	ENVIRONMENT = "ENVIRONMENT",
-};
+}
 
 export enum E_TabStatus {
-    SAVED = "SAVED",
-    MODIFIED = "MODIFIED",
-    NONE = "NONE",
-};
+	SAVED = "SAVED",
+	MODIFIED = "MODIFIED",
+	NONE = "NONE",
+}
 
 export interface TabbarSlice {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -31,16 +31,19 @@ export interface TabbarSlice {
 
 	getActiveTab: () => T_Tab | null;
 
-    activeTab: string | null;
-    setActiveTab: (tab_id: string | null) => void;
+	activeTab: string | null;
+	setActiveTab: (tab_id: string | null) => void;
 
 	setTabTitle: (tab_id: string, title: string) => void;
 
-    setTabState: (tab_id: string, state: E_TabStatus) => void;
+	setTabState: (tab_id: string, state: E_TabStatus) => void;
 
-    setTabDataField: (tab_id: string, field: string, value: any) => void;
+	setTabDataField: (tab_id: string, field: string, value: any) => void;
 
 	setTabData: (tab_id: string, data: any) => void;
+
+	getAllTabbarSliceDataForSessionSave: () => any;
+	setAllTabbarSliceDataFromSessionSave: (ts: any) => any;
 }
 
 export const createTabbarSlice: StateCreator<
@@ -53,8 +56,8 @@ export const createTabbarSlice: StateCreator<
 	setTabs: (tabs) => set({ tabs }),
 	getTabs: () => get().tabs,
 
-    activeTab: null,
-    setActiveTab: (tab_id) => set({ activeTab: tab_id }),
+	activeTab: null,
+	setActiveTab: (tab_id) => set({ activeTab: tab_id }),
 
 	getActiveTab: () => {
 		const tab_id = get().activeTab;
@@ -64,156 +67,169 @@ export const createTabbarSlice: StateCreator<
 	},
 
 	setTabTitle: (tab_id: string, title: string) => {
-        const tabs = [ ...get().tabs ];
-        const tab = tabs.find((tab) => tab.id === tab_id);
+		const tabs = [...get().tabs];
+		const tab = tabs.find((tab) => tab.id === tab_id);
 
-        if (tab) {
-            tab.title = title;
-        }
+		if (tab) {
+			tab.title = title;
+		}
 
-        set({ tabs });
+		set({ tabs });
 	},
 
-    setTabState: (tab_id: string, state: E_TabStatus) => {
-        const tabs = [ ...get().tabs ];
-        const tab = tabs.find((tab) => tab.id === tab_id);
+	setTabState: (tab_id: string, state: E_TabStatus) => {
+		const tabs = [...get().tabs];
+		const tab = tabs.find((tab) => tab.id === tab_id);
 
-        if (tab) {
-            tab.status = state;
-        }
+		if (tab) {
+			tab.status = state;
+		}
 
-        set({ tabs });
-    },
+		set({ tabs });
+	},
 
-    setTabDataField: (tab_id: string, field: string, value: any) => {
-        const tabs = [ ...get().tabs ];
-        const tab = tabs.find((tab) => tab.id === tab_id);
+	setTabDataField: (tab_id: string, field: string, value: any) => {
+		const tabs = [...get().tabs];
+		const tab = tabs.find((tab) => tab.id === tab_id);
 
-        if (tab) {
-            tab.data[field] = value;
-        }
+		if (tab) {
+			tab.data[field] = value;
+		}
 
-        set({ tabs });
-    },
+		set({ tabs });
+	},
 
-    setTabData: (tab_id: string, data: any) => {
-        const tabs = [ ...get().tabs ];
-        const tab = tabs.find((tab) => tab.id === tab_id);
+	setTabData: (tab_id: string, data: any) => {
+		const tabs = [...get().tabs];
+		const tab = tabs.find((tab) => tab.id === tab_id);
 
-        if (tab) {
-            tab.data = data;
-        }
+		if (tab) {
+			tab.data = data;
+		}
 
-        set({ tabs });
-    },
+		set({ tabs });
+	},
+
+	getAllTabbarSliceDataForSessionSave: () => {
+		return {
+			tabs: get().tabs,
+			activeTab: get().activeTab,
+		};
+	},
+	setAllTabbarSliceDataFromSessionSave: (ts: any) => {
+		set({
+			tabs: ts.tabs,
+			activeTab: ts.activeTab,
+		});
+	},
 });
 
 export const test_data: T_Tab[] = [
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "U GET",
 		requestType: "PUT",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "DELETE",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "POST",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "DELETE",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "S GET",
 		requestType: "GET",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "S GET",
 		requestType: "OPTIONS",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "HEAD",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "GET",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.NONE,
 		title: "S GET",
 		requestType: "GET",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "S GET",
 		requestType: "GET",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "M GET",
 		requestType: "GET",
-        data: {},
+		data: {},
 	},
 
 	{
-        id: uuidv4(),
-        type: E_TabType.HTTP_REQUEST,
+		id: uuidv4(),
+		type: E_TabType.HTTP_REQUEST,
 		status: E_TabStatus.MODIFIED,
 		title: "U PUT",
 		requestType: "PUT",
-        data: {},
+		data: {},
 	},
 ];

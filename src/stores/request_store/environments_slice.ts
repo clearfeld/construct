@@ -100,6 +100,9 @@ export interface EnvironmentsSlice {
 	vaultSecret: string | null;
 	setVaultSecret: (secret: string | null) => void;
 	getVaultSecret: () => string | null;
+
+	getAllEnvironmentsSliceDataForSessionSave: () => any;
+	setAllEnvironmentsSliceDataFromSessionSave: (es: any) => any;
 }
 
 export const createEnvironmentsSlice: StateCreator<
@@ -261,6 +264,31 @@ export const createEnvironmentsSlice: StateCreator<
 	vaultSecret: null,
 	setVaultSecret: (secret) => set({ vaultSecret: secret }),
 	getVaultSecret: () => get().vaultSecret,
+
+	getAllEnvironmentsSliceDataForSessionSave: () => {
+		return {
+			activeEnvironmentSliceItem: get().activeEnvironmentSliceItem,
+			enabledEnvironment: get().enabledEnvironment,
+			activeEnvironmentDetails: get().activeEnvironmentDetails,
+			activeEnvironment: get().activeEnvironment,
+			environments: get().environments,
+			globals: get().globals,
+			vault: get().vault,
+			// NOTE: never save vaultSecret
+		};
+	},
+
+	setAllEnvironmentsSliceDataFromSessionSave: (es: any) => {
+		set({
+			activeEnvironmentSliceItem: es.activeEnvironmentSliceItem,
+			enabledEnvironment: es.enabledEnvironment,
+			activeEnvironmentDetails: es.activeEnvironmentDetails,
+			activeEnvironment: es.activeEnvironment,
+			environments: es.environments,
+			globals: es.globals,
+			vault: es.vault,
+		});
+	},
 });
 
 /*

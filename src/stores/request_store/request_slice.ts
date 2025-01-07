@@ -214,6 +214,9 @@ export interface RequestSlice {
 		body: string,
 		// cookies:
 	) => void;
+
+	getAllDataForSessionSave: () => any;
+	setAllDataFromSessionSave: (rs: any) => any;
 }
 
 export const createRequestSlice: StateCreator<
@@ -369,7 +372,7 @@ export const createRequestSlice: StateCreator<
 			return;
 		}
 
-	    // url
+		// url
 		// body
 		// headers
 
@@ -491,6 +494,40 @@ export const createRequestSlice: StateCreator<
 			// cookies,
 
 			response: null,
+		});
+	},
+
+	getAllDataForSessionSave: () => {
+		return {
+			id: get().id,
+			name: get().name,
+			url: get().url,
+			method: get().method,
+			isAutoHeadersVisible: get().isAutoHeadersVisible,
+			autoHeaders: get().autoHeaders,
+			headers: get().headers,
+			body: get().body,
+			cookies: get().cookies,
+			response: get().response,
+			response_headers: get().response_headers,
+			response_cookies: get().response_cookies,
+		};
+	},
+
+	setAllDataFromSessionSave: (rs: any) => {
+		set({
+			id: rs.id,
+			name: rs.name,
+			url: rs.url,
+			method: rs.method,
+			isAutoHeadersVisible: rs.isAutoHeadersVisible,
+			autoHeaders: rs.autoHeaders,
+			headers: rs.headers,
+			body: rs.body,
+			cookies: rs.cookies,
+			response: rs.response,
+			response_headers: rs.response_headers,
+			response_cookies: rs.response_cookies,
 		});
 	},
 });
