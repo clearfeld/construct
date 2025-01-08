@@ -1,29 +1,30 @@
 import * as stylex from "@stylexjs/stylex";
 import { platform } from "@tauri-apps/plugin-os";
 
-// backgroundColor: isWindows ? "yellow" : "gray",
-// @ts-ignore
 import MinimizeSVG from "@assets/mdi_window-minimize.svg?react";
-// @ts-ignore
 import MaximizeSVG from "@assets/mdi_window-maximize.svg?react";
-// @ts-ignore
 import CloseSVG from "@assets/mdi_close.svg?react";
 import { useEffect, useState } from "react";
-// import { Window, currentMonitor } from "@tauri-apps/api/window";
 
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 // import { useLocation } from "react-router";
 
+import { TauriEvent } from "@tauri-apps/api/event";
+
 // Save session - load is in SessionsSaveAndLoadManager.tsx
 // TODO: bring these together after figuring out tauri's way of listening to window close
-const session_file = "last_session.json";
+const session_file = import.meta.env.DEV
+	? "last_session_dev_mode.json"
+	: "last_session.json";
+const roaming_dir = await appDataDir(); // "com.construct.app";
 
 import {
 	exists,
 	BaseDirectory,
 	writeTextFile,
 	create,
+	mkdir,
 } from "@tauri-apps/plugin-fs";
 
 // import { sqlite_db } from "@src/stores/sqlite";
@@ -33,124 +34,112 @@ import {
 // import { store } from "../../stores/store_helper";
 import MacControls from "./mac_controls";
 import useRequestStore from "@src/stores/request_store";
+import { appDataDir } from "@tauri-apps/api/path";
 // import { Link } from "react-router-dom";
 
 const styles = stylex.create({
-    base: {
-        // marginLeft: "320px",
-        width: "100vw",
-        height: "var(--navbar-height)",
+	base: {
+		width: "100vw",
+		height: "var(--navbar-height)",
 
-        userSelect: "none",
-        display: "flex",
-        // justifyContent: "flex-end",
-        position: "fixed",
-        zIndex: 1000,
-        top: "0",
-        left: "0",
-        // right: 0,
+		userSelect: "none",
+		display: "flex",
+		position: "fixed",
+		zIndex: 1000,
+		top: "0",
+		left: "0",
 
-        backgroundColor: "var(--sidebar-color-bg)",
-        borderBottom: "1px solid var(--border-color)",
-    },
+		backgroundColor: "var(--sidebar-color-bg)",
+		borderBottom: "1px solid var(--border-color)",
+	},
 });
 
 const window_styles = stylex.create({
-    btn: {
-        // backgroundColor: "red",
-        // backgroundColor: "var(--navbar-color-bg)",
-        width: "3rem",
-        // height: "calc(100% - 4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
+	btn: {
+		// backgroundColor: "var(--navbar-color-bg)",
+		width: "3rem",
+		// height: "calc(100% - 4px)",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		cursor: "pointer",
 
-        transition: "background-color var(--transition-speed) ease",
+		transition: "background-color var(--transition-speed) ease",
 
-        ":hover": {
-            backgroundColor: "var(--navbar-color-bg-hover)",
-        },
-    },
+		":hover": {
+			backgroundColor: "var(--navbar-color-bg-hover)",
+		},
+	},
 
-    close_btn: {
-        ":hover": {
-            backgroundColor: "red !important",
-        },
-    },
+	close_btn: {
+		":hover": {
+			backgroundColor: "red !important",
+		},
+	},
 });
 
-// interface I_NavButtonProps {
-// 	children: ReactNode;
-// }
-// function NavButton({ children }: I_NavButtonProps) {
-// 	return (
-// 		<button {...stylex.props(styles.nav_button)} type="button">
-// 			{children}
-// 		</button>
-// 	);
-// }
-
-// const appWindow = new Window("main");
-
 export default function Navbar() {
-    // const [curRoute, setCurRoute] = useState<T_NavRoutes>("Tools");
-    // const [curRoute, setCurRoute] = useState("Tools");
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [currentPlatform, setCurrentPlatform] = useState<string>("macosx");
 
-    const [currentPlatform, setCurrentPlatform] = useState<string>("macosx");
+	useEffect(() => {
+		GetPlat();
 
-    useEffect(() => {
-        GetPlat();
+		getCurrentWindow().listen(
+			TauriEvent.WINDOW_CLOSE_REQUESTED,
+			async (_event) => {
+				// TODO: UI state showing session save in progress
 
-        // console.log(store);
-        // test_write();
-        test_read();
-    }, []);
+				await AttemptToSaveLocalSession();
 
-    async function GetPlat() {
-        const currentPlatform = await platform();
-        // console.log(currentPlatform);
-        setCurrentPlatform(currentPlatform);
-    }
+                await getCurrentWindow().destroy();
+			},
+		);
 
-    // async function test_write() {
-    // 	await store.set("some-key", { value: 5 });
-    // 	await store.save();
-    // }
+		// console.log(store);
+		// test_write();
+		// test_read();
+	}, []);
 
-    async function test_read() {
-        // const val = await store.get("some-key");
-        // console.log(val);
-    }
+	async function GetPlat() {
+		const currentPlatform = await platform();
+		// console.log(currentPlatform);
+		setCurrentPlatform(currentPlatform);
+	}
 
-    useEffect(() => {
-        // const appWindow = getCurrentWindow();
+	// async function test_write() {
+	// 	await store.set("some-key", { value: 5 });
+	// 	await store.save();
+	// }
 
-        document
-            .getElementById("titlebar-minimize")
-            ?.addEventListener("click", async () => {
-                await getCurrentWindow().minimize();
-            });
+	// async function test_read() {
+	//     // const val = await store.get("some-key");
+	//     // console.log(val);
+	// }
 
-        document
-            .getElementById("titlebar-maximize")
-            ?.addEventListener("click", async () => {
-                await getCurrentWindow().toggleMaximize();
-            });
+	useEffect(() => {
+		// const appWindow = getCurrentWindow();
 
-        document
-            .getElementById("titlebar-close")
-            ?.addEventListener("click", async () => {
+		document
+			.getElementById("titlebar-minimize")
+			?.addEventListener("click", async () => {
+				await getCurrentWindow().minimize();
+			});
 
-                await AttemptToSaveLocalSession();
+		document
+			.getElementById("titlebar-maximize")
+			?.addEventListener("click", async () => {
+				await getCurrentWindow().toggleMaximize();
+			});
 
-                // TODO: UI state showing session save in progress
+		document
+			.getElementById("titlebar-close")
+			?.addEventListener("click", async () => {
+				// await AttemptToSaveLocalSession();
+				// TODO: UI state showing session save in progress
 
-                await getCurrentWindow().close();
-            });
-    }, [currentPlatform]);
-
+				await getCurrentWindow().close();
+			});
+	}, [currentPlatform]);
 
 	const getAllSidebarSliceDataForSessionSave = useRequestStore(
 		(state) => state.getAllSidebarSliceDataForSessionSave,
@@ -159,24 +148,18 @@ export default function Navbar() {
 	const getAllTabbarSliceDataForSessionSave = useRequestStore(
 		(state) => state.getAllTabbarSliceDataForSessionSave,
 	);
-    const getAllDataForSessionSave = useRequestStore(
+	const getAllDataForSessionSave = useRequestStore(
 		(state) => state.getAllDataForSessionSave,
 	);
-    const getAllEnvironmentsSliceDataForSessionSave = useRequestStore(
+	const getAllEnvironmentsSliceDataForSessionSave = useRequestStore(
 		(state) => state.getAllEnvironmentsSliceDataForSessionSave,
 	);
-
-    // const location = useLocation();
 
 	async function AttemptToSaveLocalSession() {
 		const request_slice = getAllDataForSessionSave();
 		const environment_slice = getAllEnvironmentsSliceDataForSessionSave();
 		const tabbar_slice = getAllTabbarSliceDataForSessionSave();
 		const sidebar_slice = getAllSidebarSliceDataForSessionSave();
-
-		console.log("ctrl + p");
-
-		console.log(request_slice);
 
 		const contents = JSON.stringify({
 			meta: {
@@ -189,33 +172,33 @@ export default function Navbar() {
 			sidebar_slice: sidebar_slice,
 		});
 
-		const previous_session_exists = await exists(session_file, {
+		const dir_exists = await exists(`${roaming_dir}`, {
 			baseDir: BaseDirectory.AppData,
 		});
 
-		console.log("Checked if exists");
+		if (!dir_exists) {
+			await mkdir(`${roaming_dir}`, {
+				baseDir: BaseDirectory.AppData,
+			});
+		}
+
+		const previous_session_exists = await exists(
+			`${roaming_dir}/${session_file}`,
+			{
+				baseDir: BaseDirectory.AppData,
+			},
+		);
 
 		if (previous_session_exists) {
-			console.log("attempt to write");
-
-			writeTextFile(session_file, contents, {
+			await writeTextFile(`${roaming_dir}/${session_file}`, contents, {
 				baseDir: BaseDirectory.AppData,
 			})
-				.then((res) => {
-					console.log("success?", res);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+
+            // .catch((err) => {
+			// 		console.log(err);
+			// 	});
 		} else {
-			console.log("attempt to create");
-
-			// TODO: testing needed for weird initial state of app
-			// await mkdir("com.construct.app", {
-			// 	baseDir: BaseDirectory.AppData,
-			// });
-
-			const file = await create(session_file, {
+			const file = await create(`${roaming_dir}/${session_file}`, {
 				baseDir: BaseDirectory.AppData,
 			});
 			await file.write(new TextEncoder().encode(contents));
@@ -223,34 +206,34 @@ export default function Navbar() {
 		}
 	}
 
-    return (
-        <div data-tauri-drag-region {...stylex.props(styles.base)}>
-            {currentPlatform === "macos" && <MacControls />}
+	return (
+		<div data-tauri-drag-region {...stylex.props(styles.base)}>
+			{currentPlatform === "macos" && <MacControls />}
 
-            <p
-                data-tauri-drag-region
-                style={{
-                    margin: 0,
-                    padding: 0,
-                    alignContent: "center",
-                    marginLeft: "1rem",
-                }}
-            >
-                Construct
-            </p>
+			<p
+				data-tauri-drag-region
+				style={{
+					margin: 0,
+					padding: 0,
+					alignContent: "center",
+					marginLeft: "1rem",
+				}}
+			>
+				Construct
+			</p>
 
-            <div
-                data-tauri-drag-region
-                style={{
-                    display: "flex",
-                    position: "fixed",
-                    height: "36px",
-                    right: 0,
-                    // alignItems: "center",
-                    borderBottom: "1px solid var(--color-border)",
-                }}
-            >
-                {/* <Link
+			<div
+				data-tauri-drag-region
+				style={{
+					display: "flex",
+					position: "fixed",
+					height: "36px",
+					right: 0,
+					// alignItems: "center",
+					borderBottom: "1px solid var(--color-border)",
+				}}
+			>
+				{/* <Link
 					to={"/settings"}
 				>
 					<svg
@@ -264,38 +247,34 @@ export default function Navbar() {
 					</svg>
 				</Link> */}
 
-                {(currentPlatform === "windows" ||
-                    currentPlatform === "linux") && (
-                    <>
-                        <div
-                            className="titlebar-button"
-                            id="titlebar-minimize"
-                            {...stylex.props(window_styles.btn)}
-                        >
-                            <MinimizeSVG />
-                        </div>
+				{(currentPlatform === "windows" || currentPlatform === "linux") && (
+					<>
+						<div
+							className="titlebar-button"
+							id="titlebar-minimize"
+							{...stylex.props(window_styles.btn)}
+						>
+							<MinimizeSVG />
+						</div>
 
-                        <div
-                            className="titlebar-button"
-                            id="titlebar-maximize"
-                            {...stylex.props(window_styles.btn)}
-                        >
-                            <MaximizeSVG />
-                        </div>
+						<div
+							className="titlebar-button"
+							id="titlebar-maximize"
+							{...stylex.props(window_styles.btn)}
+						>
+							<MaximizeSVG />
+						</div>
 
-                        <div
-                            className="titlebar-button"
-                            id="titlebar-close"
-                            {...stylex.props(
-                                window_styles.btn,
-                                window_styles.close_btn,
-                            )}
-                        >
-                            <CloseSVG />
-                        </div>
-                    </>
-                )}
-            </div>
-        </div>
-    );
+						<div
+							className="titlebar-button"
+							id="titlebar-close"
+							{...stylex.props(window_styles.btn, window_styles.close_btn)}
+						>
+							<CloseSVG />
+						</div>
+					</>
+				)}
+			</div>
+		</div>
+	);
 }

@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import useRequestStore from "./stores/request_store/index.ts";
 import { useNavigate } from "react-router";
 import { LoadingSize, LoadingSpinner } from "@controlkit/ui";
+import { appDataDir } from "@tauri-apps/api/path";
 
-// TODO: have different file for local and prod version of app
-const session_file = "last_session.json";
-
-// import { listen } from "@tauri-apps/api/event";
+const session_file = import.meta.env.DEV ? "last_session_dev_mode.json" : "last_session.json";
+const roaming_dir = await appDataDir(); // "com.construct.app";
 
 const styles = stylex.create({
 	wrapper: {
@@ -16,7 +15,6 @@ const styles = stylex.create({
 		position: "absolute",
 		width: "100%",
 		height: "calc(100% - var(--navbar-height))",
-		// marginTop: "var(--navbar-height)",
 		zIndex: 1000,
 		display: "flex",
 		flexDirection: "column",
@@ -60,10 +58,8 @@ export default function SessionSaveAndLoadManager() {
 		// 	}
 		// };
 
-		// // TODO: need to figure this out in case of alt f4 or other types of window close events
-		// // listen("tauri://close-requested", async (event) => {
-		// // 	await AttemptToSaveLocalSession();
-		// // });
+		// TODO: need to figure this out in case of alt f4 or other types of window close events
+
 
 		// window.addEventListener("keydown", handleKeyDown);
 
@@ -79,12 +75,12 @@ export default function SessionSaveAndLoadManager() {
 
 		// TODO: create a separate file within appConfig for settings store in the future
 
-		const previous_session_exists = await exists(session_file, {
+		const previous_session_exists = await exists(`${roaming_dir}/${session_file}`, {
 			baseDir: BaseDirectory.AppData,
 		});
 
 		if (previous_session_exists) {
-			const session_json = await readTextFile(session_file, {
+			const session_json = await readTextFile(`${roaming_dir}/${session_file}`, {
 				baseDir: BaseDirectory.AppData,
 			});
 
