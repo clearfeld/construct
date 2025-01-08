@@ -4,8 +4,6 @@ import type { T_Header } from "@src/stores/request_store/request_slice";
 import { invoke } from "@tauri-apps/api/core";
 
 export default function SendRequestBtn() {
-	// const sendRequest = useRequestStore((state) => state.sendRequest);
-
 	const getHTTPRequest = useRequestStore((state) => state.getHTTPRequest);
 	const getEnabledEnvironmentAndDetails = useRequestStore(
 		(state) => state.getEnabledEnvironmentAndDetails,
@@ -146,7 +144,6 @@ export default function SendRequestBtn() {
 	return (
 		<Button
 			onClick={(_) => {
-				// sendRequest();
 				AttemptToSendHTTPRequest();
 			}}
 		>

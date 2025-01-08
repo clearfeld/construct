@@ -200,7 +200,6 @@ export interface RequestSlice {
 	loading: boolean;
 	setLoading: (arg: boolean) => void;
 	error: string | null;
-	sendRequest: () => Promise<void>;
 
 	getHTTPRequest: () => any;
 
@@ -345,82 +344,6 @@ export const createRequestSlice: StateCreator<
 	loading: false,
 	setLoading: (arg: boolean) => set({ loading: arg }),
 	error: null,
-
-	// TODO: old clean
-	sendRequest: async () => {
-		set({ loading: true });
-
-		const method = get().method;
-		const s = get();
-		const { url, body, cookies, autoHeaders, headers } = get();
-
-		// set({ loading: true, error: null });
-
-		console.log(method, body, url, cookies, autoHeaders, headers, s);
-
-		const filtered_headers = headers
-			.filter((h) => h.enabled)
-			.map((h) => `${h.key}: ${h.value}`)
-			.join(", ");
-
-		// TODO: verify data before invoking
-		// console.log(url);
-		const trimmedUrl = url.trim();
-		if (trimmedUrl.length === 0) {
-			// TODO: error state ui
-			// set({ error: "URL cannot be empty", loading: false });
-			return;
-		}
-
-		// url
-		// body
-		// headers
-
-		console.log(trimmedUrl);
-
-		invoke("http_request", {
-			method: method.value,
-			headers: filtered_headers,
-			url: trimmedUrl,
-			body: body,
-			cookies: "",
-		})
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			.then((message: any) => {
-				console.log(message);
-
-				set({ response: message.response_data_string });
-				set({ response_headers: message.response_headers });
-				set({ response_cookies: message.response_cookies });
-				set({ loading: false });
-
-				// setResponse(message.response_data_string);
-				// set_HTTP_API_Response_Body(message.response_data_string);
-				// set_HTTP_API_Response_Headers(message.response_headers);
-			})
-			.catch((error_message) => {
-				console.error(error_message);
-
-				set({ loading: false });
-			});
-
-		// try {
-		// 	const response = await fetch(url, {
-		// 		method,
-		// 		headers: {
-		// 			...headers,
-		// 			Cookie: Object.entries(cookies)
-		// 				.map(([key, value]) => `${key}=${value}`)
-		// 				.join("; "),
-		// 		},
-		// 		body: method !== "GET" ? body : undefined,
-		// 	});
-		// 	const responseData = await response.json();
-		// 	set({ response: responseData, loading: false });
-		// } catch (error) {
-		// 	set({ error: error.message, loading: false });
-		// }
-	},
 
 	getHTTPRequest: () => {
 		return {
