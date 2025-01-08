@@ -1,19 +1,35 @@
-import {
-	exists,
-	BaseDirectory,
-	readTextFile,
-} from "@tauri-apps/plugin-fs";
-import { useEffect } from "react";
+import * as stylex from "@stylexjs/stylex";
+import { exists, BaseDirectory, readTextFile } from "@tauri-apps/plugin-fs";
+import { useEffect, useState } from "react";
 import useRequestStore from "./stores/request_store/index.ts";
 import { useNavigate } from "react-router";
+import { LoadingSize, LoadingSpinner } from "@controlkit/ui";
 
 // TODO: have different file for local and prod version of app
 const session_file = "last_session.json";
 
 // import { listen } from "@tauri-apps/api/event";
 
+const styles = stylex.create({
+	wrapper: {
+		backgroundColor: "var(--color-bg)",
+		position: "absolute",
+		width: "100%",
+		height: "calc(100% - var(--navbar-height))",
+		// marginTop: "var(--navbar-height)",
+		zIndex: 1000,
+		display: "flex",
+		flexDirection: "column",
+		gap: "1rem",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});
+
 export default function SessionSaveAndLoadManager() {
 	const navigate = useNavigate();
+
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const setAllDataFromSessionSave = useRequestStore(
 		(state) => state.setAllDataFromSessionSave,
@@ -56,7 +72,6 @@ export default function SessionSaveAndLoadManager() {
 		// };
 	}, []);
 
-
 	async function SetLocalSessionIfExists() {
 		// TODO: https://tauri.app/plugin/file-system/#read
 		// probably should use readTextFileLines or Binary data format for session file instead of raw json
@@ -95,8 +110,18 @@ export default function SessionSaveAndLoadManager() {
 		} else {
 			console.log("doesnt exists");
 		}
+
+		setLoading(false);
 	}
 
-	return <></>;
+	return (
+		<>
+			{loading && (
+				<div {...stylex.props(styles.wrapper)}>
+					<LoadingSpinner size={LoadingSize.LARGE} />
+					<p>Checking for local session...</p>
+				</div>
+			)}
+		</>
+	);
 }
-

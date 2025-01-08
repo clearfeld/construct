@@ -61,8 +61,6 @@ function App() {
 				path="/"
 				element={
 					<div>
-						<SessionSaveAndLoadManager />
-
 						<div
 							style={{
 								height: "var(--navbar-height)",
@@ -70,6 +68,8 @@ function App() {
 						>
 							<Navbar />
 						</div>
+
+						<SessionSaveAndLoadManager />
 
 						<Outlet />
 
