@@ -4,6 +4,13 @@
 
 [![image](https://private-user-images.githubusercontent.com/49600278/400570317-dcb26a03-7361-4f67-977a-93b17baf8470.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzYyMDI4MDQsIm5iZiI6MTczNjIwMjUwNCwicGF0aCI6Ii80OTYwMDI3OC80MDA1NzAzMTctZGNiMjZhMDMtNzM2MS00ZjY3LTk3N2EtOTNiMTdiYWY4NDcwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAxMDYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMTA2VDIyMjgyNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTgzOGRlNjQwODBhNzJmNTI1MWZhMDk3YjFmMWUxYjhjNDJkZjViZjRkZWI4ZDQxOTE3OGFlMTJjZjY5YTIzNTgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.bMpH5FotMIbuH3FkFW9Ch2DWo353OBDdHt3aQObwPPE)
 
+# Mac Install
+After dragging the app into the applications folder you'll need to run.
+```bash
+xattr -c /Applications/construct.app
+```
+Apple claims the app / dmg is damaged or corrupt if it doesn't have a apple certificate for the app.
+
 # Tauri + React + Typescript
 
 This template should help get you started developing with Tauri, React and Typescript in Vite.
