@@ -51,6 +51,9 @@ export const createSidebarSlice: StateCreator<
 	addCollection: () => {
 		const ns = structuredClone(get().collection);
 
+		const dn = new Date();
+		const unixTimestamp = dn.getTime();
+
 		ns.push({
 			id: uuidv4(),
 			type: "collection",
@@ -58,6 +61,9 @@ export const createSidebarSlice: StateCreator<
 			name: "New Collection",
 			open: true,
 			items: [],
+
+			updated_at: unixTimestamp,
+			created_at: unixTimestamp,
 		});
 
 		set({ collection: ns });
@@ -66,6 +72,9 @@ export const createSidebarSlice: StateCreator<
 	addFolder: (collection_id: string) => {
 		const ns = structuredClone(get().collection);
 
+		const dn = new Date();
+		const unixTimestamp = dn.getTime();
+
 		addToTargetIfExists(ns, collection_id, {
 			id: uuidv4(),
 			type: "folder",
@@ -73,15 +82,21 @@ export const createSidebarSlice: StateCreator<
 			name: "New Folder",
 			open: true,
 			items: [],
+
+			updated_at: unixTimestamp,
+			created_at: unixTimestamp,
 		});
 
 		set({ collection: ns });
 	},
 
-	addRequest: (collection_id: string) => {
+	addRequest: (id: string) => {
 		const ns = structuredClone(get().collection);
 
-		addToTargetIfExists(ns, collection_id, {
+		const dn = new Date();
+		const unixTimestamp = dn.getTime();
+
+		addToTargetIfExists(ns, id, {
 			id: uuidv4(),
 			type: "http_request",
 			favorite: false,
@@ -92,6 +107,9 @@ export const createSidebarSlice: StateCreator<
 			body: "",
 			open: true,
 			items: [],
+
+			updated_at: unixTimestamp,
+			created_at: unixTimestamp,
 		});
 
 		set({ collection: ns });
@@ -141,6 +159,9 @@ export function UpdateHttpRequestTargetIfExists(
 	method: T_Method,
 	headers: T_Header[],
 	body: string,
+
+	updated_at: string | number,
+	created_at: string | number,
 ) {
 	for (let i = 0; i < nc.length; ++i) {
 		// console.log("NC", nc[i].id);
@@ -151,6 +172,9 @@ export function UpdateHttpRequestTargetIfExists(
 			nc[i].method = method.value;
 			nc[i].headers = headers;
 			nc[i].body = body;
+
+			nc[i].updated_at = updated_at;
+			nc[i].created_at = created_at;
 
 			return;
 		}
@@ -164,6 +188,9 @@ export function UpdateHttpRequestTargetIfExists(
 				method,
 				headers,
 				body,
+
+				updated_at,
+				created_at,
 			);
 		}
 	}

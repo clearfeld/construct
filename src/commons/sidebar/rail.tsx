@@ -162,7 +162,6 @@ export function SidebarButton({ Svg, selected, onClick }: SidebarButtonProps) {
 		<button
 			{...stylex.props(styles.button, selected && styles.selected)}
 			onClick={onClick}
-			type="button"
 		>
 			<div {...stylex.props(selected && styles.selected_border)} />
 

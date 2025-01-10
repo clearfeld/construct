@@ -1,23 +1,22 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
-import Navbar from "./commons/navbar";
-import Sidebar from "./commons/sidebar";
-
 import * as stylex from "@stylexjs/stylex";
-import Footer from "./commons/footer";
-// import TabBar from "./commons/tabbar";
-// import Toolbar from "./commons/toolbar";
-import HttpRequestsPage from "./pages/http_requests";
-
 import { Routes, Route, Outlet } from "react-router";
 
+import "./App.css";
+
 import "./updater.tsx";
-import { H5 } from "@controlkit/ui";
-import TabBar from "./commons/tabbar/index.tsx";
-import EnvironmentsPage from "./pages/environments/index.tsx";
 import SessionSaveAndLoadManager from "./SessionSaveAndLoadManager.tsx";
+
+import { H5 } from "@controlkit/ui";
+
+import Navbar from "./commons/navbar";
+import Sidebar from "./commons/sidebar";
+import Footer from "./commons/footer";
+
+import TabBar from "./commons/tabbar/index.tsx";
+import Toolbar from "./commons/toolbar";
+
+import HttpRequestsPage from "./pages/http_requests";
+import EnvironmentsPage from "./pages/environments/index.tsx";
 
 const styles = stylex.create({
 	container: {
@@ -36,13 +35,12 @@ const styles = stylex.create({
 
 	details_container: {
 		display: "flex",
-		width: "100%",
 		height: "calc(100% - var(--tabbar-height))",
 	},
 
 	request_container: {
-		// width: "calc(100% - var(--toolbar-width))",
-		width: "calc(100%)",
+		width: "calc(100% - var(--toolbar-width))",
+		// width: "calc(100%)",
 	},
 });
 
@@ -151,7 +149,7 @@ function App() {
 										<HttpRequestsPage />
 									</div>
 
-									{/* <Toolbar /> */}
+									<Toolbar />
 								</div>
 							</div>
 						</div>
@@ -168,7 +166,12 @@ function App() {
 								<TabBar />
 
 								<div {...stylex.props(styles.details_container)}>
-									<div {...stylex.props(styles.request_container)}>
+									<div
+										// {...stylex.props(styles.request_container)}
+										style={{
+											width: "100%",
+										}}
+									>
 										<EnvironmentsPage />
 									</div>
 

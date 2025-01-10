@@ -1,10 +1,10 @@
 import * as stylex from '@stylexjs/stylex';
 import {memo} from "react";
-import type {ExpandedTab} from "./left-toolbar.tsx";
 import {Documentation} from "./documentation.tsx";
 import {Comments} from "./comments.tsx";
 import {Code} from "./code.tsx";
 import {Info} from "./Info.tsx";
+import { E_ToolbarHTTPRequestSections } from '@src/stores/request_store/toolbar_slice.ts';
 
 const styles = stylex.create({
   container: {
@@ -13,7 +13,7 @@ const styles = stylex.create({
 })
 
 interface RightToolbarProps {
-  expandedTab: ExpandedTab | null;
+  expandedTab: E_ToolbarHTTPRequestSections | null;
   onClose: () => void;
 }
 
@@ -24,13 +24,13 @@ export const RightToolbar = memo(function RightToolbar({
 
   const renderComponent = () => {
     switch (expandedTab) {
-      case 'documentation':
+      case E_ToolbarHTTPRequestSections.DOCUMENTATION:
         return <Documentation onClose={onClose}/>
-      case 'comments':
+      case E_ToolbarHTTPRequestSections.COMMENTS:
         return <Comments onClose={onClose}/>
-      case 'code':
+      case E_ToolbarHTTPRequestSections.CODE:
         return <Code onClose={onClose}/>
-      case 'info':
+      case E_ToolbarHTTPRequestSections.INFO:
         return <Info onClose={onClose}/>
       default:
         return null;

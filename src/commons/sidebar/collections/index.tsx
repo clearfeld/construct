@@ -18,7 +18,7 @@ export default function Collections() {
 	const getTabs = useRequestStore((state) => state.getTabs);
 	const setTabs = useRequestStore((state) => state.setTabs);
 
-	const getCurrentRequest= useRequestStore((state) => state.getCurrentRequest);
+	const getCurrentRequest = useRequestStore((state) => state.getCurrentRequest);
 
 	const getId = useRequestStore((state) => state.getId);
 	const getName = useRequestStore((state) => state.getName);
@@ -26,6 +26,9 @@ export default function Collections() {
 	const getMethod = useRequestStore((state) => state.getMethod);
 	const getHeaders = useRequestStore((state) => state.getHeaders);
 	const getBody = useRequestStore((state) => state.getBody);
+
+	const getUpdatedAt = useRequestStore((state) => state.getUpdatedAt);
+	const getCreatedAt = useRequestStore((state) => state.getCreatedAt);
 
 	const setTabState = useRequestStore((state) => state.setTabState);
 
@@ -63,6 +66,9 @@ export default function Collections() {
 		const ns = structuredClone(getCollection());
 		// debugger;
 
+		const nd = new Date();
+		const unixTimestamp = nd.getTime();
+
 		UpdateHttpRequestTargetIfExists(
 			ns,
 			getId(),
@@ -71,20 +77,25 @@ export default function Collections() {
 			getMethod(),
 			getHeaders(),
 			getBody(),
+
+			// meta
+			unixTimestamp, // getUpdatedAt(),
+			getCreatedAt(),
 		);
 
 		setCollection(ns);
 
-		const tabs = [ ...getTabs() ];
+		const tabs = [...getTabs()];
 
 		const id = getId();
-		for(let i = 0; i < tabs.length; ++i) {
-			if(tabs[i].id === id) {
+		for (let i = 0; i < tabs.length; ++i) {
+			if (tabs[i].id === id) {
 				tabs[i].title = getName();
 				tabs[i].requestType = getMethod().value;
 				tabs[i].status = E_TabStatus.SAVED;
 
 				tabs[i].data = getCurrentRequest();
+				tabs[i].data.updated_at = unixTimestamp;
 
 				break;
 			}

@@ -201,6 +201,12 @@ export interface RequestSlice {
 	setLoading: (arg: boolean) => void;
 	error: string | null;
 
+	// meta
+	updated_at: string;
+	getUpdatedAt: () => string;
+	created_at: string;
+	getCreatedAt: () => string;
+
 	getHTTPRequest: () => any;
 
 	setRequestParameters: (
@@ -212,6 +218,8 @@ export interface RequestSlice {
 		headers: T_Header[],
 		body: string,
 		// cookies:
+		updated_at: string,
+		created_at: string,
 	) => void;
 
 	getAllDataForSessionSave: () => any;
@@ -240,6 +248,10 @@ export const createRequestSlice: StateCreator<
 			response: get().response,
 			response_headers: get().response_headers,
 			response_cookies: get().response_cookies,
+
+			// meta
+			updated_at: get().updated_at,
+			created_at: get().created_at,
 		};
 	},
 
@@ -345,6 +357,12 @@ export const createRequestSlice: StateCreator<
 	setLoading: (arg: boolean) => set({ loading: arg }),
 	error: null,
 
+	// meta
+	updated_at: "",
+	getUpdatedAt: () => get().updated_at,
+	created_at: "",
+	getCreatedAt: () => get().created_at,
+
 	getHTTPRequest: () => {
 		return {
 			url: get().url,
@@ -365,6 +383,8 @@ export const createRequestSlice: StateCreator<
 		headers: T_Header[],
 		body: string,
 		// cookies:
+		updated_at: string,
+		created_at: string,
 	) => {
 		const uef = get().urlEditorRef;
 		if (uef) {
@@ -417,6 +437,8 @@ export const createRequestSlice: StateCreator<
 			// cookies,
 
 			response: null,
+			updated_at,
+			created_at,
 		});
 	},
 

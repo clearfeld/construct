@@ -664,6 +664,8 @@ export default function RecursiveTree(props: any) {
 													tab.data.headers,
 													tab.data.body,
 													// item.cookies,
+													tab.data.updated_at,
+													tab.data.created_at,
 												);
 
 												setActiveTab(item.id);
@@ -679,7 +681,12 @@ export default function RecursiveTree(props: any) {
 													item.headers,
 													item.body,
 													// item.cookies,
+													item.updated_at,
+													item.created_at,
 												);
+
+												const dn = new Date();
+												const unixTimestamp = dn.getTime();
 
 												const t: T_Tab = {
 													id: item.id,
@@ -698,6 +705,9 @@ export default function RecursiveTree(props: any) {
 
 														response: null,
 														response_headers: null,
+
+														updated_at: unixTimestamp,
+														created_at: unixTimestamp
 													},
 												};
 												tabs.push(t);
