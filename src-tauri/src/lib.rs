@@ -44,7 +44,8 @@ struct HTTPAPIResponse {
 
 #[derive(serde::Serialize)]
 struct HTTPAPIErrorResponse {
-    error_code: i32,
+    // TODO: should have an error type to help distungish between curl native errors and custom app logic errors
+    error_code: Option<i32>,
     error_message: String,
 }
 
@@ -66,7 +67,7 @@ fn http_request(
     // println!("{}, {}", url, url_encode);
 
     let mut error_str: String = "".to_string();
-    let mut error_code: i32 = -1;
+    let mut error_code: Option<i32> = None;
 
     match easy.url(
         // Setting - OFF
@@ -79,7 +80,7 @@ fn http_request(
         Err(e) => {
             return Err(HTTPAPIErrorResponse {
                 error_code: error_code,
-                error_message: format!("Test - {}", e.to_string()),
+                error_message: format!("{}", e.to_string()),
             })
         }
     }
@@ -228,7 +229,7 @@ fn http_request(
         Err(e) => {
             return Err(HTTPAPIErrorResponse {
                 error_code: error_code,
-                error_message: format!("Test - {}", e.to_string()),
+                error_message: format!("{}", e.to_string()),
             })
         }
     };
@@ -349,7 +350,7 @@ fn http_request(
                 println!("Request failed: {}", err);
 
                 return Err(HTTPAPIErrorResponse {
-                    error_code: err.code(),
+                    error_code: Some(err.code()),
                     error_message: err.to_string(),
                 });
             }
