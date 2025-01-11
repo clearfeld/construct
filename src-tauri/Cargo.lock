@@ -558,6 +558,7 @@ name = "construct"
 version = "0.8.0"
 dependencies = [
  "curl",
+ "curl-sys",
  "serde",
  "serde_json",
  "tauri",
