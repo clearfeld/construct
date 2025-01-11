@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import { Divider, H6, Label } from "@controlkit/ui";
+import { Divider, Label } from "@controlkit/ui";
 import { memo, useEffect, useState } from "react";
 import useRequestStore from "@src/stores/request_store";
 // import CloseSVG from '../../assets/close.svg?react';
@@ -56,11 +56,13 @@ const styles = stylex.create({
 	},
 });
 
-interface InfoProps {
-	onClose: () => void;
-}
+// interface InfoProps {
+// 	onClose: () => void;
+// }
 
-export const Info = memo(function Info({ onClose }: InfoProps) {
+export const Info = memo(function Info(
+	// { onClose }: InfoProps
+) {
 	const activeTab = useRequestStore((state) => state.activeTab);
 	const getTabs = useRequestStore((state) => state.getTabs);
 	const [curTab, setCurTab] = useState();
@@ -108,6 +110,7 @@ export const Info = memo(function Info({ onClose }: InfoProps) {
 				<Label extend={styles.label}>Last saved update at:</Label>
 
 				<p {...stylex.props(styles.text)}>
+					{/* @ts-ignore */}
 					{FormateDateString(curTab?.data.updated_at)}
 				</p>
 
@@ -120,6 +123,7 @@ export const Info = memo(function Info({ onClose }: InfoProps) {
 				<Label extend={styles.label}>Created on:</Label>
 
 				<p {...stylex.props(styles.text)}>
+					{/* @ts-ignore */}
 					{FormateDateString(curTab?.data.created_at)}
 				</p>
 

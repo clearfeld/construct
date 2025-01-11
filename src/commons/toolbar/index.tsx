@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import * as stylex from "@stylexjs/stylex";
-import { LeftToolbar, type ExpandedTab } from "./left-toolbar.tsx";
+import { LeftToolbar } from "./left-toolbar.tsx";
 import { RightToolbar } from "./right-toolbar.tsx";
 import useRequestStore from "@src/stores/request_store/index.ts";
 import { E_ToolbarHTTPRequestSections } from "@src/stores/request_store/toolbar_slice.ts";
@@ -59,7 +59,7 @@ function Toolbar() {
 
 	// TODO: need to move this to context or local atom to avoid prop drilling
 	// const [expandedTab, setExpandedTab] = useState<ExpandedTab | null>(null);
-	const prevExpandedTab = useRef<ExpandedTab | null>(null);
+	const prevExpandedTab = useRef<E_ToolbarHTTPRequestSections | null>(null);
 	const prevIsExpanded = useRef<boolean>(false);
 
 	const html_style = document.getElementsByTagName("html")[0].style;

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import stylex from "@stylexjs/stylex";
 import useRequestStore from "@src/stores/request_store";
 
+// import HTTPStatusCodes from "@src/data/http_status_codes";
+
 // import GlobeLock from "../../../assets/globe-lock.svg?react";
 // import SaveIcon from "../../../assets/save.svg?react";
 // import MoreOptions from "../../../assets/horizontal-ellipsis.svg?react";
@@ -62,7 +64,7 @@ interface I_RequestTabBar {
 
 interface I_InfoPairProps {
 	title: string;
-	value: string;
+	value: number | null;
 }
 
 const InfoPair = ({ title, value }: I_InfoPairProps) => {

@@ -1,5 +1,4 @@
 import type { StateCreator } from "zustand";
-import { invoke } from "@tauri-apps/api/core";
 // TODO: AC-81 use v7 when possible
 import { v4 as uuidv4 } from "uuid";
 import type { LexicalEditor } from "lexical";

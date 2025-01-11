@@ -110,7 +110,7 @@ function ResponseSection() {
 	const [activeTabIndex, setActiveTabIndex] = useState(0);
 
 	const response = useRequestStore((state) => state.response);
-	const error = useRequestStore((state) => state.error);
+	// const error = useRequestStore((state) => state.error);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {

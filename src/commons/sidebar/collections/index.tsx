@@ -27,7 +27,7 @@ export default function Collections() {
 	const getHeaders = useRequestStore((state) => state.getHeaders);
 	const getBody = useRequestStore((state) => state.getBody);
 
-	const getUpdatedAt = useRequestStore((state) => state.getUpdatedAt);
+	// const getUpdatedAt = useRequestStore((state) => state.getUpdatedAt);
 	const getCreatedAt = useRequestStore((state) => state.getCreatedAt);
 
 	const setTabState = useRequestStore((state) => state.setTabState);
