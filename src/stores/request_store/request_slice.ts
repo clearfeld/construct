@@ -197,6 +197,8 @@ export interface RequestSlice {
 	setResponseHeaders: (response: any) => void;
 	response_cookies: any;
 	setResponseCookies: (response: any) => void;
+	response_status_code: number | null;
+	setResponseStatusCode: (status_code: number| null) => void;
 	loading: boolean;
 	setLoading: (arg: boolean) => void;
 	error: string | null;
@@ -377,6 +379,8 @@ export const createRequestSlice: StateCreator<
 	setResponseCookies: (cookies: any) => {
 		set({ response_cookies: cookies });
 	},
+	response_status_code: null,
+	setResponseStatusCode: (status_code: number | null) => set({ response_status_code: status_code }),
 	loading: false,
 	setLoading: (arg: boolean) => set({ loading: arg }),
 	error: null,

@@ -16,6 +16,8 @@ export default function SendRequestBtn() {
 
 	const setError = useRequestStore((state) => state.setError);
 
+	const setResponseStatusCode = useRequestStore((state) => state.setResponseStatusCode);
+
     function ReplaceManagedVariable(env: any, sub_target: any): string {
         console.log(env.variables);
 
@@ -130,6 +132,7 @@ export default function SendRequestBtn() {
 				setResponse(message.response_data_string);
 				setResponseHeaders(message.response_headers);
 				setResponseCookies(message.response_cookies);
+				setResponseStatusCode(message.status_code);
 				setLoading(false);
 
 				// setResponse(message.response_data_string);

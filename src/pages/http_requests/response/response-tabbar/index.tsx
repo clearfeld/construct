@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import stylex from "@stylexjs/stylex";
+import useRequestStore from "@src/stores/request_store";
 
 // import GlobeLock from "../../../assets/globe-lock.svg?react";
 // import SaveIcon from "../../../assets/save.svg?react";
@@ -41,9 +42,16 @@ const styles = stylex.create({
 		boxShadow: "unset",
 		border: "unset",
 	},
+
+	title: {
+		color: "var(--text-sub)",
+	},
+
 	//need to add variants
 	value: {
-		color: "#006699",
+		// TODO: different status codes should have different colors
+		color: "var(--text)",
+		// color: "#006699",
 	},
 });
 
@@ -52,21 +60,25 @@ interface I_RequestTabBar {
 	hideRightSegment: boolean;
 }
 
-// interface I_InfoPairProps {
-// 	title: string;
-// 	value: string;
-// }
+interface I_InfoPairProps {
+	title: string;
+	value: string;
+}
 
-// const InfoPair = ({ title, value }: I_InfoPairProps) => {
-// 	return (
-// 		<div {...stylex.props(styles.infoPair)}>
-// 			<p>{title}:</p>
-// 			<p {...stylex.props(styles.value)}>{value}</p>
-// 		</div>
-// 	);
-// };
+const InfoPair = ({ title, value }: I_InfoPairProps) => {
+	return (
+		<div {...stylex.props(styles.infoPair)}>
+			<p {...stylex.props(styles.title)}>{title}:</p>
+			<p {...stylex.props(styles.value)}>{value}</p>
+		</div>
+	);
+};
 
 export default function ResponseTabBar(props: I_RequestTabBar) {
+	const response_status_code = useRequestStore(
+		(state) => state.response_status_code,
+	);
+
 	return (
 		<div {...stylex.props(styles.wrapper)}>
 			{props.children}
@@ -78,13 +90,19 @@ export default function ResponseTabBar(props: I_RequestTabBar) {
         <InfoPair title="Time" value="52 ms"></InfoPair>
         <InfoPair title="Size" value="1.13 kb"></InfoPair> */}
 
-					<button {...stylex.props(styles.button)}>
-						{/* <SaveIcon /> Save as example */}
-					</button>
+					<InfoPair
+						title="Status"
+						value={response_status_code}
+						// TODO: add the string too "200 OK"
+					/>
 
-					<button {...stylex.props(styles.button)}>
-						{/* <MoreOptions /> */}
-					</button>
+					{/* <button {...stylex.props(styles.button)}>
+						<SaveIcon /> Save as example
+					</button> */}
+
+					{/* <button {...stylex.props(styles.button)}>
+						<MoreOptions />
+					</button> */}
 				</div>
 			)}
 		</div>

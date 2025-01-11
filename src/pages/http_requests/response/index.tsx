@@ -194,7 +194,7 @@ function ResponseSection() {
 			<div {...stylex.props(styles.section)}>
 				<ResponseTabBar
 					// children={undefined}
-					hideRightSegment={false}
+					hideRightSegment={response !== null}
 				>
 					<div
 						style={{
@@ -212,7 +212,6 @@ function ResponseSection() {
 											title={tab.title}
 											amount={tab.amount}
 											status={tab.status}
-											// hideRightSegment={false}
 										>
 											<div {...stylex.props(styles.tabContent)}>
 												{tab.children}
