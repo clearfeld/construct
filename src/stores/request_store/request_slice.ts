@@ -200,6 +200,7 @@ export interface RequestSlice {
 	loading: boolean;
 	setLoading: (arg: boolean) => void;
 	error: string | null;
+	setError: (arg: string | null) => void,
 
 	// meta
 	updated_at: string;
@@ -379,6 +380,7 @@ export const createRequestSlice: StateCreator<
 	loading: false,
 	setLoading: (arg: boolean) => set({ loading: arg }),
 	error: null,
+	setError: (arg: string | null) => set({ error: arg }),
 
 	// meta
 	updated_at: "",

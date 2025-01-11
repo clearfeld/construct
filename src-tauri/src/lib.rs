@@ -37,6 +37,15 @@ struct HTTPAPIResponse {
     time_appconnect: Duration,
     time_pretransfer: Duration,
     time_starttransfer: Duration,
+    time_redirect: Duration,
+
+    redirect_count: u32,
+}
+
+#[derive(serde::Serialize)]
+struct HTTPAPIErrorResponse {
+    error_code: i32,
+    error_message: String,
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -47,7 +56,7 @@ fn http_request(
     url: &str,
     body: &str,
     _cookies: &str,
-) -> Result<HTTPAPIResponse, String> {
+) -> Result<HTTPAPIResponse, HTTPAPIErrorResponse> {
     let mut easy = Easy::new();
 
     // only should use this on path, query, and user info
@@ -56,28 +65,146 @@ fn http_request(
     // let url_encode = easy.url_encode(url.as_bytes());
     // println!("{}, {}", url, url_encode);
 
-    easy.url(
+    let mut error_str: String = "".to_string();
+    let mut error_code: i32 = -1;
+
+    match easy.url(
         // Setting - OFF
         url, // Setting - encode url automatically
             // url_encode.as_str()
-    )
-    .unwrap();
+    ) {
+        Ok(_) => {
+            println!("URL set successfully");
+        }
+        Err(e) => {
+            return Err(HTTPAPIErrorResponse {
+                error_code: error_code,
+                error_message: format!("Test - {}", e.to_string()),
+            })
+        }
+    }
 
     match method {
-        "GET" => easy.get(true).unwrap(),
-        "POST" => easy.post(true).unwrap(),
-        "PUT" => easy.put(true).unwrap(),
-        "PATCH" => easy.custom_request("PATCH").unwrap(),
-        "DELETE" => easy.custom_request("DELETE").unwrap(),
+        "GET" => match easy.get(true) {
+            Ok(_) => {
+                println!("GET set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
 
-        "HEAD" => easy.nobody(true).unwrap(),
-        "OPTIONS" => easy.custom_request("OPTIONS").unwrap(),
+        "POST" => match easy.post(true) {
+            Ok(_) => {
+                println!("POST set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
 
-        "TRACE" => easy.custom_request("TRACE").unwrap(),
-        "CONNECT" => easy.custom_request("CONNECT").unwrap(),
+        "PUT" => match easy.put(true) {
+            Ok(_) => {
+                println!("PUT set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "PATCH" => match easy.custom_request("PATCH") {
+            Ok(_) => {
+                println!("PATCH set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "DELETE" => match easy.custom_request("DELETE") {
+            Ok(_) => {
+                println!("DELETE set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "HEAD" => match easy.nobody(true) {
+            Ok(_) => {
+                println!("HEAD set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "OPTIONS" => match easy.custom_request("OPTIONS") {
+            Ok(_) => {
+                println!("OPTIONS set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "TRACE" => match easy.custom_request("TRACE") {
+            Ok(_) => {
+                println!("TRACE set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
+
+        "CONNECT" => match easy.custom_request("CONNECT") {
+            Ok(_) => {
+                println!("CONNECT set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
 
         // TODO: support custom requests from frontend first
-        _ => easy.custom_request(method).unwrap(),
+        _ => match easy.custom_request(method) {
+            Ok(_) => {
+                println!("Custom request set successfully");
+            }
+            Err(e) => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: e.to_string(),
+                })
+            }
+        },
     }
 
     // TODO: finish setting up cookies frontend first
@@ -93,11 +220,30 @@ fn http_request(
     let url_parsed = match Url::parse(
         url, // or url_encoded depending
     ) {
-        Ok(v) => v,
-        Err(e) => return Err(e.to_string()),
+        Ok(v) => {
+            println!("Succesfully parsed URL");
+
+            v
+        }
+        Err(e) => {
+            return Err(HTTPAPIErrorResponse {
+                error_code: error_code,
+                error_message: format!("Test - {}", e.to_string()),
+            })
+        }
     };
 
-    let host_header = "Host: ".to_owned() + url_parsed.host_str().unwrap();
+    let host_header = "Host: ".to_owned()
+        + match url_parsed.host_str() {
+            Some(v) => v,
+            None => {
+                return Err(HTTPAPIErrorResponse {
+                    error_code: error_code,
+                    error_message: "Failed to parse host string".to_string(),
+                })
+            }
+        };
+
     let construction_token_header =
         "Construct-Token: ".to_owned() + Uuid::new_v4().to_string().as_str();
 
@@ -174,6 +320,7 @@ fn http_request(
     let mut response_data_string: String = String::new();
 
     let mut response_headers = Vec::new();
+
     {
         let mut transfer = easy.transfer();
 
@@ -193,7 +340,20 @@ fn http_request(
             })
             .unwrap();
 
-        transfer.perform().unwrap();
+        match transfer.perform() {
+            Ok(_) => {
+                // Request succeeded
+            }
+            Err(err) => {
+                // Handle the error
+                println!("Request failed: {}", err);
+
+                return Err(HTTPAPIErrorResponse {
+                    error_code: err.code(),
+                    error_message: err.to_string(),
+                });
+            }
+        }
     }
 
     let cookies = easy
@@ -204,6 +364,9 @@ fn http_request(
         .collect::<Vec<String>>();
 
     // easy.perform().unwrap();
+
+    // easy.download_size()
+    // easy.upload(enable)
 
     Ok(HTTPAPIResponse {
         status_code: easy.response_code().unwrap(),
@@ -233,8 +396,10 @@ fn http_request(
         time_appconnect: easy.appconnect_time().unwrap(), // SSL Handshake
         time_pretransfer: easy.pretransfer_time().unwrap(), // Substract dns tcp and ssl from this to get socket init time - double check might be wrong on this
         time_starttransfer: easy.starttransfer_time().unwrap(), // transfer start
+        time_redirect: easy.redirect_time().unwrap(),       // time taken for all redirects
 
-                                                            // redirect time, count, and url
+        redirect_count: easy.redirect_count().unwrap(), // total number of redirects taken
+        // easy.redirect_url()
     })
 }
 

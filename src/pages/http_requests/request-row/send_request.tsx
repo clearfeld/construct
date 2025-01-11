@@ -14,6 +14,8 @@ export default function SendRequestBtn() {
     const setResponseHeaders = useRequestStore((state) => state.setResponseHeaders);
     const setResponseCookies = useRequestStore((state) => state.setResponseCookies);
 
+	const setError = useRequestStore((state) => state.setError);
+
     function ReplaceManagedVariable(env: any, sub_target: any): string {
         console.log(env.variables);
 
@@ -47,6 +49,8 @@ export default function SendRequestBtn() {
     }
 
 	function AttemptToSendHTTPRequest() {
+		setError(null);
+		setResponse(null);
         setLoading(true);
 
 		const { url, method, autoHeaders, headers, body, cookies } =
@@ -132,8 +136,10 @@ export default function SendRequestBtn() {
 				// set_HTTP_API_Response_Body(message.response_data_string);
 				// set_HTTP_API_Response_Headers(message.response_headers);
 			})
-			.catch((error_message) => {
-				console.error(error_message);
+			.catch((eobj) => {
+				console.error(eobj);
+
+				setError(eobj.error_message);
 
                 setLoading(false);
 			});
