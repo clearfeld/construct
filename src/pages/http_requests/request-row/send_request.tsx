@@ -9,51 +9,63 @@ export default function SendRequestBtn() {
 		(state) => state.getEnabledEnvironmentAndDetails,
 	);
 
-    const setLoading = useRequestStore((state) => state.setLoading);
-    const setResponse = useRequestStore((state) => state.setResponse);
-    const setResponseHeaders = useRequestStore((state) => state.setResponseHeaders);
-    const setResponseCookies = useRequestStore((state) => state.setResponseCookies);
+	const setLoading = useRequestStore((state) => state.setLoading);
+	const setResponse = useRequestStore((state) => state.setResponse);
+	const setResponseHeaders = useRequestStore(
+		(state) => state.setResponseHeaders,
+	);
+	const setResponseCookies = useRequestStore(
+		(state) => state.setResponseCookies,
+	);
 
 	const setError = useRequestStore((state) => state.setError);
 
-	const setResponseStatusCode = useRequestStore((state) => state.setResponseStatusCode);
+	const setResponseStatusCode = useRequestStore(
+		(state) => state.setResponseStatusCode,
+	);
 
-    function ReplaceManagedVariable(env: any, sub_target: any): string {
-        console.log(env.variables);
+	function ReplaceManagedVariable(env: any, sub_target: any): string {
+		console.log(env.variables);
 
-        let s = sub_target;
-        for(const variable of env.variables) {
-            console.log("VAR - ", s, variable.key, variable.initial_value, variable.current_value);
+		let s = sub_target;
+		for (const variable of env.variables) {
+			console.log(
+				"VAR - ",
+				s,
+				variable.key,
+				variable.initial_value,
+				variable.current_value,
+			);
 
-            if(variable.current_value !== "") {
-                if(variable.current_value === "NULL") {
-                    s = s.replace(`{{${variable.key}}}`, "null");
-                    continue;
-                }
+			if (variable.current_value !== "") {
+				if (variable.current_value === "NULL") {
+					s = s.replace(`{{${variable.key}}}`, "null");
+					continue;
+				}
 
-                s = s.replace(`{{${variable.key}}}`, variable.current_value);
-            }
+				s = s.replace(`{{${variable.key}}}`, variable.current_value);
+			}
 
-            if(variable.initial_value !== "") {
-                if(variable.initial_value === "NULL") {
-                    s = s.replace(`{{${variable.key}}}`, "null");
-                    continue;
-                }
+			if (variable.initial_value !== "") {
+				if (variable.initial_value === "NULL") {
+					s = s.replace(`{{${variable.key}}}`, "null");
+					continue;
+				}
 
-                s = s.replace(`{{${variable.key}}}`, variable.initial_value);
-            }
+				s = s.replace(`{{${variable.key}}}`, variable.initial_value);
+			}
 
-            // console.log(s.replace(`{{${variable.key}}}`, variable.value));
-            // s = s.replace(`{{${variable.key}}}`, variable.value);
-        }
+			// console.log(s.replace(`{{${variable.key}}}`, variable.value));
+			// s = s.replace(`{{${variable.key}}}`, variable.value);
+		}
 
-        return s;
-    }
+		return s;
+	}
 
 	function AttemptToSendHTTPRequest() {
 		setError(null);
 		setResponse(null);
-        setLoading(true);
+		setLoading(true);
 
 		const { url, method, autoHeaders, headers, body, cookies } =
 			getHTTPRequest();
@@ -93,28 +105,33 @@ export default function SendRequestBtn() {
 
 		// console.log(trimmedUrl);
 
-        console.log("SUBBED");
+		console.log("SUBBED");
 
-        let subbed_url = trimmedUrl;
-        let subbed_body = body;
-        let subbed_headers = structuredClone(headers);
+		let subbed_url = trimmedUrl;
+		let subbed_body = body;
+		let subbed_headers = structuredClone(headers);
 
-        subbed_url = ReplaceManagedVariable(env, subbed_url);
-        subbed_body = ReplaceManagedVariable(env, subbed_body);
-        for(let idx = 0; idx < subbed_headers.length; ++idx) {
-            subbed_headers[idx].value = ReplaceManagedVariable(env, subbed_headers[idx].value);
-        }
+		if (env !== null) {
+			subbed_url = ReplaceManagedVariable(env, subbed_url);
+			subbed_body = ReplaceManagedVariable(env, subbed_body);
+			for (let idx = 0; idx < subbed_headers.length; ++idx) {
+				subbed_headers[idx].value = ReplaceManagedVariable(
+					env,
+					subbed_headers[idx].value,
+				);
+			}
+		}
 
 		const filtered_headers = subbed_headers
-        .filter((h: T_Header) => h.enabled)
-        .map((h: T_Header) => `${h.key}: ${h.value}`)
-        .join(", ");
+			.filter((h: T_Header) => h.enabled)
+			.map((h: T_Header) => `${h.key}: ${h.value}`)
+			.join(", ");
 
-        console.log("METHOD - ", method);
+		console.log("METHOD - ", method);
 		console.log("URL - ", subbed_url);
 		console.log("AUTO HEADERS - ", autoHeaders);
 		console.log("HEADERS - ", subbed_headers);
-        console.log("FILTERED HEADERS - ", filtered_headers);
+		console.log("FILTERED HEADERS - ", filtered_headers);
 		console.log("BODY - ", subbed_body);
 		console.log("COOKIES - ", cookies);
 
@@ -144,7 +161,7 @@ export default function SendRequestBtn() {
 
 				setError(eobj.error_message);
 
-                setLoading(false);
+				setLoading(false);
 			});
 
 		console.groupEnd();
