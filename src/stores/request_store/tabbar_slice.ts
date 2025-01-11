@@ -44,6 +44,8 @@ export interface TabbarSlice {
 
 	getAllTabbarSliceDataForSessionSave: () => any;
 	setAllTabbarSliceDataFromSessionSave: (ts: any) => any;
+
+	deleteTabAndMoveToNext: (tab_id: string) => any | void;
 }
 
 export const createTabbarSlice: StateCreator<
@@ -121,6 +123,32 @@ export const createTabbarSlice: StateCreator<
 			tabs: ts.tabs,
 			activeTab: ts.activeTab,
 		});
+	},
+
+	deleteTabAndMoveToNext: (tab_id: string) => {
+		const tabs = [...get().tabs];
+		const index = tabs.findIndex((tab) => tab.id === tab_id);
+		if (index !== -1) {
+			tabs.splice(index, 1);
+		}
+		set({ tabs });
+
+		if (get().activeTab === tab_id) {
+			if (tabs.length > 0) {
+				if (index - 1 >= 0 && index - 1 < tabs.length) {
+					set({ activeTab: tabs[index - 1].id });
+
+					return tabs[index - 1];
+				}
+
+				return null;
+			} else {
+				set({ activeTab: null });
+				return null;
+			}
+		}
+
+		return null;
 	},
 });
 

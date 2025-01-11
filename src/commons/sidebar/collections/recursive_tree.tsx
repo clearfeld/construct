@@ -115,6 +115,10 @@ export default function RecursiveTree(props: any) {
 	const activeTab = useRequestStore((state) => state.activeTab);
 	const setActiveTab = useRequestStore((state) => state.setActiveTab);
 
+	const deleteTabAndMoveToNext = useRequestStore(
+		(state) => state.deleteTabAndMoveToNext,
+	);
+
 	// const setTabState = useRequestStore((state) => state.setTabState);
 
 	// TODO: remove this when moving the sub comps into their own files
@@ -655,6 +659,7 @@ export default function RecursiveTree(props: any) {
 													(method) => method.value === tab.data.method,
 												);
 
+												// TODO: migrate to setCurrentRequest2
 												setRequestParameters(
 													tab.data.id,
 													tab.data.name,
@@ -707,7 +712,7 @@ export default function RecursiveTree(props: any) {
 														response_headers: null,
 
 														updated_at: unixTimestamp,
-														created_at: unixTimestamp
+														created_at: unixTimestamp,
 													},
 												};
 												tabs.push(t);
@@ -838,6 +843,14 @@ export default function RecursiveTree(props: any) {
 													<DropdownMenuItem
 														onClick={() => {
 															deleteItem(item.id);
+															const next_tab = deleteTabAndMoveToNext(item.id);
+															if (next_tab) {
+																if (next_tab.type === E_TabType.HTTP_REQUEST) {
+																	navigate(`/http_request/${next_tab.id}`);
+																} else if (next_tab.type === E_TabType.ENVIRONMENT) {
+																	navigate(`/environment/${next_tab.id}`);
+																}
+															}
 														}}
 													>
 														Delete

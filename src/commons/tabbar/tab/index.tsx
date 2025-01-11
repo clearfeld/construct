@@ -134,6 +134,10 @@ export default function Tab({
 
 	const setCurrentRequest = useRequestStore((state) => state.setCurrentRequest);
 
+	const setCurrentRequest2 = useRequestStore(
+		(state) => state.setCurrentRequest2,
+	);
+
 	// const setTabState = useRequestStore((state) => state.setTabState);
 	// const getId = useRequestStore((state) => state.getId);
 
@@ -189,7 +193,13 @@ export default function Tab({
 		(state) => state.getEnvironmentById,
 	);
 
-	const setCurrentSidebarTab = useRequestStore((state) => state.setCurrentSidebarTab);
+	const setCurrentSidebarTab = useRequestStore(
+		(state) => state.setCurrentSidebarTab,
+	);
+
+	const deleteTabAndMoveToNext = useRequestStore(
+		(state) => state.deleteTabAndMoveToNext,
+	);
 
 	return (
 		<div
@@ -348,16 +358,15 @@ export default function Tab({
 							e.preventDefault();
 							e.stopPropagation();
 
-							const tabs = [...getTabs()];
+							const next_tab = deleteTabAndMoveToNext(id);
+							if (next_tab) {
+								if (next_tab.type === E_TabType.HTTP_REQUEST) {
+									setCurrentRequest2(next_tab.data);
 
-							const tabIndex = tabs.findIndex((tab) => tab.id === id);
-							if (tabIndex !== -1) {
-								tabs.splice(tabIndex, 1);
-							}
-
-							setTabs(tabs);
-							if (tabs.length > 0) {
-								setActiveTab(tabs[tabs.length - 1].id);
+									navigate(`/http_request/${next_tab.id}`);
+								} else if (next_tab.type === E_TabType.ENVIRONMENT) {
+									navigate(`/environment/${next_tab.id}`);
+								}
 							}
 						}}
 					>

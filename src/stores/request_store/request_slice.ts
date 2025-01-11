@@ -222,6 +222,10 @@ export interface RequestSlice {
 		created_at: string,
 	) => void;
 
+	setCurrentRequest2: (
+		data: any
+	) => void;
+
 	getAllDataForSessionSave: () => any;
 	setAllDataFromSessionSave: (rs: any) => any;
 }
@@ -280,6 +284,25 @@ export const createRequestSlice: StateCreator<
 
 			response,
 			response_headers,
+			// response_cookies,
+		});
+	},
+
+	setCurrentRequest2: (
+		data
+	) => {
+		set({
+			id: data.id,
+			name: data.name,
+			url: data.url,
+			method: data.method,
+			autoHeaders: data.autoHeaders,
+			headers: data.headers,
+			body: data.body,
+			// cookies,
+
+			response: data.response,
+			response_headers: data.response_headers,
 			// response_cookies,
 		});
 	},
