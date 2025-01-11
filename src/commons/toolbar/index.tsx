@@ -113,7 +113,7 @@ function Toolbar() {
 		if (!resizerRef.current) return;
 		let curSize = size;
 		if (curSize < MIN_EXPANDED_WIDTH && size >= MIN_EXPANDED_THRESHOLD) {
-			setCurrentToolbarTab(prevExpandedTab.current || E_ToolbarHTTPRequestSections.DOCUMENTATION);
+			setCurrentToolbarTab(prevExpandedTab.current || E_ToolbarHTTPRequestSections.INFO);
 			curSize = MIN_EXPANDED_WIDTH;
 		} else if (size <= MIN_EXPANDED_THRESHOLD) {
 			setCurrentToolbarTab(null);
