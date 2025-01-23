@@ -36,13 +36,25 @@ const styles = stylex.create({
 		paddingHorizontal: "0.25rem",
 		display: "flex",
 		alignItems: "center",
+		outline: "none",
 	},
+
 	editor: {
 		width: "100%",
 		color: "var(--color-white)",
 		whiteSpace: "nowrap",
+		borderRadius: "0.25rem",
+		outline: "none",
+		padding: "0.125rem 0.25rem",
+		border: "0.0625rem solid var(--border-color)",
+
+		":focus": {
+			border: "0.0625rem solid var(--cds-blue-300)",
+		}
 	},
+
 	placeholder: {
+		padding: "0.125rem 0.25rem",
 		overflow: "hidden",
 		position: "absolute",
 		textOverflow: "ellipsis",

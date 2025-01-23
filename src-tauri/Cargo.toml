@@ -1,6 +1,6 @@
 [package]
 name = "construct"
-version = "0.8.1"
+version = "0.9.0"
 description = "A GUI API Client"
 authors = ["clearfeld"]
 edition = "2021"
