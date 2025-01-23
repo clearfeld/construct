@@ -27,6 +27,7 @@ import {
 	type T_Tab,
 } from "@src/stores/request_store/tabbar_slice";
 import CollectionItem from "./collection_item";
+import FolderItem from "./folder_item";
 
 const styles = stylex.create({
 	row: {
@@ -161,238 +162,13 @@ export default function RecursiveTree(props: any) {
 			{props.data.map((item: any) => {
 				if (item.type === "collection") {
 					return (
-
-						<CollectionItem
-							key={item.id}
-							item={item}
-							depth={props.depth}
-						/>
-
-
+						<CollectionItem key={item.id} item={item} depth={props.depth} />
 					);
 				}
 
 				if (item.type === "folder") {
 					return (
-						<div key={item.id}>
-							<div {...stylex.props(styles.row)}>
-								<div
-									style={{
-										display: "grid",
-										gridTemplateColumns: "1fr 1.5rem",
-									}}
-								>
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-									<div
-										style={{
-											display: "grid",
-											gridTemplateColumns: "0.75rem 1rem 1fr",
-											gap: "0.5rem",
-											alignItems: "center",
-											padding: "0.125rem 0.5rem",
-											marginLeft: `${props.depth * 0.75}rem`,
-										}}
-										onClick={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-
-											toggleField(item.id, "open", !item.open);
-										}}
-										onMouseEnter={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-
-											setIsHoveredFolder(true);
-										}}
-										onMouseLeave={(e) => {
-											e.preventDefault();
-											e.stopPropagation();
-
-											setIsHoveredFolder(false);
-										}}
-									>
-										{/* <ArrowRightSVG width={8} height={12} /> */}
-										{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-										<div
-										// onClick={() => {
-										// 	toggleField(item.id, "open", !item.open);
-										// }}
-										// // biome-ignore lint/a11y/useSemanticElements: <explanation>
-										// role="button"
-										// tabIndex={0}
-										>
-											{item.open ? (
-												<ArrowDownSVG width={12} height={12} />
-											) : (
-												<ArrowRightSVG width={12} height={12} />
-											)}
-										</div>
-
-										<FolderSVG width={14} height={14} />
-
-										<p
-											style={{
-												color: "#A6A6A6",
-												fontSize: "0.875rem",
-												textWrap: "nowrap",
-												overflow: "hidden",
-												textOverflow: "ellipsis",
-												fontWeight: "bold",
-											}}
-										>
-											{item.name}
-										</p>
-									</div>
-
-									{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-									{/* <div
-										onClick={() => {
-											toggleField(item.id, "favorite", !item.favorite);
-										}}
-										// biome-ignore lint/a11y/useSemanticElements: <explanation>
-										role="button"
-										tabIndex={0}
-									>
-										{item.favorite ? (
-											<FavoriteSVG width={15} height={15} />
-										) : (
-											<FavoriteInactiveSVG width={15} height={15} />
-										)}
-									</div> */}
-
-									<div>
-										{/* {isHoveredFolder ? ( */}
-										{true ? (
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<div
-														style={{
-															// backgroundColor: "red",
-															display: "grid",
-															placeItems: "center",
-															height: "100%",
-															// borderRadius: "0.25rem",
-															padding: "0 0.125rem",
-															zIndex: 1000,
-														}}
-													>
-														<MoreHorSVG width={16} />
-													</div>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													{/* <DropdownMenuItem>Share</DropdownMenuItem> */}
-													{/* <DropdownMenuItem>Open In Tab</DropdownMenuItem> */}
-													{/* <DropdownMenuItem>Add Example</DropdownMenuItem> */}
-													{/* <DropdownMenuItem>View Documentation</DropdownMenuItem> */}
-													{/* <DropdownMenuItem>View Info</DropdownMenuItem> */}
-													{/* <DropdownMenuItem>Add Pre-Run</DropdownMenuItem> */}
-													<DropdownMenuItem
-														onClick={() => {
-															addFolder(item.id);
-														}}
-													>
-														Add Folder
-													</DropdownMenuItem>
-
-													<DropdownMenuItem
-														onClick={() => {
-															addRequest(item.id);
-														}}
-													>
-														Add Request
-													</DropdownMenuItem>
-													{/* <DropdownMenuItem>Rename</DropdownMenuItem>
-													<DropdownMenuItem>Duplicate</DropdownMenuItem>
-													<DropdownMenuItem>Paste</DropdownMenuItem> */}
-													<DropdownMenuItem
-														onClick={() => {
-															deleteItem(item.id);
-														}}
-													>
-														Delete
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										) : (
-											<div />
-										)}
-									</div>
-								</div>
-							</div>
-
-							{item.open && (
-								// biome-ignore lint/complexity/noUselessFragments: <explanation>
-								<>
-									{item.items.length > 0 ? (
-										<RecursiveTree data={item.items} depth={props.depth + 1} />
-									) : (
-										<div
-											style={{
-												marginLeft: `${props.depth * 0.75}rem`,
-											}}
-										>
-											<Label
-												style={{
-													marginLeft: "1rem",
-													fontSize: "0.75rem",
-													color: "var(--text-sub)",
-												}}
-											>
-												This folder is empty. To start:
-											</Label>
-
-											<Button
-												variant={ButtonVariants.LINK}
-												onClick={() => {
-													addRequest(item.id);
-												}}
-											>
-												Add a request
-											</Button>
-										</div>
-									)}
-								</>
-							)}
-							{/* {collection.items.map((item) => {
-								return (
-
-									<div
-										key={item.id}
-										style={{
-											display: "grid",
-											gridTemplateColumns: "0.5rem 1rem 1fr 1rem 1rem",
-											gap: "0.5rem",
-											alignItems: "center",
-											padding: "0.125rem 0.5rem",
-										}}
-									>
-										<ArrowRightSVG width={8} height={12} />
-										<FolderSVG width={14} height={14} />
-
-										<p
-											style={{
-												color: "#A6A6A6",
-												fontSize: "0.875rem",
-												textWrap: "nowrap",
-												overflow: "hidden",
-												textOverflow: "ellipsis",
-											}}
-										>
-											Search Search S
-										</p>
-
-										<FavoriteSVG width={15} height={15} />
-										<MoreHorSVG
-											width={16}
-											style={{
-												top: "0.125rem",
-												position: "relative",
-											}}
-										/>
-									</div>
-								);
-							})} */}
-						</div>
+						<FolderItem key={item.id} item={item} depth={props.depth} />
 					);
 				}
 
@@ -637,7 +413,9 @@ export default function RecursiveTree(props: any) {
 															if (next_tab) {
 																if (next_tab.type === E_TabType.HTTP_REQUEST) {
 																	navigate(`/http_request/${next_tab.id}`);
-																} else if (next_tab.type === E_TabType.ENVIRONMENT) {
+																} else if (
+																	next_tab.type === E_TabType.ENVIRONMENT
+																) {
 																	navigate(`/environment/${next_tab.id}`);
 																}
 															}
