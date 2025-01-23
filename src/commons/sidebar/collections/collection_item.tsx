@@ -33,7 +33,7 @@ export default function CollectionItem(props: any) {
 	const deleteItem = useRequestStore((state) => state.deleteItem);
 
 	const [_isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
-	const [_isHoveredOther, setIsHoveredOther] = useState<boolean>(false);
+	// const [_isHoveredOther, setIsHoveredOther] = useState<boolean>(false);
 
 	const [renaming, setRenaming] = useState<boolean>(false);
 
