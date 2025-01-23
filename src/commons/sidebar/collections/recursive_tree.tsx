@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
-import ArrowRightSVG from "../../../assets/arrow-right.svg?react";
-import ArrowDownSVG from "../../../assets/arrow-down.svg?react";
+// import ArrowRightSVG from "../../../assets/arrow-right.svg?react";
+// import ArrowDownSVG from "../../../assets/arrow-down.svg?react";
 import MoreHorSVG from "../../../assets/more-hor.svg?react";
-import FolderSVG from "../../../assets/folder.svg?react";
+// import FolderSVG from "../../../assets/folder.svg?react";
 // import FavoriteInactiveSVG from "../../../assets/favorite-inactive.svg?react";
 // import FavoriteSVG from "../../../assets/favorite.svg?react";
 import { autoHeaders, methods } from "@src/stores/request_store/request_slice";
@@ -12,13 +12,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import {
-	Button,
-	ButtonVariants,
+	// Button,
+	// ButtonVariants,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-	Label,
+	// Label,
 } from "@controlkit/ui";
 
 import {
@@ -102,10 +102,12 @@ function ColoredMethod(props: any) {
 export default function RecursiveTree(props: any) {
 	const navigate = useNavigate();
 
-	const collection = useRequestStore((state) => state.collection);
-	const setCollection = useRequestStore((state) => state.setCollection);
-	const addFolder = useRequestStore((state) => state.addFolder);
-	const addRequest = useRequestStore((state) => state.addRequest);
+	// const collection = useRequestStore((state) => state.collection);
+	// const setCollection = useRequestStore((state) => state.setCollection);
+
+	// const addFolder = useRequestStore((state) => state.addFolder);
+	// const addRequest = useRequestStore((state) => state.addRequest);
+
 	const deleteItem = useRequestStore((state) => state.deleteItem);
 	const setRequestParameters = useRequestStore(
 		(state) => state.setRequestParameters,
@@ -124,37 +126,37 @@ export default function RecursiveTree(props: any) {
 	// const setTabState = useRequestStore((state) => state.setTabState);
 
 	// TODO: remove this when moving the sub comps into their own files
-	const [_isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
+	// const [_isHoveredFolder, setIsHoveredFolder] = useState<boolean>(false);
 	const [_isHoveredOther, setIsHoveredOther] = useState<boolean>(false);
 
-	function updateTargetIfExists(
-		nc: any,
-		id: string,
-		field: string,
-		value: any,
-	) {
-		for (let i = 0; i < nc.length; ++i) {
-			// console.log("NC", nc[i].id);
+	// function updateTargetIfExists(
+	// 	nc: any,
+	// 	id: string,
+	// 	field: string,
+	// 	value: any,
+	// ) {
+	// 	for (let i = 0; i < nc.length; ++i) {
+	// 		// console.log("NC", nc[i].id);
 
-			if (nc[i].id === id) {
-				nc[i][field] = value;
-				// console.log("FOUND", nc[i]);
-				return;
-			}
+	// 		if (nc[i].id === id) {
+	// 			nc[i][field] = value;
+	// 			// console.log("FOUND", nc[i]);
+	// 			return;
+	// 		}
 
-			if (nc[i].items) {
-				updateTargetIfExists(nc[i].items, id, field, value);
-			}
-		}
-	}
+	// 		if (nc[i].items) {
+	// 			updateTargetIfExists(nc[i].items, id, field, value);
+	// 		}
+	// 	}
+	// }
 
-	function toggleField(id: string, field: string, value: any) {
-		const nc = structuredClone(collection);
-		// console.log("START", id, nc);
-		updateTargetIfExists(nc, id, field, value);
-		// console.log("END", nc);
-		setCollection(nc);
-	}
+	// function toggleField(id: string, field: string, value: any) {
+	// 	const nc = structuredClone(collection);
+	// 	// console.log("START", id, nc);
+	// 	updateTargetIfExists(nc, id, field, value);
+	// 	// console.log("END", nc);
+	// 	setCollection(nc);
+	// }
 
 	return (
 		<div>
