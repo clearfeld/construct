@@ -2,7 +2,13 @@
   <H1 align="center">Construct</H1>
 </div>
 
-![image](https://github.com/user-attachments/assets/ff94300f-f58d-4eea-985f-a535efe68b04)
+![image](https://github.com/user-attachments/assets/5079a4f6-f391-43e4-83a6-9c9545dbe558)
+
+## Platform Support
+
+| Android          | iOS           | Windows            | MacOS              | Linux               | Web         |
+|------------------|---------------|--------------------|--------------------|---------------------|-------------|
+| Not Started      | Not Started   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  | Not Started |
 
 # Tauri + React + Typescript
 
