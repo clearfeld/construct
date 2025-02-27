@@ -10,9 +10,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@controlkit/ui": "^0.1.7",
+    "@controlkit/ui": "^0.2.1",
     "@lexical/react": "^0.22.0",
-    "@monaco-editor/react": "^4.6.0",
+    "@monaco-editor/react": "^4.7.0",
     "@stylexjs/stylex": "^0.9.3",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-fs": "~2",
@@ -22,8 +22,8 @@
     "@tauri-apps/plugin-process": "~2",
     "@tauri-apps/plugin-updater": "~2.3.0",
     "lexical": "^0.22.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router": "^7.1.1",
     "uuid": "^11.0.3",
     "zustand": "^5.0.2"
@@ -31,8 +31,8 @@
   "devDependencies": {
     "@stylexjs/rollup-plugin": "^0.9.3",
     "@tauri-apps/cli": "^2",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.6.2",
     "vite": "^6.0.3",
